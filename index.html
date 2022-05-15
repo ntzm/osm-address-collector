@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      button {
+        width: 100px;
+        height: 100px;
+        font-size: 20pt;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="accuracy">not connected</div>
+
+    <div id="current-number"></div>
+
+    <button class="submit" data-direction="L">L</button>
+    <button class="submit" data-direction="C">C</button>
+    <button class="submit" data-direction="R">R</button>
+
+    <br />
+
+    <button class="append" data-number="1">1</button>
+    <button class="append" data-number="2">2</button>
+    <button class="append" data-number="3">3</button>
+
+    <br />
+
+    <button class="append" data-number="4">4</button>
+    <button class="append" data-number="5">5</button>
+    <button class="append" data-number="6">6</button>
+
+    <br />
+
+    <button class="append" data-number="7">7</button>
+    <button class="append" data-number="8">8</button>
+    <button class="append" data-number="9">9</button>
+
+    <br />
+
+    <button id="start-or-pause">P</button>
+    <button class="append" data-number="0">0</button>
+
+    <br />
+
+    <b>Heading</b>
+    <div id="debug-heading"></div>
+
+    <br />
+
+    <button id="file">File</button>
+
+    <script>
+      // debug
+      const debugHeading = document.getElementById("debug-heading");
+      // end debug
+
+      const currentNumber = document.getElementById("current-number");
+      const appends = [...document.getElementsByClassName("append")];
+      const addresses = [];
+      let currentPosition = null;
+
+      appends.forEach((append) => {
+        append.addEventListener("click", () => {
+          currentNumber.innerText = currentNumber.innerText.concat(
+            append.dataset.number
+          );
+        });
+      });
+
+      const submits = [...document.getElementsByClassName("submit")];
+
+      submits.forEach((submit) => {
+        submit.addEventListener("click", () => {
+          if (currentPosition === null) {
+            alert("No GPS");
+            return;
+          }
+
+          addresses.push({
+            latitude: currentPosition.latitude,
+            longitude: currentPosition.longitude,
+            direction: submit.dataset.direction,
+            number: Number(currentNumber.innerText),
+          });
+
+          console.log(addresses);
+
+          currentNumber.innerText = "";
+        });
+      });
+
+      const start = document.getElementById("start-or-pause");
+      let started = false;
+      let watchId;
+      const accuracy = document.getElementById("accuracy");
+
+      start.addEventListener("click", () => {
+        if (started) {
+          start.innerText = "⏵︎";
+          navigator.geolocation.clearWatch(watchId);
+          accuracy.innerText = "not connected";
+          return;
+        }
+
+        start.innerText = "⏸︎";
+        started = true;
+        watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            console.log(position);
+            accuracy.innerText = String(
+              Math.round(position.coords.accuracy)
+            ).concat("m");
+            currentPosition = position.coords;
+            // debug
+            debugHeading.innerText = position.coords.heading;
+            // end debug
+          },
+          (e) => {
+            console.log(e);
+          },
+          {
+            enableHighAccuracy: true,
+          }
+        );
+      });
+
+      const file = document.getElementById("file");
+
+      file.addEventListener("click", () => {
+        const xml = document.implementation.createDocument("", "", null);
+        const osm = xml.createElement("osm");
+        osm.setAttribute("version", "0.6");
+        osm.setAttribute("generator", "AddressCollector testing");
+
+        let i = -1;
+
+        addresses.forEach((address) => {
+          const node = xml.createElement("node");
+          node.setAttribute("id", i);
+          node.setAttribute("version", 1);
+          node.setAttribute("lat", address.latitude);
+          node.setAttribute("lon", address.longitude);
+
+          const tag = xml.createElement("tag");
+          tag.setAttribute("k", "addr:housenumber");
+          tag.setAttribute("v", address.number);
+
+          node.appendChild(tag);
+          osm.appendChild(node);
+
+          --i;
+        });
+
+        xml.appendChild(osm);
+
+        const xmlString = new XMLSerializer().serializeToString(xml);
+
+        const file = new Blob([xmlString], { type: "text/xml" });
+
+        const l = document.createElement('a');
+        l.setAttribute('href', URL.createObjectURL(file));
+        l.setAttribute('download', 'yo.osm');
+        l.style.display = 'none';
+        document.body.appendChild(l);
+        l.click();
+        document.body.removeChild(l);
+      });
+    </script>
+  </body>
+</html>
