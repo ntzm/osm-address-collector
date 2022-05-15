@@ -39,20 +39,22 @@
       }
 
       button {
-        font-size: 20pt;
+        font-size: 24pt;
         width: 100%;
         height: 100%;
         border: 1px #999 solid;
         background: #eee;
         color: #333;
+        font-weight: bold;
       }
 
       #current-number {
-        font-size: 20pt;
+        font-size: 24pt;
         text-align: center;
         width: 100%;
         border: 1px #999 solid;
         color: #333;
+        font-weight: bold;
       }
 
       #done {
@@ -126,9 +128,23 @@
       </div>
 
       <div class="row">
-        <button class="submit" data-direction="L">&larr;</button>
-        <button class="submit" data-direction="C">&uarr;</button>
-        <button class="submit" data-direction="R">&rarr;</button>
+        <button class="submit" data-direction="L">
+          <img
+            style="width: 50px; transform: rotate(-90deg)"
+            src="assets/arrow.svg"
+            alt="Left"
+          />
+        </button>
+        <button class="submit" data-direction="C">
+          <img style="width: 50px" src="assets/arrow.svg" alt="Forward" />
+        </button>
+        <button class="submit" data-direction="R">
+          <img
+            style="width: 50px; transform: rotate(90deg)"
+            src="assets/arrow.svg"
+            alt="Right"
+          />
+        </button>
       </div>
 
       <div class="row">
