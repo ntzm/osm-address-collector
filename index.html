@@ -75,21 +75,7 @@
       </div>
     </div>
 
-    <!-- <br>
-
-    <strong>Heading</strong>
-    <p id="debug-heading"></p>
-
-    <br>
-
-    <strong>Orientation</strong>
-    <p id="debug-orientation"></p> -->
-
     <script>
-      // const debugHeading = document.getElementById('debug-heading');
-      // const debugOrientation = document.getElementById('debug-orientation');
-      // end debug
-
       const radians = (deg) => (deg * Math.PI) / 180;
       const degrees = (rad) => (rad * 180) / Math.PI;
       const move = (coords, bearing, amountKm) => {
@@ -116,6 +102,24 @@
           longitude: lon2,
         };
       };
+
+      const downloadFile = (name, contents) => {
+        const file = new Blob([contents]);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", URL.createObjectURL(file));
+        link.setAttribute("download", name);
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const getFormattedDate = () => {
+        const now = new Date();
+
+        return now.getUTCFullYear() + '-' + (now.getUTCMonth() + 1) + '-' + now.getUTCDate();
+      }
 
       const currentNumber = document.getElementById("current-number");
       const appends = [...document.getElementsByClassName("append")];
@@ -163,21 +167,21 @@
         });
       });
 
-      const start = document.getElementById("start-or-pause");
+      const startOrPause = document.getElementById("start-or-pause");
       let started = false;
       let watchId;
       const accuracy = document.getElementById("accuracy");
 
-      start.addEventListener("click", () => {
+      startOrPause.addEventListener("click", () => {
         if (started) {
-          start.innerText = "Start";
+          startOrPause.innerText = "Start";
           navigator.geolocation.clearWatch(watchId);
           accuracy.innerText = "not connected";
           started = false;
           return;
         }
 
-        start.innerText = "Pause";
+        startOrPause.innerText = "Pause";
         started = true;
         watchId = navigator.geolocation.watchPosition(
           (position) => {
@@ -186,8 +190,6 @@
               Math.round(position.coords.accuracy)
             ).concat("m");
             currentPosition = position.coords;
-            // debug
-            // debugHeading.innerText = position.coords.heading;
           },
           (e) => {
             console.log(e);
@@ -212,11 +214,9 @@
         osm.setAttribute("version", "0.6");
         osm.setAttribute("generator", "AddressCollector testing");
 
-        let i = -1;
-
-        addresses.forEach((address) => {
+        addresses.forEach((address, i) => {
           const node = xml.createElement("node");
-          node.setAttribute("id", i);
+          node.setAttribute("id", -i);
           node.setAttribute("version", 1);
           node.setAttribute("lat", address.latitude);
           node.setAttribute("lon", address.longitude);
@@ -227,23 +227,13 @@
 
           node.appendChild(tag);
           osm.appendChild(node);
-
-          --i;
         });
 
         xml.appendChild(osm);
 
         const xmlString = new XMLSerializer().serializeToString(xml);
 
-        const file = new Blob([xmlString], { type: "text/xml" });
-
-        const l = document.createElement("a");
-        l.setAttribute("href", URL.createObjectURL(file));
-        l.setAttribute("download", "yo.osm");
-        l.style.display = "none";
-        document.body.appendChild(l);
-        l.click();
-        document.body.removeChild(l);
+        downloadFile(getFormattedDate().concat(".osm"), xmlString);
       });
 
       const clear = document.getElementById("clear");
@@ -254,8 +244,6 @@
 
       window.addEventListener("deviceorientationabsolute", (e) => {
         currentOrientation = e.alpha;
-        // debug
-        // debugOrientation.innerText = e.alpha;
       });
     </script>
   </body>
