@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      body, html {
+      body,
+      html {
         margin: 0;
         padding: 0;
       }
@@ -40,7 +41,7 @@
       }
 
       .append {
-        background:  #C1E1C1 ;
+        background: #c1e1c1;
       }
     </style>
   </head>
@@ -86,7 +87,7 @@
       </div>
 
       <div class="row">
-        <button id="file">File</button>
+        <button id="file">Done</button>
       </div>
     </div>
 
@@ -165,6 +166,11 @@
             return;
           }
 
+          if (currentNumber.value === '') {
+            alert("No number");
+            return;
+          }
+
           let bearing = currentOrientation;
           const direction = submit.dataset.direction;
 
@@ -181,7 +187,7 @@
           addresses.push({
             latitude: newPosition.latitude,
             longitude: newPosition.longitude,
-            number: Number(currentNumber.value),
+            number: currentNumber.value,
           });
 
           currentNumber.value = "";
@@ -243,7 +249,13 @@
           node.setAttribute("lon", address.longitude);
 
           const tag = xml.createElement("tag");
-          tag.setAttribute("k", "addr:housenumber");
+
+          if (isNaN(address.number)) {
+            tag.setAttribute("k", "addr:housename");
+          } else {
+            tag.setAttribute("k", "addr:housenumber");
+          }
+
           tag.setAttribute("v", address.number);
 
           node.appendChild(tag);
@@ -263,7 +275,7 @@
         currentNumber.value = "";
       });
 
-      const orientation = document.getElementById('orientation');
+      const orientation = document.getElementById("orientation");
 
       window.addEventListener("deviceorientationabsolute", (e) => {
         currentOrientation = e.alpha;
