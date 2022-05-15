@@ -91,18 +91,18 @@
       }
 
       .info {
+        padding: 15px;
         width: 100%;
         text-align: center;
         font-size: 20pt;
         display: flex;
         flex-direction: row;
-        justify-content: center;
         align-items: center;
       }
 
       .info-icon {
         width: 32px;
-        margin-right: 12px;
+        margin: 12px;
       }
     </style>
   </head>
@@ -299,6 +299,7 @@
           startOrPause.innerText = "Start";
           navigator.geolocation.clearWatch(watchId);
           accuracy.innerText = "N/A";
+          accuracy.style.color = "#333";
           started = false;
           return;
         }
@@ -307,10 +308,17 @@
         started = true;
         watchId = navigator.geolocation.watchPosition(
           (position) => {
-            console.log(position);
-            accuracy.innerText = String(
-              Math.round(position.coords.accuracy)
-            ).concat("m");
+            const acc = Math.round(position.coords.accuracy);
+            accuracy.innerText = String(acc).concat("m");
+
+            if (acc < 10) {
+              accuracy.style.color = "#c1e1c1";
+            } else if (acc < 20) {
+              accuracy.style.color = "#ffb347";
+            } else {
+              accuracy.style.color = "#ff6961";
+            }
+
             currentPosition = position.coords;
           },
           (e) => {
