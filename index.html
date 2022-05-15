@@ -95,40 +95,46 @@
       const radians = (deg) => (deg * Math.PI) / 180;
       const degrees = (rad) => (rad * 180) / Math.PI;
       const move = (coords, bearing, amountKm) => {
-        const r = 6378.1;
-        const brng = radians(bearing);
-        const d = 0.01;
+        const radiusOfEarthKm = 6378.1;
+        const bearingRadians = radians(bearing);
 
-        const lat1 = radians(currentPosition.latitude);
-        const lon1 = radians(currentPosition.longitude);
+        const latitudeRadians = radians(currentPosition.latitude);
+        const longitudeRadians = radians(currentPosition.longitude);
 
-        const lat2 = Math.asin(
-          Math.sin(lat1) * Math.cos(d / r) +
-            Math.cos(lat1) * Math.sin(d / r) * Math.cos(brng)
+        const movedLatitudeRadians = Math.asin(
+          Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
+            Math.cos(latitudeRadians) *
+              Math.sin(amountKm / radiusOfEarthKm) *
+              Math.cos(bearingRadians)
         );
-        const lon2 =
-          lon1 +
+        const movedLongitudeRadians =
+          longitudeRadians +
           Math.atan2(
-            Math.sin(brng) * Math.sin(d / r) * Math.cos(lat1),
-            Math.cos(d / r) - Math.sin(lat1) * Math.sin(lat2)
+            Math.sin(bearingRadians) *
+              Math.sin(amountKm / radiusOfEarthKm) *
+              Math.cos(latitudeRadians),
+            Math.cos(amountKm / radiusOfEarthKm) -
+              Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
           );
 
         return {
-          latitude: degrees(lat2),
-          longitude: degrees(lon2),
+          latitude: degrees(movedLatitudeRadians),
+          longitude: degrees(movedLongitudeRadians),
         };
       };
 
       const downloadFile = (name, contents) => {
-        const file = new Blob([contents]);
+        const file = new Blob([contents], { type: "application/vnd.osm+xml" });
 
         const link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(file));
+        const url = URL.createObjectURL(file);
+        link.setAttribute("href", url);
         link.setAttribute("download", name);
         link.style.display = "none";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       };
 
       const getFormattedDate = () => {
@@ -166,7 +172,7 @@
             return;
           }
 
-          if (currentNumber.value === '') {
+          if (currentNumber.value === "") {
             alert("No number");
             return;
           }
