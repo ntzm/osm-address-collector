@@ -50,7 +50,7 @@
 
     <button id="file">File</button>
 
-    <br>
+    <!-- <br>
 
     <strong>Heading</strong>
     <p id="debug-heading"></p>
@@ -58,11 +58,11 @@
     <br>
 
     <strong>Orientation</strong>
-    <p id="debug-orientation"></p>
+    <p id="debug-orientation"></p> -->
 
     <script>
-      const debugHeading = document.getElementById('debug-heading');
-      const debugOrientation = document.getElementById('debug-orientation');
+      // const debugHeading = document.getElementById('debug-heading');
+      // const debugOrientation = document.getElementById('debug-orientation');
       // end debug
 
       const radians = (deg) => (deg * Math.PI) / 180;
@@ -72,6 +72,7 @@
       const appends = [...document.getElementsByClassName("append")];
       const addresses = [];
       let currentPosition = null;
+      let currentOrientation = null;
 
       appends.forEach((append) => {
         append.addEventListener("click", () => {
@@ -90,7 +91,7 @@
             return;
           }
 
-          let bearing = currentPosition.heading;
+          let bearing = currentOrientation;
           const direction = submit.dataset.direction;
 
           if (direction === "L") {
@@ -153,7 +154,8 @@
               Math.round(position.coords.accuracy)
             ).concat("m");
             currentPosition = position.coords;
-            debugHeading.innerText = position.coords.heading;
+            // debug
+            // debugHeading.innerText = position.coords.heading;
           },
           (e) => {
             console.log(e);
@@ -213,9 +215,10 @@
         currentNumber.innerText = "";
       });
 
-      // debug
       window.addEventListener("deviceorientationabsolute", (e) => {
-        debugOrientation.innerText = e.alpha;
+        currentOrientation = e.alpha;
+        // debug
+        // debugOrientation.innerText = e.alpha;
       });
     </script>
   </body>
