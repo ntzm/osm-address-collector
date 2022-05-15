@@ -42,7 +42,7 @@
 
     <br />
 
-    <button id="start-or-pause">P</button>
+    <button id="start-or-pause">Start</button>
     <button class="append" data-number="0">0</button>
 
     <br />
@@ -55,6 +55,9 @@
     <button id="file">File</button>
 
     <script>
+      const radians = (deg) => (deg * Math.PI) / 180;
+      const degrees = (rad) => (rad * 180) / Math.PI;
+
       // debug
       const debugHeading = document.getElementById("debug-heading");
       // end debug
@@ -81,10 +84,39 @@
             return;
           }
 
+          // let bearing = currentPosition.heading;
+          let bearing = 0;
+          const direction = submit.dataset.direction;
+
+          if (direction === "L") {
+            bearing -= 90;
+          }
+
+          if (direction === "R") {
+            bearing += 90;
+          }
+
+          const r = 6378.1;
+          const brng = radians(bearing);
+          const d = 0.005;
+
+          const lat1 = radians(currentPosition.latitude);
+          const lon1 = radians(currentPosition.longitude);
+
+          const lat2 = Math.asin(
+            Math.sin(lat1) * Math.cos(d / r) +
+              Math.cos(lat1) * Math.sin(d / r) * Math.cos(brng)
+          );
+          const lon2 =
+            lon1 +
+            Math.atan2(
+              Math.sin(brng) * Math.sin(d / r) * Math.cos(lat1),
+              Math.cos(d / r) - Math.sin(lat1) * Math.sin(lat2)
+            );
+
           addresses.push({
-            latitude: currentPosition.latitude,
-            longitude: currentPosition.longitude,
-            direction: submit.dataset.direction,
+            latitude: degrees(lat2),
+            longitude: degrees(lon2),
             number: Number(currentNumber.innerText),
           });
 
@@ -101,13 +133,13 @@
 
       start.addEventListener("click", () => {
         if (started) {
-          start.innerText = "⏵︎";
+          start.innerText = "Start";
           navigator.geolocation.clearWatch(watchId);
           accuracy.innerText = "not connected";
           return;
         }
 
-        start.innerText = "⏸︎";
+        start.innerText = "Pause";
         started = true;
         watchId = navigator.geolocation.watchPosition(
           (position) => {
@@ -162,10 +194,10 @@
 
         const file = new Blob([xmlString], { type: "text/xml" });
 
-        const l = document.createElement('a');
-        l.setAttribute('href', URL.createObjectURL(file));
-        l.setAttribute('download', 'yo.osm');
-        l.style.display = 'none';
+        const l = document.createElement("a");
+        l.setAttribute("href", URL.createObjectURL(file));
+        l.setAttribute("download", "yo.osm");
+        l.style.display = "none";
         document.body.appendChild(l);
         l.click();
         document.body.removeChild(l);
