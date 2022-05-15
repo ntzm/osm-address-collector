@@ -50,7 +50,21 @@
 
     <button id="file">File</button>
 
+    <br>
+
+    <strong>Heading</strong>
+    <p id="debug-heading"></p>
+
+    <br>
+
+    <strong>Orientation</strong>
+    <p id="debug-orientation"></p>
+
     <script>
+      const debugHeading = document.getElementById('debug-heading');
+      const debugOrientation = document.getElementById('debug-orientation');
+      // end debug
+
       const radians = (deg) => (deg * Math.PI) / 180;
       const degrees = (rad) => (rad * 180) / Math.PI;
 
@@ -76,8 +90,7 @@
             return;
           }
 
-          // let bearing = currentPosition.heading;
-          let bearing = 0;
+          let bearing = currentPosition.heading;
           const direction = submit.dataset.direction;
 
           if (direction === "L") {
@@ -140,6 +153,7 @@
               Math.round(position.coords.accuracy)
             ).concat("m");
             currentPosition = position.coords;
+            debugHeading.innerText = position.coords.heading;
           },
           (e) => {
             console.log(e);
@@ -197,6 +211,11 @@
 
       clear.addEventListener("click", () => {
         currentNumber.innerText = "";
+      });
+
+      // debug
+      window.addEventListener("deviceorientationabsolute", (e) => {
+        debugOrientation.innerText = e.alpha;
       });
     </script>
   </body>
