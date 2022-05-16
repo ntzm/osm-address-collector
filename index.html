@@ -430,14 +430,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     </div>
 
     <script>
-      const degreesToRadians = (degrees) => degrees * Math.PI / 180;
-      const radiansToDegrees = (radians) => radians * 180 / Math.PI;
+      const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
+      const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
       const move = (coords, bearing, amountKm) => {
         const radiusOfEarthKm = 6378.1;
         const bearingRadians = degreesToRadians(bearing);
 
-        const latitudeRadians = degreesToRadians(currentPosition.latitude);
-        const longitudeRadians = degreesToRadians(currentPosition.longitude);
+        const latitudeRadians = degreesToRadians(coords.latitude);
+        const longitudeRadians = degreesToRadians(coords.longitude);
 
         const movedLatitudeRadians = Math.asin(
           Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
@@ -740,7 +740,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       };
 
       window.addEventListener("deviceorientationabsolute", (e) => {
-        updateOrientation(e.alpha);
+        updateOrientation(Math.abs(e.alpha - 360));
       });
 
       const maybeAbsoluteDeviceOrientationHandler = (e) => {
@@ -750,7 +750,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         }
 
         if (e.absolute) {
-          updateOrientation(e.alpha);
+          updateOrientation(Math.abs(e.alpha - 360));
           return;
         }
 
