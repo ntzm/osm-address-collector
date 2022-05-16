@@ -733,14 +733,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       const $orientation = document.getElementById("orientation");
       const $orientationIcon = document.getElementById("orientation-icon");
 
+      const invertBearing = (bearing) => Math.abs(bearing - 360);
+
       const updateOrientation = (orientation) => {
         currentOrientation = Math.round(orientation);
         $orientation.textContent = `${currentOrientation}°`;
-        $orientationIcon.style.transform = `rotate(${currentOrientation}deg)`;
+        $orientationIcon.style.transform = `rotate(${invertBearing(
+          currentOrientation
+        )}deg)`;
       };
 
       window.addEventListener("deviceorientationabsolute", (e) => {
-        updateOrientation(Math.abs(e.alpha - 360));
+        updateOrientation(invertBearing(e.alpha));
       });
 
       const maybeAbsoluteDeviceOrientationHandler = (e) => {
@@ -750,7 +754,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         }
 
         if (e.absolute) {
-          updateOrientation(Math.abs(e.alpha - 360));
+          updateOrientation(invertBearing(e.alpha));
           return;
         }
 
