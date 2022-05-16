@@ -423,22 +423,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
       const orientation = document.getElementById("orientation");
 
+      const updateOrientation = (o) => {
+        currentOrientation = o;
+        orientation.innerText = Math.round(o) + "°";
+      };
+
       window.addEventListener("deviceorientationabsolute", (e) => {
-        currentOrientation = e.alpha;
-        orientation.innerText = Math.round(e.alpha) + "°";
+        updateOrientation(e.alpha);
       });
 
       const maybeAbsoluteDeviceOrientationHandler = (e) => {
-        if (!e.absolute) {
-          window.removeEventListener(
-            "deviceorientation",
-            maybeAbsoluteDeviceOrientationHandler
-          );
+        if (e.webkitCompassHeading) {
+          updateOrientation(e.webkitCompassHeading);
           return;
         }
 
-        currentOrientation = e.alpha;
-        orientation.innerText = Math.round(e.alpha) + "°";
+        if (e.absolute) {
+          updateOrientation(e.alpha);
+          return;
+        }
+
+        window.removeEventListener(
+          "deviceorientation",
+          maybeAbsoluteDeviceOrientationHandler
+        );
       };
 
       window.addEventListener(
