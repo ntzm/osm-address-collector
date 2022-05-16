@@ -1,0 +1,131 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: sans-serif;
+  color: #333;
+}
+
+.container button {
+  font-size: 24pt;
+  width: 100%;
+  height: 100%;
+  border: 1px #999 solid;
+  background: #eee;
+  color: #333;
+  font-weight: bold;
+}
+
+#current-number-or-name {
+  font-size: 24pt;
+  text-align: center;
+  width: 100%;
+  border: 1px #999 solid;
+  color: #333;
+  font-weight: bold;
+  margin: 0;
+  border-radius: 0;
+  appearance: none;
+}
+
+#done {
+  background: #aec6cf;
+}
+
+#clear {
+  background: #faa0a0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  align-items: stretch;
+  box-sizing: border-box;
+  min-height: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  height: 100%;
+}
+
+.append {
+  background: #c1e1c1;
+}
+
+.info {
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 16pt;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-icon {
+  height: 32px;
+  width: 32px;
+  stroke-width: 5px;
+  color: #333;
+}
+
+.submit-icon {
+  stroke-width: 5px;
+  color: #333;
+}
+
+#settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  background: #fff;
+  z-index: 5;
+  display: none;
+}
+
+#close-settings,
+#add-custom-tag {
+  margin-left: 5px;
+  margin-top: 5px;
+  width: 30px;
+  height: 30px;
+}
+
+.settings-container {
+  padding: 5px;
+}
+
+#built-in-settings {
+  display: grid;
+  column-gap: 5px;
+  grid-template-columns: [label] auto [input] 1fr;
+}
+
+.custom-tag {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.custom-tag:last-of-type {
+  margin-bottom: 0;
+}
+
+.custom-tag input {
+  width: 100%;
+  margin-left: 5px;
+}
