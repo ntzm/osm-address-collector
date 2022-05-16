@@ -579,6 +579,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             bearing += 90;
           }
 
+          bearing %= 360;
+
           const newPosition = move(currentPosition, bearing, distance / 1000);
 
           addresses.push({
