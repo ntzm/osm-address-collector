@@ -1,67 +1,37 @@
-const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
-const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
-const move = (coords, bearing, amountKm) => {
-  const radiusOfEarthKm = 6378.1;
-  const bearingRadians = degreesToRadians(bearing);
-
-  const latitudeRadians = degreesToRadians(coords.latitude);
-  const longitudeRadians = degreesToRadians(coords.longitude);
-
-  const movedLatitudeRadians = Math.asin(
-    Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
-    Math.cos(latitudeRadians) *
-    Math.sin(amountKm / radiusOfEarthKm) *
-    Math.cos(bearingRadians)
-  );
-  const movedLongitudeRadians =
-    longitudeRadians +
-    Math.atan2(
-      Math.sin(bearingRadians) *
-      Math.sin(amountKm / radiusOfEarthKm) *
-      Math.cos(latitudeRadians),
-      Math.cos(amountKm / radiusOfEarthKm) -
-      Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
-    );
-
-  return {
-    latitude: radiansToDegrees(movedLatitudeRadians),
-    longitude: radiansToDegrees(movedLongitudeRadians),
-  };
-};
-
-const downloadFile = (name, contents, type) => {
-  const file = new Blob([contents], { type });
-
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(file);
-  link.setAttribute("href", url);
-  link.setAttribute("download", name);
-  link.style.display = "none";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-};
-
-const getFormattedDate = () =>
-  new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", "-")
-    .replace(/:/g, "");
-
-const $currentNumberOrName = document.getElementById(
-  "current-number-or-name"
-);
 const $lastAction = document.getElementById("last-action");
-const addresses = [];
-let currentPosition = null;
-let currentOrientation = null;
+
+/*
+SETTINGS
+*/
+
+const $settings = document.getElementById("settings");
+
+document.getElementById("info-row").addEventListener("click", () => {
+  $settings.style.display = "block";
+});
+
+document
+  .getElementById("close-settings")
+  .addEventListener("click", () => {
+    $settings.style.display = "none";
+  });
+
+/*
+SETTINGS - Distance
+*/
 
 const $distance = document.getElementById("distance");
 let distance = Number(localStorage.getItem("distance") ?? 10);
-
 $distance.value = distance;
+
+$distance.addEventListener("blur", () => {
+  distance = Number($distance.value);
+  localStorage.setItem("distance", distance);
+});
+
+/*
+SETTINGS - Custom tags
+*/
 
 let customTags = JSON.parse(localStorage.getItem("customTags") ?? "{}");
 const $customTagContainer = document.getElementById("custom-tags");
@@ -119,7 +89,47 @@ Object.entries(customTags).forEach(([key, value]) =>
 
 $addCustomTag.addEventListener("click", () => addCustomTag("", ""));
 
-const surveyStart = new Date();
+/*
+RECORDING
+*/
+
+const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
+const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
+const move = (coords, bearing, amountKm) => {
+  const radiusOfEarthKm = 6378.1;
+  const bearingRadians = degreesToRadians(bearing);
+
+  const latitudeRadians = degreesToRadians(coords.latitude);
+  const longitudeRadians = degreesToRadians(coords.longitude);
+
+  const movedLatitudeRadians = Math.asin(
+    Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
+    Math.cos(latitudeRadians) *
+    Math.sin(amountKm / radiusOfEarthKm) *
+    Math.cos(bearingRadians)
+  );
+  const movedLongitudeRadians =
+    longitudeRadians +
+    Math.atan2(
+      Math.sin(bearingRadians) *
+      Math.sin(amountKm / radiusOfEarthKm) *
+      Math.cos(latitudeRadians),
+      Math.cos(amountKm / radiusOfEarthKm) -
+      Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
+    );
+
+  return {
+    latitude: radiansToDegrees(movedLatitudeRadians),
+    longitude: radiansToDegrees(movedLongitudeRadians),
+  };
+};
+
+const $currentNumberOrName = document.getElementById(
+  "current-number-or-name"
+);
+const addresses = [];
+let currentPosition = null;
+let currentOrientation = null;
 
 [...document.getElementsByClassName("append")].forEach((append) => {
   append.addEventListener("click", () => {
@@ -175,6 +185,10 @@ const surveyStart = new Date();
     $currentNumberOrName.value = "";
   });
 });
+
+/*
+GPS
+*/
 
 const $startOrPause = document.getElementById("start-or-pause");
 let started = false;
@@ -236,6 +250,33 @@ $startOrPause.addEventListener("click", () => {
   );
 });
 
+/*
+DONE
+*/
+
+const surveyStart = new Date();
+
+const downloadFile = (name, contents, type) => {
+  const file = new Blob([contents], { type });
+
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(file);
+  link.setAttribute("href", url);
+  link.setAttribute("download", name);
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+const getFormattedDate = () =>
+  new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", "-")
+    .replace(/:/g, "");
+
 document.getElementById("done").addEventListener("click", () => {
   if (addresses.length === 0) {
     alert("No addresses recorded");
@@ -295,9 +336,17 @@ document.getElementById("done").addEventListener("click", () => {
   );
 });
 
+/*
+CLEAR
+*/
+
 document.getElementById("clear").addEventListener("click", () => {
   $currentNumberOrName.value = "";
 });
+
+/*
+ORIENTATION
+*/
 
 const $orientation = document.getElementById("orientation");
 const $orientationIcon = document.getElementById("orientation-icon");
@@ -338,26 +387,13 @@ window.addEventListener(
   maybeAbsoluteDeviceOrientationHandler
 );
 
+/*
+UNDO
+*/
+
 document.getElementById("undo").addEventListener("click", () => {
   const address = addresses.pop();
   if (address !== undefined) {
     $lastAction.textContent = `Undid ${address.direction} ${address.numberOrName}`;
   }
-});
-
-const $settings = document.getElementById("settings");
-
-document.getElementById("info-row").addEventListener("click", () => {
-  $settings.style.display = "block";
-});
-
-document
-  .getElementById("close-settings")
-  .addEventListener("click", () => {
-    $settings.style.display = "none";
-  });
-
-$distance.addEventListener("blur", () => {
-  distance = Number($distance.value);
-  localStorage.setItem("distance", distance);
 });
