@@ -1,3 +1,19 @@
+<!--
+Copyright (C) 2022  Nat Zimmermann
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -48,13 +64,16 @@
         font-weight: bold;
       }
 
-      #current-number {
+      #current-number-or-name {
         font-size: 24pt;
         text-align: center;
         width: 100%;
         border: 1px #999 solid;
         color: #333;
         font-weight: bold;
+        margin: 0;
+        border-radius: 0;
+        appearance: none;
       }
 
       #done {
@@ -124,7 +143,7 @@
       </div>
 
       <div class="row">
-        <input id="current-number" autocapitalize />
+        <input type="text" id="current-number-or-name" autocapitalize />
       </div>
 
       <div class="row">
@@ -208,8 +227,8 @@
         };
       };
 
-      const downloadFile = (name, contents) => {
-        const file = new Blob([contents], { type: "application/vnd.osm+xml" });
+      const downloadFile = (name, contents, type) => {
+        const file = new Blob([contents], { type });
 
         const link = document.createElement("a");
         const url = URL.createObjectURL(file);
@@ -238,7 +257,9 @@
         ].join("");
       };
 
-      const currentNumber = document.getElementById("current-number");
+      const currentNumberOrName = document.getElementById(
+        "current-number-or-name"
+      );
       const appends = [...document.getElementsByClassName("append")];
       const addresses = [];
       let currentPosition = null;
@@ -246,7 +267,7 @@
 
       appends.forEach((append) => {
         append.addEventListener("click", () => {
-          currentNumber.value = currentNumber.value.concat(
+          currentNumberOrName.value = currentNumberOrName.value.concat(
             append.dataset.number
           );
         });
@@ -261,8 +282,8 @@
             return;
           }
 
-          if (currentNumber.value === "") {
-            alert("No number");
+          if (currentNumberOrName.value === "") {
+            alert("No number or name");
             return;
           }
 
@@ -282,10 +303,10 @@
           addresses.push({
             latitude: newPosition.latitude,
             longitude: newPosition.longitude,
-            number: currentNumber.value,
+            numberOrName: currentNumberOrName.value,
           });
 
-          currentNumber.value = "";
+          currentNumberOrName.value = "";
         });
       });
 
@@ -304,12 +325,15 @@
           return;
         }
 
-        startOrPause.innerText = "Pause";
-        started = true;
+        startOrPause.innerText = "Starting";
+
         watchId = navigator.geolocation.watchPosition(
           (position) => {
             const acc = Math.round(position.coords.accuracy);
             accuracy.innerText = String(acc).concat("m");
+
+            startOrPause.innerText = "Pause";
+            started = true;
 
             if (acc < 10) {
               accuracy.style.color = "#c1e1c1";
@@ -322,7 +346,22 @@
             currentPosition = position.coords;
           },
           (e) => {
-            console.log(e);
+            startOrPause.innerText = "Start";
+
+            if (e.code === e.PERMISSION_DENIED) {
+              alert("GPS permission denied: " + e.message);
+              return;
+            }
+
+            if (e.code === e.POSITION_UNAVAILABLE) {
+              alert("GPS permission unavailable: " + e.message);
+              return;
+            }
+
+            if (e.code === e.TIMEOUT) {
+              alert("GPS position timeout: " + e.message);
+              return;
+            }
           },
           {
             enableHighAccuracy: true,
@@ -353,13 +392,13 @@
 
           const tag = xml.createElement("tag");
 
-          if (isNaN(address.number)) {
+          if (isNaN(address.numberOrName)) {
             tag.setAttribute("k", "addr:housename");
           } else {
             tag.setAttribute("k", "addr:housenumber");
           }
 
-          tag.setAttribute("v", address.number);
+          tag.setAttribute("v", address.numberOrName);
 
           node.appendChild(tag);
           osm.appendChild(node);
@@ -369,13 +408,17 @@
 
         const xmlString = new XMLSerializer().serializeToString(xml);
 
-        downloadFile(getFormattedDate().concat(".osm"), xmlString);
+        downloadFile(
+          getFormattedDate().concat(".osm"),
+          xmlString,
+          "application/vnd.osm+xml"
+        );
       });
 
       const clear = document.getElementById("clear");
 
       clear.addEventListener("click", () => {
-        currentNumber.value = "";
+        currentNumberOrName.value = "";
       });
 
       const orientation = document.getElementById("orientation");
@@ -384,6 +427,24 @@
         currentOrientation = e.alpha;
         orientation.innerText = Math.round(e.alpha) + "°";
       });
+
+      const maybeAbsoluteDeviceOrientationHandler = (e) => {
+        if (!e.absolute) {
+          window.removeEventListener(
+            "deviceorientation",
+            maybeAbsoluteDeviceOrientationHandler
+          );
+          return;
+        }
+
+        currentOrientation = e.alpha;
+        orientation.innerText = Math.round(e.alpha) + "°";
+      };
+
+      window.addEventListener(
+        "deviceorientation",
+        maybeAbsoluteDeviceOrientationHandler
+      );
     </script>
   </body>
 </html>
