@@ -167,9 +167,10 @@ const surveyStart = new Date();
       longitude: newPosition.longitude,
       numberOrName: numberOrName,
       customTags,
+      direction
     });
 
-    $lastAction.textContent = `Added ${numberOrName}`;
+    $lastAction.textContent = `Added ${direction} ${numberOrName}`;
 
     $currentNumberOrName.value = "";
   });
@@ -340,7 +341,7 @@ window.addEventListener(
 document.getElementById("undo").addEventListener("click", () => {
   const address = addresses.pop();
   if (address !== undefined) {
-    $lastAction.textContent = `Undid ${address.numberOrName}`;
+    $lastAction.textContent = `Undid ${address.direction} ${address.numberOrName}`;
   }
 });
 
