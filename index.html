@@ -430,8 +430,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     </div>
 
     <script>
-      const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
-      const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
+      const degreesToRadians = (degrees) => degrees * Math.PI / 180;
+      const radiansToDegrees = (radians) => radians * 180 / Math.PI;
       const move = (coords, bearing, amountKm) => {
         const radiusOfEarthKm = 6378.1;
         const bearingRadians = degreesToRadians(bearing);
