@@ -54,7 +54,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         color: #333;
       }
 
-      button {
+      .container button {
         font-size: 24pt;
         width: 100%;
         height: 100%;
@@ -110,59 +110,290 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       }
 
       .info {
-        padding: 15px;
+        padding: 5px;
         width: 100%;
         text-align: center;
-        font-size: 20pt;
+        font-size: 16pt;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
       }
 
       .info-icon {
+        height: 32px;
         width: 32px;
-        margin: 12px;
+        stroke-width: 5px;
+        color: #333;
+      }
+
+      .submit-icon {
+        stroke-width: 5px;
+        color: #333;
+      }
+
+      #settings {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100%;
+        height: 100%;
+        background: #fff;
+        z-index: 5;
+        display: none;
+      }
+
+      #close-settings,
+      #add-custom-tag {
+        margin-left: 5px;
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+      }
+
+      .settings-container {
+        padding: 5px;
+      }
+
+      #built-in-settings {
+        display: grid;
+        column-gap: 5px;
+        grid-template-columns: [label] auto [input] 1fr;
+      }
+
+      .custom-tag {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 5px;
+      }
+
+      .custom-tag:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .custom-tag input {
+        width: 100%;
+        margin-left: 5px;
       }
     </style>
   </head>
   <body>
+    <div id="settings">
+      <button id="close-settings">x</button>
+
+      <div class="settings-container" id="built-in-settings">
+        <label for="distance">Distance (m)</label>
+        <input type="number" id="distance" />
+      </div>
+
+      <div class="settings-container" id="custom-tags"></div>
+      <button id="add-custom-tag">+</button>
+
+      <a href="https://github.com/ntzm/osm-address-collector" target="_blank">GitHub</a>
+    </div>
+
     <div class="container">
-      <div class="row">
+      <div class="row" id="info-row">
         <div class="info">
-          <img
+          <svg
             class="info-icon"
-            src="assets/satellite.svg"
-            alt="GPS Accuracy"
-          />
+            id="accuracy-icon"
+            transform="rotate(135)"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M32 46H48V62H32V46Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M32 49H8V59H32"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M48 49H72V59H48"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M38 62V64C38 65.1046 38.8954 66 40 66V66C41.1046 66 42 65.1046 42 64V62"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M47.5971 36C50.178 36 52.0737 38.4742 50.569 40.571C48.2099 43.8585 44.355 46 40 46C35.6449 46 31.79 43.8585 29.4309 40.571C27.9262 38.4742 29.8219 36 32.4028 36H47.5971Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M46.9282 28C46.226 26.7838 45.2161 25.7739 44 25.0718C42.7838 24.3696 41.4043 24 40 24C38.5957 24 37.2161 24.3697 36 25.0718C34.7838 25.7739 33.7739 26.7838 33.0718 28"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M55.5885 23C54.0086 20.2637 51.7364 17.9914 49 16.4115C46.2637 14.8317 43.1597 14 40 14C36.8404 14 33.7364 14.8317 31 16.4115C28.2637 17.9914 25.9914 20.2637 24.4116 23"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           <span id="accuracy">N/A</span>
         </div>
         <div class="info">
-          <img class="info-icon" src="assets/compass.svg" alt="Orientation" />
+          <svg
+            class="info-icon"
+            id="orientation-icon"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M68 40C68 55.464 55.464 68 40 68C24.536 68 12 55.464 12 40C12 24.536 24.536 12 40 12C55.464 12 68 24.536 68 40Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M39.0716 22.321C39.4069 21.4828 40.5933 21.4828 40.9286 22.321L47.8516 39.6284C47.9469 39.8668 47.9469 40.1328 47.8516 40.3712L40.9286 57.6786C40.5933 58.5168 39.4069 58.5168 39.0716 57.6786L32.1487 40.3712C32.0533 40.1328 32.0533 39.8668 32.1487 39.6284L39.0716 22.321Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           <span id="orientation">N/A</span>
+        </div>
+        <div class="info">
+          <svg
+            class="info-icon"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M23.8906 19.3455C25.7809 17.8305 27.8908 16.5754 30.169 15.6317C36.5076 13.0062 43.6295 13.0062 49.968 15.6317C56.3066 18.2572 61.3425 23.2932 63.968 29.6317C66.5935 35.9703 66.5935 43.0922 63.968 49.4307C61.3425 55.7693 56.3066 60.8052 49.968 63.4307C43.6295 66.0562 36.5076 66.0562 30.169 63.4307L29.2715 63.0589C28.8849 62.8988 28.5037 62.7288 28.128 62.5493"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M30.3364 25.7911L18.4517 13.9063C17.2523 12.7069 15.2017 13.5564 15.2017 15.2525L15.2017 27.0411C15.2017 28.1456 16.0971 29.0411 17.2017 29.0411L28.9902 29.0411C30.6864 29.0411 31.5358 26.9904 30.3364 25.7911Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M36 39C36 37.3431 37.3431 36 39 36C40.6569 36 42 37.3431 42 39C42 40.6569 40.6569 42 39 42C37.3431 42 36 40.6569 36 39Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M41.5967 40.5064L52.8496 47.0161"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M40.7306 36.5531L45.5317 29.7695"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span id="last-action">N/A</span>
         </div>
       </div>
 
       <div class="row">
-        <input type="text" id="current-number-or-name" autocapitalize />
+        <input type="text" id="current-number-or-name" autocapitalize="words" />
       </div>
 
       <div class="row">
         <button class="submit" data-direction="L">
-          <img
-            style="width: 50px; transform: rotate(-90deg)"
-            src="assets/arrow.svg"
-            alt="Left"
-          />
+          <svg
+            class="submit-icon"
+            transform="rotate(-90)"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
         <button class="submit" data-direction="C">
-          <img style="width: 50px" src="assets/arrow.svg" alt="Forward" />
+          <svg
+            class="submit-icon"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
         <button class="submit" data-direction="R">
-          <img
-            style="width: 50px; transform: rotate(90deg)"
-            src="assets/arrow.svg"
-            alt="Right"
-          />
+          <svg
+            class="submit-icon"
+            transform="rotate(90)"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
 
@@ -192,18 +423,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
       <div class="row">
         <button id="done">Done</button>
+        <button id="undo">Undo</button>
       </div>
     </div>
 
     <script>
-      const radians = (deg) => (deg * Math.PI) / 180;
-      const degrees = (rad) => (rad * 180) / Math.PI;
+      const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
+      const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
       const move = (coords, bearing, amountKm) => {
         const radiusOfEarthKm = 6378.1;
-        const bearingRadians = radians(bearing);
+        const bearingRadians = degreesToRadians(bearing);
 
-        const latitudeRadians = radians(currentPosition.latitude);
-        const longitudeRadians = radians(currentPosition.longitude);
+        const latitudeRadians = degreesToRadians(currentPosition.latitude);
+        const longitudeRadians = degreesToRadians(currentPosition.longitude);
 
         const movedLatitudeRadians = Math.asin(
           Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
@@ -222,8 +454,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
           );
 
         return {
-          latitude: degrees(movedLatitudeRadians),
-          longitude: degrees(movedLongitudeRadians),
+          latitude: radiansToDegrees(movedLatitudeRadians),
+          longitude: radiansToDegrees(movedLongitudeRadians),
         };
       };
 
@@ -241,48 +473,97 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         URL.revokeObjectURL(url);
       };
 
-      const getFormattedDate = () => {
-        const now = new Date();
+      const getFormattedDate = () => new Date().toISOString().split("T")[0];
 
-        return [
-          now.getFullYear(),
-          "-",
-          now.getMonth() + 1,
-          "-",
-          now.getDate(),
-          "-",
-          now.getHours(),
-          now.getMinutes(),
-          now.getSeconds(),
-        ].join("");
-      };
-
-      const currentNumberOrName = document.getElementById(
+      const $currentNumberOrName = document.getElementById(
         "current-number-or-name"
       );
-      const appends = [...document.getElementsByClassName("append")];
+      const $lastAction = document.getElementById("last-action");
       const addresses = [];
       let currentPosition = null;
       let currentOrientation = null;
 
-      appends.forEach((append) => {
+      const $distance = document.getElementById("distance");
+      let distance = Number(localStorage.getItem("distance") ?? 10);
+
+      $distance.value = distance;
+
+      let customTags = JSON.parse(localStorage.getItem("customTags") ?? "{}");
+      const $customTagContainer = document.getElementById("custom-tags");
+
+      const $addCustomTag = document.getElementById("add-custom-tag");
+
+      const updateCustomTags = () => {
+        customTags = Object.fromEntries(
+          [...document.querySelectorAll(".custom-tag")].map(($tag) => [
+            $tag.querySelector(".key-input").value,
+            $tag.querySelector(".value-input").value,
+          ])
+        );
+
+        localStorage.setItem("customTags", JSON.stringify(customTags));
+      };
+
+      const addCustomTag = (key, value) => {
+        const container = document.createElement("div");
+        container.classList.add("custom-tag");
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "x";
+
+        removeButton.addEventListener("click", () => {
+          container.remove();
+          updateCustomTags();
+        });
+
+        const keyInput = document.createElement("input");
+        keyInput.type = "text";
+        keyInput.value = key;
+        keyInput.placeholder = "Key";
+        keyInput.classList.add("key-input");
+
+        const valueInput = document.createElement("input");
+        valueInput.type = "text";
+        valueInput.value = value;
+        valueInput.placeholder = "Value";
+        valueInput.classList.add("value-input");
+
+        keyInput.addEventListener("blur", updateCustomTags);
+        valueInput.addEventListener("blur", updateCustomTags);
+
+        container.appendChild(removeButton);
+        container.appendChild(keyInput);
+        container.appendChild(valueInput);
+
+        $customTagContainer.appendChild(container);
+      };
+
+      Object.entries(customTags).forEach(([key, value]) =>
+        addCustomTag(key, value)
+      );
+
+      $addCustomTag.addEventListener("click", () => addCustomTag("", ""));
+
+      const surveyStart = new Date();
+
+      [...document.getElementsByClassName("append")].forEach((append) => {
         append.addEventListener("click", () => {
-          currentNumberOrName.value = currentNumberOrName.value.concat(
+          $currentNumberOrName.value = $currentNumberOrName.value.concat(
             append.dataset.number
           );
         });
       });
 
-      const submits = [...document.getElementsByClassName("submit")];
-
-      submits.forEach((submit) => {
+      [...document.getElementsByClassName("submit")].forEach((submit) => {
         submit.addEventListener("click", () => {
           if (currentPosition === null) {
             alert("No GPS");
             return;
           }
 
-          if (currentNumberOrName.value === "") {
+          const numberOrName = $currentNumberOrName.value;
+
+          if (numberOrName === "") {
             alert("No number or name");
             return;
           }
@@ -298,68 +579,71 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             bearing += 90;
           }
 
-          const newPosition = move(currentPosition, bearing, 0.01);
+          const newPosition = move(currentPosition, bearing, distance / 1000);
 
           addresses.push({
             latitude: newPosition.latitude,
             longitude: newPosition.longitude,
-            numberOrName: currentNumberOrName.value,
+            numberOrName: numberOrName,
+            customTags,
           });
 
-          currentNumberOrName.value = "";
+          $lastAction.textContent = `Added ${numberOrName}`;
+
+          $currentNumberOrName.value = "";
         });
       });
 
-      const startOrPause = document.getElementById("start-or-pause");
+      const $startOrPause = document.getElementById("start-or-pause");
       let started = false;
       let watchId;
-      const accuracy = document.getElementById("accuracy");
+      const $accuracy = document.getElementById("accuracy");
 
-      startOrPause.addEventListener("click", () => {
+      $startOrPause.addEventListener("click", () => {
         if (started) {
-          startOrPause.innerText = "Start";
+          $startOrPause.textContent = "Start";
           navigator.geolocation.clearWatch(watchId);
-          accuracy.innerText = "N/A";
-          accuracy.style.color = "#333";
+          $accuracy.textContent = "N/A";
+          $accuracy.style.color = "#333";
           started = false;
           return;
         }
 
-        startOrPause.innerText = "Starting";
+        $startOrPause.textContent = "Starting";
 
         watchId = navigator.geolocation.watchPosition(
           (position) => {
             const acc = Math.round(position.coords.accuracy);
-            accuracy.innerText = String(acc).concat("m");
+            $accuracy.textContent = `${acc}m`;
 
-            startOrPause.innerText = "Pause";
+            $startOrPause.textContent = "Pause";
             started = true;
 
             if (acc < 10) {
-              accuracy.style.color = "#c1e1c1";
+              $accuracy.style.color = "#c1e1c1";
             } else if (acc < 20) {
-              accuracy.style.color = "#ffb347";
+              $accuracy.style.color = "#ffb347";
             } else {
-              accuracy.style.color = "#ff6961";
+              $accuracy.style.color = "#ff6961";
             }
 
             currentPosition = position.coords;
           },
           (e) => {
-            startOrPause.innerText = "Start";
+            $startOrPause.textContent = "Start";
 
             if (e.code === e.PERMISSION_DENIED) {
-              alert("GPS permission denied: " + e.message);
+              alert(`GPS permission denied: ${e.message}`);
               return;
             }
 
             if (e.code === e.POSITION_UNAVAILABLE) {
-              alert("GPS permission unavailable: " + e.message);
+              alert(`GPS position unavailable: ${e.message}`);
               return;
             }
 
             if (e.code === e.TIMEOUT) {
-              alert("GPS position timeout: " + e.message);
+              alert(`GPS position timeout: ${e.message}`);
               return;
             }
           },
@@ -370,9 +654,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         );
       });
 
-      const done = document.getElementById("done");
-
-      done.addEventListener("click", () => {
+      document.getElementById("done").addEventListener("click", () => {
         if (addresses.length === 0) {
           alert("No addresses recorded");
           return;
@@ -385,22 +667,38 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
         addresses.forEach((address, i) => {
           const node = xml.createElement("node");
-          node.setAttribute("id", -1 - i);
+          node.setAttribute("id", -surveyStart.getTime() - i);
           node.setAttribute("version", 1);
           node.setAttribute("lat", address.latitude);
           node.setAttribute("lon", address.longitude);
 
           const tag = xml.createElement("tag");
 
-          if (isNaN(address.numberOrName)) {
+          let numberOrName = address.numberOrName;
+
+          if (isNaN(numberOrName)) {
             tag.setAttribute("k", "addr:housename");
           } else {
+            numberOrName = Number(numberOrName);
             tag.setAttribute("k", "addr:housenumber");
           }
 
-          tag.setAttribute("v", address.numberOrName);
+          tag.setAttribute("v", numberOrName);
 
           node.appendChild(tag);
+
+          Object.entries(address.customTags).forEach(([key, value]) => {
+            if (value === "") {
+              return;
+            }
+
+            const customTag = xml.createElement("tag");
+            customTag.setAttribute("k", key);
+            customTag.setAttribute("v", value);
+
+            node.appendChild(customTag);
+          });
+
           osm.appendChild(node);
         });
 
@@ -409,23 +707,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         const xmlString = new XMLSerializer().serializeToString(xml);
 
         downloadFile(
-          getFormattedDate().concat(".osm"),
+          `${getFormattedDate()}.osm`,
           xmlString,
           "application/vnd.osm+xml"
         );
       });
 
-      const clear = document.getElementById("clear");
-
-      clear.addEventListener("click", () => {
-        currentNumberOrName.value = "";
+      document.getElementById("clear").addEventListener("click", () => {
+        $currentNumberOrName.value = "";
       });
 
-      const orientation = document.getElementById("orientation");
+      const $orientation = document.getElementById("orientation");
+      const $orientationIcon = document.getElementById("orientation-icon");
 
-      const updateOrientation = (o) => {
-        currentOrientation = o;
-        orientation.innerText = Math.round(o) + "°";
+      const updateOrientation = (orientation) => {
+        currentOrientation = Math.round(orientation);
+        $orientation.textContent = `${currentOrientation}°`;
+        $orientationIcon.style.transform = `rotate(${currentOrientation}deg)`;
       };
 
       window.addEventListener("deviceorientationabsolute", (e) => {
@@ -453,6 +751,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         "deviceorientation",
         maybeAbsoluteDeviceOrientationHandler
       );
+
+      document.getElementById("undo").addEventListener("click", () => {
+        const address = addresses.pop();
+        if (address !== undefined) {
+          $lastAction.textContent = `Undid ${address.numberOrName}`;
+        }
+      });
+
+      const $settings = document.getElementById("settings");
+
+      document.getElementById("info-row").addEventListener("click", () => {
+        $settings.style.display = "block";
+      });
+
+      document
+        .getElementById("close-settings")
+        .addEventListener("click", () => {
+          $settings.style.display = "none";
+        });
+
+      $distance.addEventListener("blur", () => {
+        distance = Number($distance.value);
+        localStorage.setItem("distance", distance);
+      });
     </script>
   </body>
 </html>
