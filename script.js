@@ -10,11 +10,9 @@ document.getElementById("info-row").addEventListener("click", () => {
   $settings.style.display = "block";
 });
 
-document
-  .getElementById("close-settings")
-  .addEventListener("click", () => {
-    $settings.style.display = "none";
-  });
+document.getElementById("close-settings").addEventListener("click", () => {
+  $settings.style.display = "none";
+});
 
 /*
 SETTINGS - Distance
@@ -84,9 +82,7 @@ const addCustomTag = (key, value) => {
   $customTagContainer.appendChild(container);
 };
 
-Object.entries(customTags).forEach(([key, value]) =>
-  addCustomTag(key, value)
-);
+Object.entries(customTags).forEach(([key, value]) => addCustomTag(key, value));
 
 $addCustomTag.addEventListener("click", () => addCustomTag("", ""));
 
@@ -105,18 +101,18 @@ const move = (coords, bearing, amountKm) => {
 
   const movedLatitudeRadians = Math.asin(
     Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
-    Math.cos(latitudeRadians) *
-    Math.sin(amountKm / radiusOfEarthKm) *
-    Math.cos(bearingRadians)
+      Math.cos(latitudeRadians) *
+        Math.sin(amountKm / radiusOfEarthKm) *
+        Math.cos(bearingRadians)
   );
   const movedLongitudeRadians =
     longitudeRadians +
     Math.atan2(
       Math.sin(bearingRadians) *
-      Math.sin(amountKm / radiusOfEarthKm) *
-      Math.cos(latitudeRadians),
+        Math.sin(amountKm / radiusOfEarthKm) *
+        Math.cos(latitudeRadians),
       Math.cos(amountKm / radiusOfEarthKm) -
-      Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
+        Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
     );
 
   return {
@@ -125,9 +121,7 @@ const move = (coords, bearing, amountKm) => {
   };
 };
 
-const $currentNumberOrName = document.getElementById(
-  "current-number-or-name"
-);
+const $currentNumberOrName = document.getElementById("current-number-or-name");
 const addresses = [];
 let currentPosition = null;
 let currentOrientation = null;
@@ -178,7 +172,7 @@ let currentOrientation = null;
       longitude: newPosition.longitude,
       numberOrName: numberOrName,
       customTags,
-      direction
+      direction,
     });
 
     $lastAction.textContent = `Added ${direction} ${numberOrName}`;
@@ -272,11 +266,7 @@ const downloadFile = (name, contents, type) => {
 };
 
 const getFormattedDate = () =>
-  new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", "-")
-    .replace(/:/g, "");
+  new Date().toISOString().slice(0, 19).replace("T", "-").replace(/:/g, "");
 
 document.getElementById("done").addEventListener("click", () => {
   if (addresses.length === 0) {

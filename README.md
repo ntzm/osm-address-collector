@@ -12,17 +12,17 @@
 1. On your computer, download the `.osm` file and open it in JOSM or any other editor that supports `.osm` files
    (In JOSM, if you open the `.osm` file then download data, it will merge the layers)
 1. Depending on preferences you can do any of the following:
-    - Merge the generated address nodes with the building areas
-      (in JOSM you can merge by selecting the address node and the building and pressing <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd>)
-    - Leave the address nodes separate to the building areas
-      (useful if there multiple addresses per building or if the building areas don't exist)
+   - Merge the generated address nodes with the building areas
+     (in JOSM you can merge by selecting the address node and the building and pressing <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd>)
+   - Leave the address nodes separate to the building areas
+     (useful if there multiple addresses per building or if the building areas don't exist)
 
 You can use **Pause** at any time to pause the GPS recording.
 
 ## Device Compatibility
 
-|         | Android    | iOS         |
-| ------- | ---------- | ----------- |
-| Chrome  | Yes        | No          |
-| Safari  | N/A        | No          |
-| Firefox | No         | Not tested  |
+|         | Android | iOS        |
+| ------- | ------- | ---------- |
+| Chrome  | Yes     | No         |
+| Safari  | N/A     | No         |
+| Firefox | No      | Not tested |
