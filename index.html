@@ -189,7 +189,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <div class="settings-container" id="custom-tags"></div>
       <button id="add-custom-tag">+</button>
 
-      <a href="https://github.com/ntzm/osm-address-collector" target="_blank">GitHub</a>
+      <a href="https://github.com/ntzm/osm-address-collector" target="_blank"
+        >GitHub</a
+      >
     </div>
 
     <div class="container">
@@ -473,7 +475,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         URL.revokeObjectURL(url);
       };
 
-      const getFormattedDate = () => new Date().toISOString().split("T")[0];
+      const getFormattedDate = () =>
+        new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", "-")
+          .replace(/:/g, "");
 
       const $currentNumberOrName = document.getElementById(
         "current-number-or-name"
