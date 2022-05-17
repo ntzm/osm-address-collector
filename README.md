@@ -46,18 +46,18 @@ You can see the orientation provider as well, this describes the way we get your
 
 ## Device Compatibility
 
-|         | Android | iOS        |
-| ------- | ------- | ---------- |
-| Chrome  | Yes     | Yes        |
-| Safari  | N/A     | Yes*       |
-| Firefox | Kinda** | Not tested |
+|         | Android   | iOS        |
+| ------- | --------- | ---------- |
+| Chrome  | Yes       | Yes        |
+| Safari  | N/A       | Yes\*      |
+| Firefox | Kinda\*\* | Not tested |
 
-### *Troubleshooting iOS
+### \*Troubleshooting iOS
 
 - Ensure that precise location services are enabled for the browser
 - When the site asks for orientation and motion permissions, ALLOW! Otherwise you will have to clear your Safari cache
 
-### **Absolute orientation is not supported
+### \*\*Absolute orientation is not supported
 
 Some browsers don't have a way of accessing absolution orientation of the device so GPS heading will be used instead.
 This isn't ideal as it's much less accurate.

@@ -1,3 +1,5 @@
+const VERSION = "alpha";
+
 const $lastAction = document.getElementById("last-action");
 
 /*
@@ -201,6 +203,7 @@ const $startOrPause = document.getElementById("start-or-pause");
 let started = false;
 let watchId;
 const $accuracy = document.getElementById("accuracy");
+const positions = [];
 
 $startOrPause.addEventListener("click", async () => {
   if (started) {
@@ -212,7 +215,7 @@ $startOrPause.addEventListener("click", async () => {
     return;
   }
 
-  // On iOS Safari you must request permission
+  // On iOS you must request permission
   // You can only request permission after a user action
   if (typeof DeviceOrientationEvent.requestPermission === "function") {
     await DeviceOrientationEvent.requestPermission();
@@ -223,6 +226,13 @@ $startOrPause.addEventListener("click", async () => {
   watchId = navigator.geolocation.watchPosition(
     (position) => {
       currentPosition = position.coords;
+
+      positions.push({
+        latitude: currentPosition.latitude,
+        longitude: currentPosition.longitude,
+        time: new Date(),
+      });
+
       const acc = Math.round(currentPosition.accuracy);
       $accuracy.textContent = `${acc}m`;
 
@@ -285,11 +295,9 @@ DONE
 
 const surveyStart = new Date();
 
-const downloadFile = (name, contents, type) => {
-  const file = new Blob([contents], { type });
-
+const downloadBlob = (name, blob) => {
   const link = document.createElement("a");
-  const url = URL.createObjectURL(file);
+  const url = URL.createObjectURL(blob);
   link.setAttribute("href", url);
   link.setAttribute("download", name);
   link.style.display = "none";
@@ -302,16 +310,11 @@ const downloadFile = (name, contents, type) => {
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace("T", "-").replace(/:/g, "");
 
-document.getElementById("done").addEventListener("click", () => {
-  if (addresses.length === 0) {
-    alert("No addresses recorded");
-    return;
-  }
-
+const getAddressesFile = () => {
   const xml = document.implementation.createDocument("", "", null);
   const osm = xml.createElement("osm");
   osm.setAttribute("version", "0.6");
-  osm.setAttribute("generator", "AddressCollector testing");
+  osm.setAttribute("generator", `OSM Address Collector ${VERSION}`);
 
   addresses.forEach((address, i) => {
     const node = xml.createElement("node");
@@ -352,13 +355,52 @@ document.getElementById("done").addEventListener("click", () => {
 
   xml.appendChild(osm);
 
-  const xmlString = new XMLSerializer().serializeToString(xml);
+  return new XMLSerializer().serializeToString(xml);
+};
 
-  downloadFile(
-    `${getFormattedDate()}.osm`,
-    xmlString,
-    "application/vnd.osm+xml"
-  );
+const getTraceFile = () => {
+  const xml = document.implementation.createDocument("", "", null);
+
+  const gpx = xml.createElement("gpx");
+  gpx.setAttribute("version", "1.1");
+  gpx.setAttribute("creator", `OSM Address Collector ${VERSION}`);
+
+  const trk = xml.createElement("trk");
+  const trkseg = xml.createElement("trkseg");
+
+  positions.forEach((position) => {
+    const trkpt = xml.createElement("trkpt");
+    trkpt.setAttribute("lat", position.latitude);
+    trkpt.setAttribute("lon", position.longitude);
+
+    const time = xml.createElement("time");
+    time.textContent = position.time.toISOString();
+
+    trkpt.appendChild(time);
+    trkseg.appendChild(trkpt);
+  });
+
+  trk.appendChild(trkseg);
+  gpx.appendChild(trk);
+  xml.appendChild(gpx);
+
+  return new XMLSerializer().serializeToString(xml);
+};
+
+document.getElementById("done").addEventListener("click", async () => {
+  if (addresses.length === 0) {
+    alert("No addresses recorded");
+    return;
+  }
+
+  const zip = new JSZip();
+
+  zip.file("addresses.osm", getAddressesFile());
+  zip.file("trace.gpx", getTraceFile());
+
+  const zipFile = await zip.generateAsync({ type: "blob" });
+
+  downloadBlob(`${getFormattedDate()}.zip`, zipFile);
 });
 
 /*
