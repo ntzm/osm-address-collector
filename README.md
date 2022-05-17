@@ -19,6 +19,31 @@
 
 You can use **Pause** at any time to pause the GPS recording.
 
+Satellite icon shows your location accuracy in metres.
+
+Compass icon shows your bearing.
+
+History icon shows your last action.
+
+## Settings
+
+Click the top row with the icons on to open the settings.
+
+Settings are saved in browser local storage so they will be the same when you come back to the site.
+
+Distance - how far to move the address node from your current location (default 10m)
+(e.g. if you press 4 then left arrow, the address node will be 10m to your left)
+
+Custom tags can be added, modified and removed.
+These apply as you are surveying so you can change them halfway through and it will only apply to addresses you add after you change them.
+
+You can see the orientation provider as well, this describes the way we get your current orientation:
+
+- None: no orientation available - you will not be able to record addresses with an orientation
+- GPS heading: the direction you are travelling in between GPS position updates - this isn't super accurate so is a fallback
+- Webkit compass heading: the direction your iOS device is pointing
+- Device orientation: the direction your device is pointing
+
 ## Device Compatibility
 
 |         | Android | iOS        |

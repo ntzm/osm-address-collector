@@ -15,6 +15,12 @@ document.getElementById("close-settings").addEventListener("click", () => {
 });
 
 /*
+SETTINGS - Info
+*/
+
+const $orientationProvider = document.getElementById("orientation-provider");
+
+/*
 SETTINGS - Distance
 */
 
@@ -149,6 +155,12 @@ let currentOrientation = null;
     }
 
     let bearing = currentOrientation;
+
+    if (bearing === null) {
+      alert("No orientation available");
+      return;
+    }
+
     const direction = submit.dataset.direction;
 
     if (direction === "L") {
@@ -190,7 +202,7 @@ let started = false;
 let watchId;
 const $accuracy = document.getElementById("accuracy");
 
-$startOrPause.addEventListener("click", () => {
+$startOrPause.addEventListener("click", async () => {
   if (started) {
     $startOrPause.textContent = "Start";
     navigator.geolocation.clearWatch(watchId);
@@ -200,11 +212,18 @@ $startOrPause.addEventListener("click", () => {
     return;
   }
 
+  // On iOS Safari you must request permission
+  // You can only request permission after a user action
+  if (typeof DeviceOrientationEvent.requestPermission === "function") {
+    await DeviceOrientationEvent.requestPermission();
+  }
+
   $startOrPause.textContent = "Starting";
 
   watchId = navigator.geolocation.watchPosition(
     (position) => {
-      const acc = Math.round(position.coords.accuracy);
+      currentPosition = position.coords;
+      const acc = Math.round(currentPosition.accuracy);
       $accuracy.textContent = `${acc}m`;
 
       $startOrPause.textContent = "Pause";
@@ -218,7 +237,22 @@ $startOrPause.addEventListener("click", () => {
         $accuracy.style.color = "#ff6961";
       }
 
-      currentPosition = position.coords;
+      // If we aren't able to get the orientation from the device, fall back to the heading
+      if (!isOrientationExact) {
+        const heading = currentPosition.heading;
+
+        // Some geolocation methods don't support heading
+        if (heading === null) {
+          return;
+        }
+
+        // If we haven't moved, heading can be NAN
+        if (isNaN(heading)) {
+          return;
+        }
+
+        updateOrientation(heading, "GPS heading", false);
+      }
     },
     (e) => {
       $startOrPause.textContent = "Start";
@@ -341,29 +375,36 @@ ORIENTATION
 
 const $orientation = document.getElementById("orientation");
 const $orientationIcon = document.getElementById("orientation-icon");
+let isOrientationExact = false;
 
 const invertBearing = (bearing) => Math.abs(bearing - 360);
 
-const updateOrientation = (orientation) => {
+const updateOrientation = (orientation, provider, isExact) => {
   currentOrientation = Math.round(orientation);
   $orientation.textContent = `${currentOrientation}°`;
   $orientationIcon.style.transform = `rotate(${invertBearing(
     currentOrientation
   )}deg)`;
+  $orientationProvider.textContent = provider;
+  isOrientationExact = isExact;
 };
 
 window.addEventListener("deviceorientationabsolute", (e) => {
-  updateOrientation(invertBearing(e.alpha));
+  updateOrientation(
+    invertBearing(e.alpha),
+    "Absolute device orientation",
+    true
+  );
 });
 
 const maybeAbsoluteDeviceOrientationHandler = (e) => {
   if (e.webkitCompassHeading) {
-    updateOrientation(e.webkitCompassHeading);
+    updateOrientation(e.webkitCompassHeading, "Webkit compass heading", true);
     return;
   }
 
   if (e.absolute) {
-    updateOrientation(invertBearing(e.alpha));
+    updateOrientation(invertBearing(e.alpha), "Device orientation", true);
     return;
   }
 
