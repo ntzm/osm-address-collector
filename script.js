@@ -358,7 +358,7 @@ const downloadBlob = (name, blob) => {
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace("T", "-").replace(/:/g, "");
 
-const getAddressesFile = () => {
+const getOsmFile = () => {
   const xml = document.implementation.createDocument("", "", null);
   const osm = xml.createElement("osm");
   osm.setAttribute("version", "0.6");
@@ -398,6 +398,21 @@ const getAddressesFile = () => {
       node.appendChild(customTag);
     });
 
+    osm.appendChild(node);
+  });
+
+  notes.forEach((note, i) => {
+    const node = xml.createElement("node");
+    node.setAttribute("id", -surveyStart.getTime() - addresses.length - i);
+    node.setAttribute("version", 1);
+    node.setAttribute("lat", note.latitude);
+    node.setAttribute("lon", note.longitude);
+
+    const tag = xml.createElement("tag");
+    tag.setAttribute("k", "note");
+    tag.setAttribute("v", note.content);
+
+    node.appendChild(tag);
     osm.appendChild(node);
   });
 
@@ -443,7 +458,7 @@ document.getElementById("done").addEventListener("click", async () => {
 
   const zip = new JSZip();
 
-  zip.file("addresses.osm", getAddressesFile());
+  zip.file("data.osm", getOsmFile());
 
   if (recordTrace) {
     zip.file("trace.gpx", getTraceFile());
@@ -555,4 +570,30 @@ $photo.addEventListener("change", () => {
   $photo.value = "";
 
   addAction("+ photo");
+});
+
+/*
+NOTE
+*/
+
+const notes = [];
+const $addNote = document.getElementById("add-note");
+const $noteWriter = document.getElementById("note-writer");
+const $noteContent = document.getElementById("note-content");
+const $saveNote = document.getElementById("save-note");
+
+$addNote.addEventListener("click", () => {
+  $noteWriter.style.display = "flex";
+});
+
+$saveNote.addEventListener("click", () => {
+  notes.push({
+    latitude: currentPosition.latitude,
+    longitude: currentPosition.longitude,
+    content: $noteContent.value,
+  });
+  $noteContent.value = "";
+  $noteWriter.style.display = "none";
+
+  addAction("+ note");
 });

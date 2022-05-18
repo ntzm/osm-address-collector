@@ -92,7 +92,8 @@ html {
   stroke-width: 5px;
 }
 
-#settings {
+#settings,
+#note-writer {
   position: absolute;
   top: 0;
   left: 0;
@@ -145,4 +146,12 @@ html {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+#note-content {
+  height: 100%;
+}
+
+#note-writer {
+  flex-direction: column;
 }
