@@ -487,6 +487,22 @@ document.getElementById("done").addEventListener("click", async () => {
     zip.file(photo.name);
   });
 
+  await Promise.all(
+    audioNotes.map(
+      (audioNote) =>
+        new Promise((resolve) => {
+          const reader = new FileReader();
+
+          reader.addEventListener("load", () => {
+            zip.file("foo.ogg", reader.result);
+            resolve();
+          });
+
+          reader.readAsArrayBuffer(audioNote);
+        })
+    )
+  );
+
   const zipFile = await zip.generateAsync({ type: "blob" });
 
   downloadBlob(`${getFormattedDate()}.zip`, zipFile);
@@ -606,4 +622,48 @@ $saveNote.addEventListener("click", () => {
 $closeNoteWriter.addEventListener("click", () => {
   $noteContent.value = "";
   $noteWriter.style.display = "none";
+});
+
+/*
+AUDIO NOTES
+*/
+
+const $startOrFinishAudioNote = document.getElementById(
+  "start-or-finish-audio-note"
+);
+const audioNotes = [];
+let audioRecording = false;
+let recorder = null;
+
+$startOrFinishAudioNote.addEventListener("click", async () => {
+  if (currentPosition === null) {
+    alert("No GPS");
+    return;
+  }
+
+  if (audioRecording) {
+    recorder.stop();
+
+    $startOrFinishAudioNote.style.background = null;
+    audioRecording = false;
+    return;
+  }
+
+  audioRecording = true;
+  $startOrFinishAudioNote.style.background = "#faa0a0";
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const chunks = [];
+  recorder = new MediaRecorder(stream);
+
+  recorder.addEventListener("dataavailable", (e) => {
+    chunks.push(e.data);
+  });
+
+  recorder.onstop = (e) => {
+    const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+    audioNotes.push(blob);
+  };
+
+  recorder.start();
 });
