@@ -127,11 +127,11 @@ const addCustomTag = (key, value) => {
   keyInput.addEventListener("blur", updateCustomTags);
   valueInput.addEventListener("blur", updateCustomTags);
 
-  container.appendChild(removeButton);
-  container.appendChild(keyInput);
-  container.appendChild(valueInput);
+  container.append(removeButton);
+  container.append(keyInput);
+  container.append(valueInput);
 
-  $customTagContainer.appendChild(container);
+  $customTagContainer.append(container);
 };
 
 Object.entries(customTags).forEach(([key, value]) => addCustomTag(key, value));
@@ -352,7 +352,7 @@ const downloadBlob = (name, blob) => {
   link.setAttribute("href", url);
   link.setAttribute("download", name);
   link.style.display = "none";
-  document.body.appendChild(link);
+  document.body.append(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
@@ -387,7 +387,7 @@ const getOsmFile = () => {
 
     tag.setAttribute("v", numberOrName);
 
-    node.appendChild(tag);
+    node.append(tag);
 
     Object.entries(address.customTags).forEach(([key, value]) => {
       if (value === "") {
@@ -398,10 +398,10 @@ const getOsmFile = () => {
       customTag.setAttribute("k", key);
       customTag.setAttribute("v", value);
 
-      node.appendChild(customTag);
+      node.append(customTag);
     });
 
-    osm.appendChild(node);
+    osm.append(node);
   });
 
   notes.forEach((note, i) => {
@@ -415,11 +415,11 @@ const getOsmFile = () => {
     tag.setAttribute("k", "note");
     tag.setAttribute("v", note.content);
 
-    node.appendChild(tag);
-    osm.appendChild(node);
+    node.append(tag);
+    osm.append(node);
   });
 
-  xml.appendChild(osm);
+  xml.append(osm);
 
   return new XMLSerializer().serializeToString(xml);
 };
@@ -442,13 +442,13 @@ const getTraceFile = () => {
     const time = xml.createElement("time");
     time.textContent = position.time.toISOString();
 
-    trkpt.appendChild(time);
-    trkseg.appendChild(trkpt);
+    trkpt.append(time);
+    trkseg.append(trkpt);
   });
 
-  trk.appendChild(trkseg);
-  gpx.appendChild(trk);
-  xml.appendChild(gpx);
+  trk.append(trkseg);
+  gpx.append(trk);
+  xml.append(gpx);
 
   return new XMLSerializer().serializeToString(xml);
 };
