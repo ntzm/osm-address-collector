@@ -208,6 +208,7 @@ const positions = [];
 $startOrPause.addEventListener("click", async () => {
   if (started) {
     $startOrPause.textContent = "Start";
+    currentPosition = null;
     navigator.geolocation.clearWatch(watchId);
     $accuracy.textContent = "N/A";
     $accuracy.style.color = "#333";
