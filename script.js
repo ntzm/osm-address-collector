@@ -63,6 +63,19 @@ $recordTrace.addEventListener("change", () => {
 });
 
 /*
+SETTINGS - Vibrate
+*/
+
+const $vibrationEnabled = document.getElementById("vibration-enabled");
+let vibrationEnabled = Boolean(localStorage.getItem("vibrationEnabled") ?? "1");
+$vibrationEnabled.checked = vibrationEnabled;
+
+$vibrationEnabled.addEventListener("change", () => {
+  vibrationEnabled = $vibrationEnabled.checked;
+  localStorage.setItem("vibrationEnabled", vibrationEnabled ? "1" : "");
+});
+
+/*
 SETTINGS - Custom tags
 */
 
@@ -188,6 +201,10 @@ let currentOrientation = null;
     if (bearing === null) {
       alert("No orientation available");
       return;
+    }
+
+    if (vibrationEnabled && typeof window.navigator.vibrate === "function") {
+      window.navigator.vibrate(50);
     }
 
     const direction = submit.dataset.direction;
