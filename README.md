@@ -1,15 +1,30 @@
-# OSM Address Collector
+# [OSM Address Collector](https://ntzm.github.io/osm-address-collector/)
+
+An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspired by [Keypad Mapper](https://wiki.openstreetmap.org/wiki/Keypad-Mapper_3)
+
+![](https://user-images.githubusercontent.com/3888578/169166977-0b2674d7-00fc-4ef5-a2a0-7c74f12879c2.png)
+
+## Features
+
+- Easily record building numbers or names as you're walking
+- Supports text, photo and audio notes
+- GPX traces
+- Works offline
+- Customisable tags for address nodes
 
 ## Workflow
+
+(video coming soon)
 
 1. Press **Start**
 1. Navigate to a building that needs a number or name
 1. Enter the number using the keypad or the name device's keyboard
 1. Press the direction key to indicate where the building is location in comparison to the device's orientation
 1. Repeat from step 2 until you have finished your survey
-1. Press **Done** to download the generated `.osm` file
+1. Press **Done** to download the generated `.zip` file
 1. Share this file however you like, such as uploading to cloud storage
-1. On your computer, download the `.osm` file and open it in JOSM or any other editor that supports `.osm` files
+1. On your computer, download the `.zip` file
+1. Unzip the file and open its contents in JOSM or any other editor that supports `.osm`, and optionally `.gpx`, image and audio files
    (In JOSM, if you open the `.osm` file then download data, it will merge the layers)
 1. Depending on preferences you can do any of the following:
    - Merge the generated address nodes with the building areas
