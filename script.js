@@ -649,6 +649,10 @@ $startOrFinishAudioNote.addEventListener("click", async () => {
 
   audioRecording = true;
   $startOrFinishAudioNote.style.background = "#faa0a0";
+  const positionWhenStarted = {
+    latitude: currentPosition.latitude,
+    longitude: currentPosition.longitude,
+  };
 
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const chunks = [];
@@ -660,8 +664,8 @@ $startOrFinishAudioNote.addEventListener("click", async () => {
 
   recorder.onstop = () => {
     audioNotes.push({
-      latitude: currentPosition.latitude,
-      longitude: currentPosition.longitude,
+      latitude: positionWhenStarted.latitude,
+      longitude: positionWhenStarted.longitude,
       audio: new Blob(chunks, { type: "audio/ogg; codecs=opus" }),
     });
 
