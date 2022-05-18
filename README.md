@@ -21,9 +21,13 @@ You can use **Pause** at any time to pause the GPS recording.
 
 Satellite icon shows your location accuracy in metres.
 
-Compass icon shows your bearing.
+History icon shows your last two action.
 
-History icon shows your last action.
+Press the note icon to add a text note.
+
+Press the photo icon to add a photo note.
+
+Press the audio icon to add an audio note.
 
 ## Settings
 
@@ -33,6 +37,10 @@ Settings are saved in browser local storage so they will be the same when you co
 
 Distance - how far to move the address node from your current location (default 10m)
 (e.g. if you press 4 then left arrow, the address node will be 10m to your left)
+
+Record trace - whether or not a GPX file of your movements is generated
+
+Vibrate - does your device vibrate on certain events
 
 Custom tags can be added, modified and removed.
 These apply as you are surveying so you can change them halfway through and it will only apply to addresses you add after you change them.
@@ -44,21 +52,29 @@ You can see the orientation provider as well, this describes the way we get your
 - Webkit compass heading: the direction your iOS device is pointing
 - Device orientation: the direction your device is pointing
 
+You can also see your current orientation according to the orientation provider.
+
 ## Device Compatibility
 
-|         | Android   | iOS        |
-| ------- | --------- | ---------- |
-| Chrome  | Yes       | Yes        |
-| Safari  | N/A       | Yes\*      |
-| Firefox | Kinda\*\* | Not tested |
+Y = Yes
 
-### \*Troubleshooting iOS
+N = No
+
+NT = Not tested
+
+| | Chrome Android | Everything else |
+| GPS | Y | NT |
+| Accurate orientation | Y | NT |
+| Photo | Y | NT |
+| Audio notes | Y | NT |
+
+### iOS
 
 - Ensure that precise location services are enabled for the browser
 - When the site asks for orientation and motion permissions, ALLOW! Otherwise you will have to clear your Safari cache
 
-### \*\*Absolute orientation is not supported
+### Absolute orientation is not supported sometimes
 
-Some browsers don't have a way of accessing absolution orientation of the device so GPS heading will be used instead.
+Some browsers (Firefox) don't have a way of accessing absolution orientation of the device so GPS heading will be used instead.
 This isn't ideal as it's much less accurate.
 Please consider using a different browser for this application.

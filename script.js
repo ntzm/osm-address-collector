@@ -666,7 +666,7 @@ $startOrFinishAudioNote.addEventListener("click", async () => {
     });
 
     // Stops the recording icon showing in browser tab
-    stream.getTracks().forEach(track => track.stop());
+    stream.getTracks().forEach((track) => track.stop());
 
     addAction("+ audio note");
   };
