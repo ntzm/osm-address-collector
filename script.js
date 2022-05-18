@@ -398,6 +398,26 @@ document.getElementById("done").addEventListener("click", async () => {
   zip.file("addresses.osm", getAddressesFile());
   zip.file("trace.gpx", getTraceFile());
 
+  await Promise.all(
+    photos.map(
+      (photo) =>
+        new Promise((resolve) => {
+          const reader = new FileReader();
+
+          reader.addEventListener("load", () => {
+            zip.file(photo.name, reader.result);
+            resolve();
+          });
+
+          reader.readAsArrayBuffer(photo);
+        })
+    )
+  );
+
+  photos.forEach((photo) => {
+    zip.file(photo.name);
+  });
+
   const zipFile = await zip.generateAsync({ type: "blob" });
 
   downloadBlob(`${getFormattedDate()}.zip`, zipFile);
@@ -470,4 +490,16 @@ document.getElementById("undo").addEventListener("click", () => {
   if (address !== undefined) {
     $lastAction.textContent = `Undid ${address.direction} ${address.numberOrName}`;
   }
+});
+
+/*
+PHOTO
+*/
+
+const photos = [];
+const $photo = document.getElementById("photo");
+
+$photo.addEventListener("change", () => {
+  photos.push($photo.files[0]);
+  $photo.value = "";
 });

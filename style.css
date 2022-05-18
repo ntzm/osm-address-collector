@@ -8,7 +8,8 @@ html {
   color: #333;
 }
 
-.container button {
+.container button,
+#photo-button {
   font-size: 24pt;
   width: 100%;
   height: 100%;
@@ -16,6 +17,13 @@ html {
   background: #eee;
   color: #333;
   font-weight: bold;
+  padding: 0;
+}
+
+#photo-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #current-number-or-name {
@@ -128,4 +136,8 @@ html {
 .custom-tag input {
   width: 100%;
   margin-left: 5px;
+}
+
+#photo {
+  display: none;
 }
