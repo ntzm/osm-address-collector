@@ -204,7 +204,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <div class="row">
         <button class="submit" data-direction="L">
           <svg
-            class="submit-icon"
+            class="button-icon"
             transform="rotate(-90)"
             width="80"
             height="80"
@@ -228,7 +228,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         </button>
         <button class="submit" data-direction="F">
           <svg
-            class="submit-icon"
+            class="button-icon"
             width="80"
             height="80"
             viewBox="0 0 80 80"
@@ -251,7 +251,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         </button>
         <button class="submit" data-direction="R">
           <svg
-            class="submit-icon"
+            class="button-icon"
             transform="rotate(90)"
             width="80"
             height="80"
@@ -296,7 +296,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <div class="row">
         <button id="start-or-pause">Start</button>
         <button class="append" data-number="0">0</button>
-        <button id="clear">Clear</button>
+        <button id="clear">
+          <svg
+            class="button-icon"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M55.5564 55.6693L24.4437 24.5566"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M24.4436 55.6693L55.5563 24.5566"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
       </div>
 
       <div class="row">
@@ -307,10 +329,53 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             accept="image/*"
             id="photo"
           />
-          Photo
+          <svg
+            class="button-icon"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M27.1603 23.6616L29.3479 17.9465C29.6442 17.1726 30.387 16.6615 31.2157 16.6615L49.6241 16.6615C50.4528 16.6615 51.1957 17.1726 51.4919 17.9465L53.6795 23.6616H65C66.6569 23.6616 68 25.0047 68 26.6616V60.6616C68 62.3184 66.6569 63.6616 65 63.6616H15C13.3431 63.6616 12 62.3184 12 60.6616V26.6616C12 25.0047 13.3431 23.6616 15 23.6616H27.1603Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M33.9378 32.1616C37.6891 29.9957 42.3109 29.9957 46.0622 32.1616C49.8135 34.3274 52.1244 38.3299 52.1244 42.6616C52.1244 46.9932 49.8135 50.9957 46.0622 53.1616C42.3109 55.3274 37.6891 55.3274 33.9378 53.1616C30.1865 50.9957 27.8756 46.9932 27.8756 42.6616C27.8756 38.3299 30.1865 34.3274 33.9378 32.1616Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </label>
         <button id="done">Done</button>
-        <button id="undo">Undo</button>
+        <button id="undo">
+          <svg
+            class="button-icon"
+            transform="scale(-1, 1)"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M36.9629 14.3008C34.5917 14.5721 32.2491 15.1726 30.0048 16.1022C23.6662 18.7277 18.6303 23.7637 16.0048 30.1022C13.3793 36.4407 13.3793 43.5626 16.0048 49.9012C18.6303 56.2397 23.6662 61.2757 30.0048 63.9012C36.3433 66.5267 43.4652 66.5267 49.8038 63.9012C56.1423 61.2757 61.1783 56.2397 63.8038 49.9012L64.1755 49.0037C64.3357 48.6171 64.4851 48.2273 64.6237 47.8347"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M36.98 14.2984C37.01 14.2949 37.0401 14.2916 37.0702 14.2883M37.0703 6.5961V23.4037C37.0703 25.0998 39.1209 25.9492 40.3202 24.7499L47.9489 17.1212C49.1205 15.9497 49.1205 14.0502 47.9489 12.8786L40.3203 5.24991C39.1209 4.05057 37.0703 4.89999 37.0703 6.5961Z"
+              stroke="#333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
       </div>
     </div>
 
