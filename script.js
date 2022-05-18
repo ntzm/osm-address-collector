@@ -501,7 +501,6 @@ ORIENTATION
 */
 
 const $orientation = document.getElementById("orientation");
-const $orientationIcon = document.getElementById("orientation-icon");
 let isOrientationExact = false;
 
 const invertBearing = (bearing) => Math.abs(bearing - 360);
@@ -509,9 +508,6 @@ const invertBearing = (bearing) => Math.abs(bearing - 360);
 const updateOrientation = (orientation, provider, isExact) => {
   currentOrientation = Math.round(orientation);
   $orientation.textContent = `${currentOrientation}°`;
-  $orientationIcon.style.transform = `rotate(${invertBearing(
-    currentOrientation
-  )}deg)`;
   $orientationProvider.textContent = provider;
   isOrientationExact = isExact;
 };
