@@ -493,12 +493,15 @@ document.getElementById("done").addEventListener("click", async () => {
         new Promise((resolve) => {
           const reader = new FileReader();
 
+          const fileName =
+            `${audioNote.latitude}-${audioNote.longitude}`.replace(/\./g, "_");
+
           reader.addEventListener("load", () => {
-            zip.file("foo.ogg", reader.result);
+            zip.file(`${fileName}.ogg`, reader.result);
             resolve();
           });
 
-          reader.readAsArrayBuffer(audioNote);
+          reader.readAsArrayBuffer(audioNote.audio);
         })
     )
   );
@@ -660,9 +663,14 @@ $startOrFinishAudioNote.addEventListener("click", async () => {
     chunks.push(e.data);
   });
 
-  recorder.onstop = (e) => {
-    const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
-    audioNotes.push(blob);
+  recorder.onstop = () => {
+    audioNotes.push({
+      latitude: currentPosition.latitude,
+      longitude: currentPosition.longitude,
+      audio: new Blob(chunks, { type: "audio/ogg; codecs=opus" }),
+    });
+
+    addAction("+ audio note");
   };
 
   recorder.start();
