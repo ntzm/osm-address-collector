@@ -454,11 +454,6 @@ const getTraceFile = () => {
 };
 
 document.getElementById("done").addEventListener("click", async () => {
-  if (addresses.length === 0) {
-    alert("No addresses recorded");
-    return;
-  }
-
   const zip = new JSZip();
 
   zip.file("data.osm", getOsmFile());
