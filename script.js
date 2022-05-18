@@ -670,6 +670,9 @@ $startOrFinishAudioNote.addEventListener("click", async () => {
       audio: new Blob(chunks, { type: "audio/ogg; codecs=opus" }),
     });
 
+    // Stops the recording icon showing in browser tab
+    stream.getTracks().forEach(track => track.stop());
+
     addAction("+ audio note");
   };
 
