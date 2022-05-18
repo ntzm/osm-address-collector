@@ -62,11 +62,12 @@ N = No
 
 NT = Not tested
 
-| | Chrome Android | Everything else |
-| GPS | Y | NT |
-| Accurate orientation | Y | NT |
-| Photo | Y | NT |
-| Audio notes | Y | NT |
+|                      | Chrome Android | Everything else |
+| -------------------- | -------------- | --------------- |
+| GPS                  | Y              | NT              |
+| Accurate orientation | Y              | NT              |
+| Photo                | Y              | NT              |
+| Audio notes          | Y              | NT              |
 
 ### iOS
 
