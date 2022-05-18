@@ -52,6 +52,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <div class="settings-container" id="built-in-settings">
         <label for="distance">Distance (m)</label>
         <input type="number" id="distance" />
+
+        <label for="record-trace">Record trace</label>
+
+        <input type="checkbox" id="record-trace" />
       </div>
 
       <h2>Custom tags</h2>
@@ -193,7 +197,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
               stroke-linejoin="round"
             />
           </svg>
-          <span id="last-action">N/A</span>
+          <ul id="history"></ul>
         </div>
       </div>
 

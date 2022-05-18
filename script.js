@@ -1,6 +1,20 @@
 const VERSION = "alpha";
 
-const $lastAction = document.getElementById("last-action");
+/*
+HISTORY
+*/
+
+const $history = document.getElementById("history");
+
+const addAction = (action) => {
+  const item = document.createElement("li");
+  item.textContent = action;
+  $history.prepend(item);
+
+  if ($history.children.length > 2) {
+    $history.removeChild($history.lastChild);
+  }
+};
 
 /*
 SETTINGS
@@ -33,6 +47,19 @@ $distance.value = distance;
 $distance.addEventListener("blur", () => {
   distance = Number($distance.value);
   localStorage.setItem("distance", distance);
+});
+
+/*
+SETTINGS - Record trace
+*/
+
+const $recordTrace = document.getElementById("record-trace");
+let recordTrace = Boolean(localStorage.getItem("recordTrace") ?? "1");
+$recordTrace.checked = recordTrace;
+
+$recordTrace.addEventListener("change", () => {
+  recordTrace = $recordTrace.checked;
+  localStorage.setItem("recordTrace", recordTrace ? "1" : "");
 });
 
 /*
@@ -189,7 +216,7 @@ let currentOrientation = null;
       direction,
     });
 
-    $lastAction.textContent = `Added ${direction} ${numberOrName}`;
+    addAction(`+ ${direction} ${numberOrName}`);
 
     $currentNumberOrName.value = "";
   });
@@ -213,6 +240,7 @@ $startOrPause.addEventListener("click", async () => {
     $accuracy.textContent = "N/A";
     $accuracy.style.color = "#333";
     started = false;
+    addAction("Paused");
     return;
   }
 
@@ -226,6 +254,8 @@ $startOrPause.addEventListener("click", async () => {
 
   watchId = navigator.geolocation.watchPosition(
     (position) => {
+      addAction("Started");
+
       currentPosition = position.coords;
 
       positions.push({
@@ -397,7 +427,10 @@ document.getElementById("done").addEventListener("click", async () => {
   const zip = new JSZip();
 
   zip.file("addresses.osm", getAddressesFile());
-  zip.file("trace.gpx", getTraceFile());
+
+  if (recordTrace) {
+    zip.file("trace.gpx", getTraceFile());
+  }
 
   await Promise.all(
     photos.map(
@@ -489,7 +522,7 @@ UNDO
 document.getElementById("undo").addEventListener("click", () => {
   const address = addresses.pop();
   if (address !== undefined) {
-    $lastAction.textContent = `Undid ${address.direction} ${address.numberOrName}`;
+    addAction(`- ${address.direction} ${address.numberOrName}`);
   }
 });
 
@@ -503,4 +536,6 @@ const $photo = document.getElementById("photo");
 $photo.addEventListener("change", () => {
   photos.push($photo.files[0]);
   $photo.value = "";
+
+  addAction("+ photo");
 });
