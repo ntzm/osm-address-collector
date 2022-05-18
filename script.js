@@ -268,11 +268,10 @@ $startOrPause.addEventListener("click", async () => {
   }
 
   $startOrPause.textContent = "Starting";
+  addAction("Started");
 
   watchId = navigator.geolocation.watchPosition(
     (position) => {
-      addAction("Started");
-
       currentPosition = position.coords;
 
       positions.push({
