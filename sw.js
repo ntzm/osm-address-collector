@@ -1,14 +1,9 @@
-const CACHE_NAME = "OSMAddressCollector";
+importScripts(
+  "https://storage.googleapis.com/workbox-cdn/releases/6.5.2/workbox-sw.js"
+);
 
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.open(CACHE_NAME).then((cache) =>
-      fetch(event.request.url)
-        .then((fetchedResponse) => {
-          cache.put(event.request, fetchedResponse.clone());
-          return fetchedResponse;
-        })
-        .catch(() => cache.match(event.request.url))
-    )
-  );
-});
+workbox.routing.registerRoute(
+  new workbox.routing.NavigationRoute(
+    new workbox.strategies.NetworkFirst({ networkTimeoutSeconds: 5 })
+  )
+);
