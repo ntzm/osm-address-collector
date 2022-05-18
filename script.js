@@ -576,8 +576,14 @@ const $addNote = document.getElementById("add-note");
 const $noteWriter = document.getElementById("note-writer");
 const $noteContent = document.getElementById("note-content");
 const $saveNote = document.getElementById("save-note");
+const $closeNoteWriter = document.getElementById("close-note-writer");
 
 $addNote.addEventListener("click", () => {
+  if (currentPosition === null) {
+    alert("No GPS");
+    return;
+  }
+
   $noteWriter.style.display = "flex";
 });
 
@@ -591,4 +597,9 @@ $saveNote.addEventListener("click", () => {
   $noteWriter.style.display = "none";
 
   addAction("+ note");
+});
+
+$closeNoteWriter.addEventListener("click", () => {
+  $noteContent.value = "";
+  $noteWriter.style.display = "none";
 });
