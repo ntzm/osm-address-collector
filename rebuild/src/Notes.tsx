@@ -11,9 +11,11 @@ import {
   Button,
 } from "@mui/material";
 import React from "react";
+import { ActionType } from "./enums";
+import { AddTextNote, Action } from "./types";
 
 interface NotesProps {
-  onTextNoteAdded: (content: string) => void;
+  onAction: (action: Action) => void;
 }
 
 function Notes(props: NotesProps) {
@@ -21,7 +23,12 @@ function Notes(props: NotesProps) {
   const [currentTextNoteContent, setCurrentTextNotContent] = React.useState("");
 
   function addNote() {
-    props.onTextNoteAdded(currentTextNoteContent);
+    const addTextNote: AddTextNote = {
+      type: ActionType.AddTextNote,
+      content: currentTextNoteContent,
+    };
+
+    props.onAction(addTextNote);
     setCurrentTextNotContent("");
     setTextNoteDialogOpen(false);
   }

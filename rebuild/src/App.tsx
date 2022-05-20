@@ -11,12 +11,13 @@ import Keypad from "./Keypad";
 import MenuBar from "./MenuBar";
 import Notes from "./Notes";
 import PositionAndOrientation from "./LocationAndOrientation";
-import { Position, Settings } from "./types";
+import { ActionRecord, Position, Settings, Action } from "./types";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import SettingsPage from "./Settings";
 import CustomTags from "./CustomTags";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import SettingsContext from "./SettingsContext";
+import { ActionType } from "./enums";
 
 function useStickyState<T>(
   defaultValue: T,
@@ -72,12 +73,25 @@ function App() {
 }
 
 function Main() {
-  const notes: string[] = [];
+  const actions: ActionRecord[] = [];
 
-  function addNote(content: string) {
-    notes.push(content);
+  const [latestPosition, setLatestPosition] = useState<Position>({
+    latitutde: 0,
+    longitude: 0,
+  });
 
-    console.log(notes);
+  function handleAction(action: Action) {
+    if (action.type === ActionType.NewPosition) {
+      setLatestPosition(action.position);
+    }
+
+    const record: ActionRecord = {
+      time: new Date(),
+      position: latestPosition,
+      action,
+    };
+
+    actions.push(record);
   }
 
   function updatePosition(position: Position) {
@@ -91,7 +105,7 @@ function Main() {
       <Box mt={10}>
         <Keypad />
         <PositionAndOrientation onNewPosition={updatePosition} />
-        <Notes onTextNoteAdded={addNote} />
+        <Notes onAction={handleAction} />
       </Box>
     </Container>
   );

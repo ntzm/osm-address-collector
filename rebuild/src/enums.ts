@@ -3,3 +3,9 @@ export enum Direction {
   Forward,
   Right,
 }
+
+export enum ActionType {
+  AddAddress,
+  AddTextNote,
+  NewPosition,
+}

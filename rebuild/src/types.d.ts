@@ -1,3 +1,5 @@
+import { ActionType, Direction } from "./enums";
+
 export interface Position {
   latitutde: number;
   longitude: number;
@@ -22,3 +24,31 @@ export interface Settings {
 export interface ContextSettings extends Settings {
   setSettings: (settings: Settings) => void;
 }
+
+export interface ActionRecord {
+  time: Date;
+  position: Position;
+  action: Action;
+}
+
+interface BaseAction {
+  type: ActionType;
+}
+
+export interface AddAddress extends BaseAction {
+  type: ActionType.AddAddress;
+  houseNameOrNumber: string;
+  direction: Direction;
+}
+
+export interface AddTextNote extends BaseAction {
+  type: ActionType.AddTextNote;
+  content: string;
+}
+
+export interface NewPosition extends BaseAction {
+  type: ActionType.NewPosition;
+  position: Position;
+}
+
+export type Action = AddAddress | AddTextNote | NewPosition;
