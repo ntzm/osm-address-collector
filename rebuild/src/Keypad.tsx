@@ -3,10 +3,15 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import KeypadNumber from "./KeypadNumber";
 import ThrowButton from "./ThrowButton";
-import { Direction } from "./enums";
+import { Direction, EventType } from "./enums";
 import SettingsContext from "./SettingsContext";
+import { AddAddress, Event } from "./types";
 
-function Keypad() {
+interface KeypadProps {
+  onEvent: (event: Event) => void;
+}
+
+function Keypad(props: KeypadProps) {
   const [numberOrName, setNumberOrName] = useState("");
   const settings = useContext(SettingsContext);
 
@@ -14,6 +19,17 @@ function Keypad() {
     if (settings.vibrate) {
       navigator.vibrate(10);
     }
+  }
+
+  function addAddress(direction: Direction) {
+    const addAddress: AddAddress = {
+      type: EventType.AddAddress,
+      houseNameOrNumber: numberOrName,
+      direction,
+    };
+
+    props.onEvent(addAddress);
+    setNumberOrName("");
   }
 
   function appendNumber(n: number) {
@@ -44,13 +60,13 @@ function Keypad() {
       </Grid>
       <Grid container item spacing={1}>
         <Grid item xs>
-          <ThrowButton direction={Direction.Left} />
+          <ThrowButton direction={Direction.Left} onClick={addAddress} />
         </Grid>
         <Grid item xs>
-          <ThrowButton direction={Direction.Forward} />
+          <ThrowButton direction={Direction.Forward} onClick={addAddress} />
         </Grid>
         <Grid item xs>
-          <ThrowButton direction={Direction.Right} />
+          <ThrowButton direction={Direction.Right} onClick={addAddress} />
         </Grid>
       </Grid>
       <Grid container item spacing={1}>

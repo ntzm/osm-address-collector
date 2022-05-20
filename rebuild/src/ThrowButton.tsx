@@ -4,6 +4,7 @@ import { Direction } from "./enums";
 
 interface ThrowButtonProps {
   direction: Direction;
+  onClick: (direction: Direction) => void;
 }
 
 const directionIconMap = {
@@ -18,6 +19,7 @@ function ThrowButton(props: ThrowButtonProps) {
       variant="text"
       fullWidth={true}
       sx={{ height: 80, fontSize: "2rem", color: "text.secondary" }}
+      onClick={() => props.onClick(props.direction)}
     >
       {directionIconMap[props.direction]}
     </Button>

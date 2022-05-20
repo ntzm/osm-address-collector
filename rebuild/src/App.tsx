@@ -91,6 +91,8 @@ function Main() {
       event: action,
     };
 
+    console.log(record);
+
     actions.push(record);
   }
 
@@ -103,7 +105,7 @@ function Main() {
       <MenuBar />
 
       <Box mt={10}>
-        <Keypad />
+        <Keypad onEvent={handleEvent} />
         <PositionAndOrientation onNewPosition={updatePosition} />
         <Notes onEvent={handleEvent} />
       </Box>
