@@ -1,0 +1,27 @@
+import { ArrowBack, ArrowForward, ArrowUpward } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import { Direction } from "./enums";
+
+interface ThrowButtonProps {
+  direction: Direction;
+}
+
+const directionIconMap = {
+  [Direction.Left]: <ArrowBack fontSize="inherit" />,
+  [Direction.Forward]: <ArrowUpward fontSize="inherit" />,
+  [Direction.Right]: <ArrowForward fontSize="inherit" />,
+};
+
+function ThrowButton(props: ThrowButtonProps) {
+  return (
+    <Button
+      variant="text"
+      fullWidth={true}
+      sx={{ height: 80, fontSize: "2rem", color: "text.secondary" }}
+    >
+      {directionIconMap[props.direction]}
+    </Button>
+  );
+}
+
+export default ThrowButton;
