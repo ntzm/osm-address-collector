@@ -11,7 +11,7 @@ import Keypad from "./Keypad";
 import MenuBar from "./MenuBar";
 import Notes from "./Notes";
 import PositionAndOrientation from "./LocationAndOrientation";
-import { EventRecord, Position, Settings, Event } from "./types";
+import { EventRecord, Position, Settings, Event, CustomTag } from "./types";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import SettingsPage from "./Settings";
 import CustomTags from "./CustomTags";
@@ -46,6 +46,31 @@ function App() {
     "settings"
   );
 
+  const [customTags, setCustomTags] = useStickyState<CustomTag[]>(
+    [],
+    "customTags"
+  );
+
+  function addCustomTag(tag: CustomTag) {
+    setCustomTags(customTags.concat(tag));
+  }
+
+  function changeCustomTagKey(key: string, id: number) {
+    const newTags = [...customTags];
+    newTags[id].key = key;
+    setCustomTags(newTags);
+  }
+
+  function changeCustomTagValue(value: string, id: number) {
+    const newTags = [...customTags];
+    newTags[id].value = value;
+    setCustomTags(newTags);
+  }
+
+  function deleteCustomTag(id: number) {
+    setCustomTags(customTags.filter((_, i) => i !== id));
+  }
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -62,9 +87,23 @@ function App() {
         <CssBaseline />
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Main />} />
+            <Route
+              path="/"
+              element={<Main customTagCount={customTags.length} />}
+            />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/custom-tags" element={<CustomTags />} />
+            <Route
+              path="/custom-tags"
+              element={
+                <CustomTags
+                  tags={customTags}
+                  onAdd={addCustomTag}
+                  onChangeKey={changeCustomTagKey}
+                  onChangeValue={changeCustomTagValue}
+                  onDelete={deleteCustomTag}
+                />
+              }
+            />
           </Routes>
         </HashRouter>
       </ThemeProvider>
@@ -72,7 +111,11 @@ function App() {
   );
 }
 
-function Main() {
+interface MainProps {
+  customTagCount: number;
+}
+
+function Main(props: MainProps) {
   const actions: EventRecord[] = [];
 
   const [latestPosition, setLatestPosition] = useState<Position>({
@@ -102,7 +145,7 @@ function Main() {
 
   return (
     <Container maxWidth="sm">
-      <MenuBar />
+      <MenuBar customTagCount={props.customTagCount} />
 
       <Box mt={10}>
         <Keypad onEvent={handleEvent} />

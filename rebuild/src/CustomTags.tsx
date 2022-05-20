@@ -11,35 +11,18 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CustomTag } from "./types";
 
-function CustomTags() {
-  const [tags, setTags] = useState<CustomTag[]>([]);
+interface CustomTagsProps {
+  tags: CustomTag[];
+  onAdd: (customTag: CustomTag) => void;
+  onChangeKey: (key: string, id: number) => void;
+  onChangeValue: (value: string, id: number) => void;
+  onDelete: (id: number) => void;
+}
 
-  function addEmptyTag() {
-    setTags(tags.concat({ key: "", value: "" }));
-  }
-
-  function deleteTag(id: number) {
-    setTags(tags.filter((_, i) => i !== id));
-  }
-
-  function updateKey(key: string, id: number) {
-    const newTags = [...tags];
-    newTags[id].key = key;
-    setTags(newTags);
-
-    // todo: warn on duplicate key
-  }
-
-  function updateValue(value: string, id: number) {
-    const newTags = [...tags];
-    newTags[id].value = value;
-    setTags(newTags);
-  }
-
+function CustomTags(props: CustomTagsProps) {
   return (
     <Container maxWidth="sm">
       <AppBar color="default">
@@ -61,7 +44,7 @@ function CustomTags() {
       </AppBar>
       <Box mt={10}>
         <List>
-          {tags.map((tag, i) => (
+          {props.tags.map((tag, i) => (
             <ListItem key={`custom-tag-${i}`}>
               <Grid container spacing={1}>
                 <Grid item xs>
@@ -70,7 +53,7 @@ function CustomTags() {
                     size="small"
                     autoCapitalize="no"
                     value={tag.key}
-                    onChange={(e) => updateKey(e.target.value, i)}
+                    onChange={(e) => props.onChangeKey(e.target.value, i)}
                   />
                 </Grid>
                 <Grid item xs>
@@ -78,11 +61,11 @@ function CustomTags() {
                     label="Value"
                     size="small"
                     value={tag.value}
-                    onChange={(e) => updateValue(e.target.value, i)}
+                    onChange={(e) => props.onChangeValue(e.target.value, i)}
                   />
                 </Grid>
                 <Grid item>
-                  <IconButton onClick={() => deleteTag(i)}>
+                  <IconButton onClick={() => props.onDelete(i)}>
                     <Delete />
                   </IconButton>
                 </Grid>
@@ -90,7 +73,7 @@ function CustomTags() {
             </ListItem>
           ))}
         </List>
-        <IconButton onClick={addEmptyTag}>
+        <IconButton onClick={() => props.onAdd({ key: "", value: "" })}>
           <Add />
         </IconButton>
       </Box>

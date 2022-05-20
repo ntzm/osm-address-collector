@@ -59,7 +59,11 @@ function ListItemLink(props: ListItemLinkProps) {
   );
 }
 
-function MenuBar() {
+interface MenuBarProps {
+  customTagCount: number;
+}
+
+function MenuBar(props: MenuBarProps) {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -106,7 +110,7 @@ function MenuBar() {
             primary="Custom tags"
             icon={
               <ListItemIcon>
-                <Badge badgeContent="0" color="primary">
+                <Badge badgeContent={props.customTagCount} color="primary">
                   <LocalOffer />
                 </Badge>
               </ListItemIcon>
