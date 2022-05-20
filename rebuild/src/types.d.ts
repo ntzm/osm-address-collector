@@ -1,4 +1,4 @@
-import { ActionType, Direction } from "./enums";
+import { EventType, Direction } from "./enums";
 
 export interface Position {
   latitutde: number;
@@ -25,30 +25,30 @@ export interface ContextSettings extends Settings {
   setSettings: (settings: Settings) => void;
 }
 
-export interface ActionRecord {
+export interface EventRecord {
   time: Date;
   position: Position;
-  action: Action;
+  event: Event;
 }
 
-interface BaseAction {
-  type: ActionType;
+interface BaseEvent {
+  type: EventType;
 }
 
-export interface AddAddress extends BaseAction {
-  type: ActionType.AddAddress;
+export interface AddAddress extends BaseEvent {
+  type: EventType.AddAddress;
   houseNameOrNumber: string;
   direction: Direction;
 }
 
-export interface AddTextNote extends BaseAction {
-  type: ActionType.AddTextNote;
+export interface AddTextNote extends BaseEvent {
+  type: EventType.AddTextNote;
   content: string;
 }
 
-export interface NewPosition extends BaseAction {
-  type: ActionType.NewPosition;
+export interface NewPosition extends BaseEvent {
+  type: EventType.NewPosition;
   position: Position;
 }
 
-export type Action = AddAddress | AddTextNote | NewPosition;
+export type Event = AddAddress | AddTextNote | NewPosition;

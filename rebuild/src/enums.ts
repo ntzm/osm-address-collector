@@ -4,7 +4,7 @@ export enum Direction {
   Right,
 }
 
-export enum ActionType {
+export enum EventType {
   AddAddress,
   AddTextNote,
   NewPosition,
