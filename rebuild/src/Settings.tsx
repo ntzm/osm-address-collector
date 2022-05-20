@@ -22,20 +22,15 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Settings } from "./types";
+import SettingsContext from "./SettingsContext";
 
 function SettingsPage() {
-  const [settings, setSettings] = useState<Settings>({
-    throwDistance: 10,
-    vibrate: true,
-    recordTrace: true,
-    darkMode: false,
-  });
+  const settings = useContext(SettingsContext);
 
   function updateThrowDistance(newThrowDistance: number) {
-    setSettings({
+    settings.setSettings({
       ...settings,
       throwDistance: newThrowDistance,
     });
@@ -46,21 +41,21 @@ function SettingsPage() {
       navigator.vibrate(10);
     }
 
-    setSettings({
+    settings.setSettings({
       ...settings,
       vibrate: !settings.vibrate,
     });
   }
 
   function toggleRecordTrace() {
-    setSettings({
+    settings.setSettings({
       ...settings,
       recordTrace: !settings.recordTrace,
     });
   }
 
   function toggleDarkMode() {
-    setSettings({
+    settings.setSettings({
       ...settings,
       darkMode: !settings.darkMode,
     });

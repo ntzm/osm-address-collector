@@ -1,25 +1,33 @@
 import { BackspaceOutlined, Clear } from "@mui/icons-material";
 import { Button, Grid, TextField } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import KeypadNumber from "./KeypadNumber";
 import ThrowButton from "./ThrowButton";
 import { Direction } from "./enums";
+import SettingsContext from "./SettingsContext";
 
 function Keypad() {
   const [numberOrName, setNumberOrName] = useState("");
+  const settings = useContext(SettingsContext);
+
+  function vibrate() {
+    if (settings.vibrate) {
+      navigator.vibrate(10);
+    }
+  }
 
   function appendNumber(n: number) {
-    navigator.vibrate(10);
+    vibrate();
     setNumberOrName(numberOrName + String(n));
   }
 
   function clear() {
-    navigator.vibrate(10);
+    vibrate();
     setNumberOrName("");
   }
 
   function backspace() {
-    navigator.vibrate(10);
+    vibrate();
     setNumberOrName(numberOrName.slice(0, -1));
   }
 

@@ -18,3 +18,7 @@ export interface Settings {
   recordTrace: boolean;
   darkMode: boolean;
 }
+
+export interface ContextSettings extends Settings {
+  setSettings: (settings: Settings) => void;
+}
