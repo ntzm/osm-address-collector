@@ -1,4 +1,11 @@
-import { Help, LocalOffer, Menu, Settings } from "@mui/icons-material";
+import {
+  Download,
+  Help,
+  LocalOffer,
+  Menu,
+  PlayArrow,
+  Settings,
+} from "@mui/icons-material";
 import {
   AppBar,
   Toolbar,
@@ -11,6 +18,7 @@ import {
   ListItemText,
   Badge,
   ListItem,
+  Divider,
 } from "@mui/material";
 import React from "react";
 import { useState } from "react";
@@ -72,7 +80,26 @@ function MenuBar() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
+      <Drawer
+        PaperProps={{ sx: { minWidth: "75%" } }}
+        open={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <List>
+          <ListItemButton>
+            <ListItemIcon>
+              <PlayArrow />
+            </ListItemIcon>
+            <ListItemText primary="Start" />
+          </ListItemButton>
+          <ListItemButton>
+            <ListItemIcon>
+              <Download />
+            </ListItemIcon>
+            <ListItemText primary="Complete" />
+          </ListItemButton>
+        </List>
+        <Divider light />
         <List>
           <ListItemLink
             to="/custom-tags"
