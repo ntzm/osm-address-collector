@@ -12,8 +12,44 @@ import {
   Badge,
   ListItem,
 } from "@mui/material";
+import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from "react-router-dom";
+
+interface ListItemLinkProps {
+  icon?: React.ReactElement;
+  primary: string;
+  to: string;
+}
+
+// copied from docs - seems like a bad hack
+function ListItemLink(props: ListItemLinkProps) {
+  const { icon, primary, to } = props;
+
+  const renderLink = React.useMemo(
+    () =>
+      React.forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, "to">>(
+        function Link(itemProps, ref) {
+          return (
+            <RouterLink to={to} ref={ref} {...itemProps} role={undefined} />
+          );
+        }
+      ),
+    [to]
+  );
+
+  return (
+    <li>
+      <ListItem button component={renderLink}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
+}
 
 function MenuBar() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -38,20 +74,26 @@ function MenuBar() {
       </AppBar>
       <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
         <List>
-          <ListItem component={Link} to="/custom-tags">
-            <ListItemIcon>
-              <Badge badgeContent="0" color="primary">
-                <LocalOffer />
-              </Badge>
-            </ListItemIcon>
-            <ListItemText primary="Custom tags" />
-          </ListItem>
-          <ListItem component={Link} to="/settings">
-            <ListItemIcon>
-              <Settings />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
+          <ListItemLink
+            to="/custom-tags"
+            primary="Custom tags"
+            icon={
+              <ListItemIcon>
+                <Badge badgeContent="0" color="primary">
+                  <LocalOffer />
+                </Badge>
+              </ListItemIcon>
+            }
+          />
+          <ListItemLink
+            to="/settings"
+            primary="Settings"
+            icon={
+              <ListItemIcon>
+                <Settings />
+              </ListItemIcon>
+            }
+          />
           <ListItemButton>
             <ListItemIcon>
               <Help />

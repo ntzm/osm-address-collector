@@ -1,4 +1,4 @@
-import { Backspace, BackspaceOutlined, Clear } from "@mui/icons-material";
+import { BackspaceOutlined, Clear } from "@mui/icons-material";
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import KeypadNumber from "./KeypadNumber";
@@ -29,6 +29,7 @@ function Keypad() {
         <TextField
           fullWidth={true}
           label="House number or name"
+          autoCapitalize="words"
           value={numberOrName}
           onChange={(e) => setNumberOrName(e.target.value)}
         />

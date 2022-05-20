@@ -68,6 +68,7 @@ function CustomTags() {
                   <TextField
                     label="Key"
                     size="small"
+                    autoCapitalize="no"
                     value={tag.key}
                     onChange={(e) => updateKey(e.target.value, i)}
                   />
