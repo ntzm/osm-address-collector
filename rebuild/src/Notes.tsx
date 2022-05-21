@@ -10,7 +10,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 import { EventType } from "./enums";
 import { AddTextNote, Event } from "./types";
 
@@ -19,8 +19,8 @@ interface NotesProps {
 }
 
 function Notes(props: NotesProps) {
-  const [textNoteDialogOpen, setTextNoteDialogOpen] = React.useState(false);
-  const [currentTextNoteContent, setCurrentTextNotContent] = React.useState("");
+  const [textNoteDialogOpen, setTextNoteDialogOpen] = useState(false);
+  const [currentTextNoteContent, setCurrentTextNotContent] = useState("");
 
   function addNote() {
     const addTextNote: AddTextNote = {
@@ -36,6 +36,7 @@ function Notes(props: NotesProps) {
   return (
     <>
       <Dialog
+        disableRestoreFocus
         open={textNoteDialogOpen}
         onClose={() => setTextNoteDialogOpen(false)}
       >
