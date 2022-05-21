@@ -2,11 +2,11 @@ import { useState } from "react";
 import SideMenu from "./SideMenu";
 import TopMenu from "./TopMenu";
 
-interface MenuBarProps {
+interface MenuProps {
   customTagCount: number;
 }
 
-function MenuBar(props: MenuBarProps) {
+function Menu(props: MenuProps) {
   const [isSideMenuOpen, setSideMenuOpen] = useState(false);
 
   return (
@@ -21,4 +21,4 @@ function MenuBar(props: MenuBarProps) {
   );
 }
 
-export default MenuBar;
+export default Menu;

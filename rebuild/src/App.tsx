@@ -8,7 +8,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Keypad from "./Keypad";
-import MenuBar from "./MenuBar";
+import Menu from "./Menu";
 import Notes from "./Notes";
 import PositionAndOrientation from "./LocationAndOrientation";
 import { EventRecord, Position, Settings, Event, CustomTag } from "./types";
@@ -145,7 +145,7 @@ function Main(props: MainProps) {
 
   return (
     <Container maxWidth="sm">
-      <MenuBar customTagCount={props.customTagCount} />
+      <Menu customTagCount={props.customTagCount} />
 
       <Box mt={10}>
         <Keypad onEvent={handleEvent} />
