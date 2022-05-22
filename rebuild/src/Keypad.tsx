@@ -1,11 +1,12 @@
 import { BackspaceOutlined, Clear } from "@mui/icons-material";
 import { Button, Grid, TextField } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import KeypadNumber from "./KeypadNumber";
 import ThrowButton from "./ThrowButton";
 import { Direction, EventType } from "./enums";
-import SettingsContext from "./SettingsContext";
 import { AddAddress, Event } from "./types";
+import { useSelector } from "react-redux";
+import { selectVibrate } from "./features/settings/slice";
 
 interface KeypadProps {
   onEvent: (event: Event) => void;
@@ -13,10 +14,10 @@ interface KeypadProps {
 
 function Keypad(props: KeypadProps) {
   const [numberOrName, setNumberOrName] = useState("");
-  const settings = useContext(SettingsContext);
+  const shouldVibrate = useSelector(selectVibrate);
 
   function vibrate() {
-    if (settings.vibrate) {
+    if (shouldVibrate) {
       navigator.vibrate(10);
     }
   }

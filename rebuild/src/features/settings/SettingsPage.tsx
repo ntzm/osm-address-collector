@@ -22,44 +22,27 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import SettingsContext from "./SettingsContext";
+import { useAppDispatch } from "../../app/hooks";
+import {
+  changeThrowDistance,
+  selectDarkMode,
+  selectRecordTrace,
+  selectThrowDistance,
+  selectVibrate,
+  toggleDarkMode,
+  toggleRecordTrace,
+  toggleVibrate,
+} from "./slice";
 
 function SettingsPage() {
-  const settings = useContext(SettingsContext);
+  const dispatch = useAppDispatch();
 
-  function updateThrowDistance(newThrowDistance: number) {
-    settings.setSettings({
-      ...settings,
-      throwDistance: newThrowDistance,
-    });
-  }
-
-  function toggleVibrate() {
-    if (!settings.vibrate) {
-      navigator.vibrate(10);
-    }
-
-    settings.setSettings({
-      ...settings,
-      vibrate: !settings.vibrate,
-    });
-  }
-
-  function toggleRecordTrace() {
-    settings.setSettings({
-      ...settings,
-      recordTrace: !settings.recordTrace,
-    });
-  }
-
-  function toggleDarkMode() {
-    settings.setSettings({
-      ...settings,
-      darkMode: !settings.darkMode,
-    });
-  }
+  const throwDistance = useSelector(selectThrowDistance);
+  const vibrate = useSelector(selectVibrate);
+  const recordTrace = useSelector(selectRecordTrace);
+  const darkMode = useSelector(selectDarkMode);
 
   return (
     <Container maxWidth="sm">
@@ -94,8 +77,10 @@ function SettingsPage() {
                 max={30}
                 valueLabelDisplay="auto"
                 valueLabelFormat={(v) => `${v}m`}
-                value={settings.throwDistance}
-                onChange={(_, value) => updateThrowDistance(value as number)}
+                value={throwDistance}
+                onChange={(_, value) =>
+                  dispatch(changeThrowDistance(value as number))
+                }
               ></Slider>
             </Stack>
           </ListItem>
@@ -109,8 +94,8 @@ function SettingsPage() {
             />
             <Switch
               edge="end"
-              checked={settings.recordTrace}
-              onChange={toggleRecordTrace}
+              checked={recordTrace}
+              onChange={() => dispatch(toggleRecordTrace())}
             />
           </ListItem>
         </List>
@@ -123,8 +108,8 @@ function SettingsPage() {
             <ListItemText primary="Vibration" />
             <Switch
               edge="end"
-              checked={settings.vibrate}
-              onChange={toggleVibrate}
+              checked={vibrate}
+              onChange={() => dispatch(toggleVibrate())}
             />
           </ListItem>
           <ListItem>
@@ -134,8 +119,8 @@ function SettingsPage() {
             <ListItemText primary="Dark mode" />
             <Switch
               edge="end"
-              checked={settings.darkMode}
-              onChange={toggleDarkMode}
+              checked={darkMode}
+              onChange={() => dispatch(toggleDarkMode())}
             />
           </ListItem>
         </List>

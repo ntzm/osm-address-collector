@@ -5,19 +5,18 @@ import {
   createTheme,
   CssBaseline,
   ThemeProvider,
-  useMediaQuery,
 } from "@mui/material";
 import Keypad from "./Keypad";
 import Menu from "./Menu";
 import Notes from "./Notes";
-import PositionAndOrientation from "./LocationAndOrientation";
-import { EventRecord, Position, Settings, Event, CustomTag } from "./types";
+import { EventRecord, Position, Event, CustomTag } from "./types";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import SettingsPage from "./Settings";
 import CustomTags from "./CustomTags";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import SettingsContext from "./SettingsContext";
 import { EventType } from "./enums";
+import SettingsPage from "./features/settings/SettingsPage";
+import { useSelector } from "react-redux";
+import { selectDarkMode } from "./features/settings/slice";
 
 function useStickyState<T>(
   defaultValue: T,
@@ -36,16 +35,6 @@ function useStickyState<T>(
 }
 
 function App() {
-  const [settings, setSettings] = useStickyState<Settings>(
-    {
-      throwDistance: 10,
-      vibrate: true,
-      recordTrace: true,
-      darkMode: useMediaQuery("(prefers-color-scheme: dark)"),
-    },
-    "settings"
-  );
-
   const [customTags, setCustomTags] = useStickyState<CustomTag[]>(
     [],
     "customTags"
@@ -71,43 +60,43 @@ function App() {
     setCustomTags(customTags.filter((_, i) => i !== id));
   }
 
+  const darkMode = useSelector(selectDarkMode);
+
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode: settings.darkMode ? "dark" : "light",
+          mode: darkMode ? "dark" : "light",
         },
       }),
-    [settings.darkMode]
+    [darkMode]
   );
 
   return (
-    <SettingsContext.Provider value={{ setSettings, ...settings }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <HashRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={<Main customTagCount={customTags.length} />}
-            />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route
-              path="/custom-tags"
-              element={
-                <CustomTags
-                  tags={customTags}
-                  onAdd={addCustomTag}
-                  onChangeKey={changeCustomTagKey}
-                  onChangeValue={changeCustomTagValue}
-                  onDelete={deleteCustomTag}
-                />
-              }
-            />
-          </Routes>
-        </HashRouter>
-      </ThemeProvider>
-    </SettingsContext.Provider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <HashRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Main customTagCount={customTags.length} />}
+          />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/custom-tags"
+            element={
+              <CustomTags
+                tags={customTags}
+                onAdd={addCustomTag}
+                onChangeKey={changeCustomTagKey}
+                onChangeValue={changeCustomTagValue}
+                onDelete={deleteCustomTag}
+              />
+            }
+          />
+        </Routes>
+      </HashRouter>
+    </ThemeProvider>
   );
 }
 
@@ -139,17 +128,12 @@ function Main(props: MainProps) {
     actions.push(record);
   }
 
-  function updatePosition(position: Position) {
-    console.log(position);
-  }
-
   return (
     <Container maxWidth="sm">
       <Menu customTagCount={props.customTagCount} />
 
       <Box mt={10}>
         <Keypad onEvent={handleEvent} />
-        <PositionAndOrientation onNewPosition={updatePosition} />
         <Notes onEvent={handleEvent} />
       </Box>
     </Container>

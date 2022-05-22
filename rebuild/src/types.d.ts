@@ -14,13 +14,6 @@ export interface CustomTag {
   value: string;
 }
 
-export interface Settings {
-  throwDistance: number;
-  vibrate: boolean;
-  recordTrace: boolean;
-  darkMode: boolean;
-}
-
 export interface ContextSettings extends Settings {
   setSettings: (settings: Settings) => void;
 }

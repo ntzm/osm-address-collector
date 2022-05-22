@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^4.5.7",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.0",
+    "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
@@ -17,8 +18,10 @@
     "@types/react-dom": "^18.0.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "redux": "^4.2.0",
     "typescript": "^4.6.4",
     "web-vitals": "^2.1.4"
   },
