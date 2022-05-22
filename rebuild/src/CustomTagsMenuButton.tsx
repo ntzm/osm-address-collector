@@ -1,20 +1,20 @@
 import { LocalOffer } from "@mui/icons-material";
 import { ListItemIcon, Badge } from "@mui/material";
 import { memo } from "react";
+import { useSelector } from "react-redux";
+import { selectCustomTags } from "./features/customTags/slice";
 import ListItemLink from "./ListItemLink";
 
-interface CustomTagsMenuButtonProps {
-  customTagCount: number;
-}
+function CustomTagsMenuButton() {
+  const customTags = useSelector(selectCustomTags);
 
-function CustomTagsMenuButton(props: CustomTagsMenuButtonProps) {
   return (
     <ListItemLink
       to="/custom-tags"
       primary="Custom tags"
       icon={
         <ListItemIcon>
-          <Badge badgeContent={props.customTagCount} color="primary">
+          <Badge badgeContent={customTags.length} color="primary">
             <LocalOffer />
           </Badge>
         </ListItemIcon>

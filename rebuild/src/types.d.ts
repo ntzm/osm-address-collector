@@ -9,11 +9,6 @@ export interface TimedPosition extends Position {
   time: Date;
 }
 
-export interface CustomTag {
-  key: string;
-  value: string;
-}
-
 export interface ContextSettings extends Settings {
   setSettings: (settings: Settings) => void;
 }

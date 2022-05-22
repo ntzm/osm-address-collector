@@ -2,11 +2,7 @@ import { useState } from "react";
 import SideMenu from "./SideMenu";
 import TopMenu from "./TopMenu";
 
-interface MenuProps {
-  customTagCount: number;
-}
-
-function Menu(props: MenuProps) {
+function Menu() {
   const [isSideMenuOpen, setSideMenuOpen] = useState(false);
 
   return (
@@ -14,7 +10,6 @@ function Menu(props: MenuProps) {
       <TopMenu onSideMenuOpen={() => setSideMenuOpen(true)} />
       <SideMenu
         isOpen={isSideMenuOpen}
-        customTagCount={props.customTagCount}
         onClose={() => setSideMenuOpen(false)}
       />
     </>

@@ -7,7 +7,6 @@ import StartOrPauseMenuButton from "./StartOrPauseMenuButton";
 
 interface SideMenuProps {
   isOpen: boolean;
-  customTagCount: number;
   onClose: () => void;
 }
 
@@ -24,7 +23,7 @@ function SideMenu(props: SideMenuProps) {
       </List>
       <Divider light />
       <List>
-        <CustomTagsMenuButton customTagCount={props.customTagCount} />
+        <CustomTagsMenuButton />
         <SettingsMenuButton />
         <HelpMenuButton />
       </List>
