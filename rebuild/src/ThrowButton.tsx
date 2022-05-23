@@ -1,6 +1,6 @@
 import { ArrowBack, ArrowForward, ArrowUpward } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { Direction } from "./enums";
+import { Direction } from "./features/addresses/enums";
 
 interface ThrowButtonProps {
   direction: Direction;

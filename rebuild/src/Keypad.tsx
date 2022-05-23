@@ -3,12 +3,12 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import KeypadNumber from "./KeypadNumber";
 import ThrowButton from "./ThrowButton";
-import { Direction } from "./enums";
 import { useSelector } from "react-redux";
 import { selectVibrate } from "./features/settings/slice";
 import { useAppDispatch } from "./app/hooks";
 import { Address } from "./features/addresses/types";
 import { addAddress } from "./features/addresses/slice";
+import { Direction } from "./features/addresses/enums";
 
 function Keypad() {
   const [nameOrNumber, setNameOrNumber] = useState("");
