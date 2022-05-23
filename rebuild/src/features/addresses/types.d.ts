@@ -1,5 +1,5 @@
 import { Direction } from "../../enums";
-import { Position } from "../../types";
+import { Position } from "../positions/types";
 
 export interface Address {
   nameOrNumber: string;

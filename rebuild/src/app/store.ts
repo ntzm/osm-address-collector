@@ -3,6 +3,7 @@ import settingsReducer from "../features/settings/slice";
 import customTagsReducer from "../features/customTags/slice";
 import addressReducer from "../features/addresses/slice";
 import textNoteReducer from "../features/textNotes/slice";
+import positionReducer from "../features/positions/slice";
 
 export const store = configureStore({
   reducer: combineReducers({
@@ -10,6 +11,7 @@ export const store = configureStore({
     customTags: customTagsReducer,
     addresses: addressReducer,
     textNotes: textNoteReducer,
+    positions: positionReducer,
   }),
 });
 

@@ -1,4 +1,4 @@
-import { Position } from "../../types";
+import { Position } from "../positions/types";
 
 export interface TextNote {
   content: string;
