@@ -23,11 +23,28 @@ const surveyStatusSlice = createSlice({
     finish() {
       return SurveyStatus.Finished;
     },
+    togglePause(state) {
+      if (state === SurveyStatus.Started) {
+        return SurveyStatus.Paused;
+      }
+
+      if (state === SurveyStatus.Paused) {
+        return SurveyStatus.Started;
+      }
+
+      throw new Error("Invalid state to pause");
+    },
   },
 });
 
-export const { attemptStart, failedToStart, start, pause, finish } =
-  surveyStatusSlice.actions;
+export const {
+  attemptStart,
+  failedToStart,
+  start,
+  pause,
+  finish,
+  togglePause,
+} = surveyStatusSlice.actions;
 
 export const selectSurveyStatus = (state: RootState) => state.surveyStatus;
 
