@@ -11,7 +11,7 @@ import Menu from "./Menu";
 import Notes from "./Notes";
 import { EventRecord, Position, Event } from "./types";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import CustomTags from "./CustomTags";
+import CustomTags from "./features/customTags/CustomTags";
 import { useMemo, useState } from "react";
 import { EventType } from "./enums";
 import SettingsPage from "./features/settings/SettingsPage";

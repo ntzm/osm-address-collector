@@ -12,14 +12,14 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addTag,
   changeTagKey,
   changeTagValue,
   deleteTag,
   selectCustomTags,
-} from "./features/customTags/slice";
+} from "./slice";
 
 function CustomTags() {
   const tags = useAppSelector(selectCustomTags);
@@ -55,7 +55,7 @@ function CustomTags() {
                     size="small"
                     autoCapitalize="no"
                     value={tag.key}
-                    onChange={(e) =>
+                    onBlur={(e) =>
                       dispatch(changeTagKey({ id: i, newKey: e.target.value }))
                     }
                   />
@@ -65,7 +65,7 @@ function CustomTags() {
                     label="Value"
                     size="small"
                     value={tag.value}
-                    onChange={(e) =>
+                    onBlur={(e) =>
                       dispatch(
                         changeTagValue({ id: i, newValue: e.target.value })
                       )
