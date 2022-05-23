@@ -3,9 +3,3 @@ export enum Direction {
   Forward = "F",
   Right = "R",
 }
-
-export enum EventType {
-  AddAddress = "addAddress",
-  AddTextNote = "addTextNote",
-  NewPosition = "newPosition",
-}

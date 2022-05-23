@@ -11,24 +11,24 @@ import {
   Button,
 } from "@mui/material";
 import { useState } from "react";
-import { EventType } from "./enums";
-import { AddTextNote, Event } from "./types";
+import { useAppDispatch } from "./app/hooks";
+import { addTextNote } from "./features/textNotes/slice";
+import { TextNote } from "./features/textNotes/types";
 
-interface NotesProps {
-  onEvent: (event: Event) => void;
-}
-
-function Notes(props: NotesProps) {
+function Notes() {
   const [textNoteDialogOpen, setTextNoteDialogOpen] = useState(false);
   const [currentTextNoteContent, setCurrentTextNotContent] = useState("");
+  const dispatch = useAppDispatch();
 
   function addNote() {
-    const addTextNote: AddTextNote = {
-      type: EventType.AddTextNote,
+    const note: TextNote = {
       content: currentTextNoteContent,
+      // todo replace
+      position: { latitutde: 0, longitude: 0 },
     };
 
-    props.onEvent(addTextNote);
+    dispatch(addTextNote(note));
+
     setCurrentTextNotContent("");
     setTextNoteDialogOpen(false);
   }

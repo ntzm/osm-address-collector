@@ -3,18 +3,17 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import KeypadNumber from "./KeypadNumber";
 import ThrowButton from "./ThrowButton";
-import { Direction, EventType } from "./enums";
-import { AddAddress, Event } from "./types";
+import { Direction } from "./enums";
 import { useSelector } from "react-redux";
 import { selectVibrate } from "./features/settings/slice";
+import { useAppDispatch } from "./app/hooks";
+import { Address } from "./features/addresses/types";
+import { addAddress } from "./features/addresses/slice";
 
-interface KeypadProps {
-  onEvent: (event: Event) => void;
-}
-
-function Keypad(props: KeypadProps) {
-  const [numberOrName, setNumberOrName] = useState("");
+function Keypad() {
+  const [nameOrNumber, setNameOrNumber] = useState("");
   const shouldVibrate = useSelector(selectVibrate);
+  const dispatch = useAppDispatch();
 
   function vibrate() {
     if (shouldVibrate) {
@@ -22,30 +21,31 @@ function Keypad(props: KeypadProps) {
     }
   }
 
-  function addAddress(direction: Direction) {
-    const addAddress: AddAddress = {
-      type: EventType.AddAddress,
-      houseNameOrNumber: numberOrName,
+  function throwAddress(direction: Direction) {
+    const address: Address = {
+      nameOrNumber: nameOrNumber,
       direction,
+      // todo use current position (from redux?)
+      position: { latitutde: 0, longitude: 0 },
     };
 
-    props.onEvent(addAddress);
-    setNumberOrName("");
+    dispatch(addAddress(address));
+    setNameOrNumber("");
   }
 
   function appendNumber(n: number) {
     vibrate();
-    setNumberOrName(numberOrName + String(n));
+    setNameOrNumber(nameOrNumber + String(n));
   }
 
   function clear() {
     vibrate();
-    setNumberOrName("");
+    setNameOrNumber("");
   }
 
   function backspace() {
     vibrate();
-    setNumberOrName(numberOrName.slice(0, -1));
+    setNameOrNumber(nameOrNumber.slice(0, -1));
   }
 
   return (
@@ -53,21 +53,21 @@ function Keypad(props: KeypadProps) {
       <Grid item xs>
         <TextField
           fullWidth={true}
-          label="House number or name"
+          label="House name or number"
           autoCapitalize="words"
-          value={numberOrName}
-          onChange={(e) => setNumberOrName(e.target.value)}
+          value={nameOrNumber}
+          onChange={(e) => setNameOrNumber(e.target.value)}
         />
       </Grid>
       <Grid container item spacing={1}>
         <Grid item xs>
-          <ThrowButton direction={Direction.Left} onClick={addAddress} />
+          <ThrowButton direction={Direction.Left} onClick={throwAddress} />
         </Grid>
         <Grid item xs>
-          <ThrowButton direction={Direction.Forward} onClick={addAddress} />
+          <ThrowButton direction={Direction.Forward} onClick={throwAddress} />
         </Grid>
         <Grid item xs>
-          <ThrowButton direction={Direction.Right} onClick={addAddress} />
+          <ThrowButton direction={Direction.Right} onClick={throwAddress} />
         </Grid>
       </Grid>
       <Grid container item spacing={1}>
