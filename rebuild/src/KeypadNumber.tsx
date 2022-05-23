@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { memo } from "react";
 
 interface KeypadNumberProps {
   onClick: (num: number) => void;
@@ -18,4 +19,4 @@ function KeypadNumber(props: KeypadNumberProps) {
   );
 }
 
-export default KeypadNumber;
+export default memo(KeypadNumber);

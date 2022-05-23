@@ -1,5 +1,6 @@
 import { ArrowBack, ArrowForward, ArrowUpward } from "@mui/icons-material";
 import { Button } from "@mui/material";
+import { memo } from "react";
 import { Direction } from "./features/addresses/enums";
 
 interface ThrowButtonProps {
@@ -26,4 +27,4 @@ function ThrowButton(props: ThrowButtonProps) {
   );
 }
 
-export default ThrowButton;
+export default memo(ThrowButton);
