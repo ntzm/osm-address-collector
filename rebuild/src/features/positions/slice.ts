@@ -21,7 +21,7 @@ export const selectLatestPosition = (state: RootState) => {
   const latestPosition = state.positions.at(-1);
 
   if (latestPosition === undefined) {
-    throw "No latest position";
+    throw new Error("No latest position");
   }
 
   return latestPosition;
