@@ -25,8 +25,6 @@ function Keypad() {
     const address: Address = {
       nameOrNumber: nameOrNumber,
       direction,
-      // todo use current position (from redux?)
-      position: { latitutde: 0, longitude: 0 },
     };
 
     dispatch(addAddress(address));

@@ -4,3 +4,7 @@ export interface TextNote {
   content: string;
   position: Position;
 }
+
+export interface TimedTextNote extends TextNote {
+  timestamp: number;
+}

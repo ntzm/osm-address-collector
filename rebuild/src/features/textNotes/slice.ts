@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { TextNote } from "./types";
+import { TextNote, TimedTextNote } from "./types";
 
-const initialState: TextNote[] = [];
+const initialState: TimedTextNote[] = [];
 
 const textNoteSlice = createSlice({
   name: "textNotes",
   initialState,
   reducers: {
     addTextNote(state, action: PayloadAction<TextNote>) {
-      state.push(action.payload);
+      state.push({ timestamp: Date.now(), ...action.payload });
     },
   },
 });

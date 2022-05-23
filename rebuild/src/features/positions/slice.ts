@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { Position } from "./types";
+import { Position, TimedPosition } from "./types";
 
-const initialState: Position[] = [];
+const initialState: TimedPosition[] = [];
 
 const positionSlice = createSlice({
   name: "positions",
   initialState,
   reducers: {
     addPosition(state, action: PayloadAction<Position>) {
-      state.push(action.payload);
+      state.push({ timestamp: Date.now(), ...action.payload });
     },
   },
 });
