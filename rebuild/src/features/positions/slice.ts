@@ -23,6 +23,7 @@ export const { addPosition } = positionSlice.actions;
 
 export const selectPositions = (state: RootState) => state.positions;
 // todo this sucks if empty
-export const selectLatestPositionId = (state: RootState) => state.positions.length - 1;
+export const selectLatestPositionId = (state: RootState) =>
+  state.positions.length - 1;
 
 export default positionSlice.reducer;

@@ -23,11 +23,13 @@ function Keypad() {
   }
 
   function throwAddress(direction: Direction) {
-    dispatch(addAddress({
-      nameOrNumber,
-      direction,
-      positionId: latestPositionId,
-    }));
+    dispatch(
+      addAddress({
+        nameOrNumber,
+        direction,
+        positionId: latestPositionId,
+      })
+    );
     setNameOrNumber("");
   }
 
