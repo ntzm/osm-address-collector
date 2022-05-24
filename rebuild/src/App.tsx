@@ -1,6 +1,6 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import CustomTags from "./features/customTags/CustomTags";
+import CustomTagsPage from "./features/customTags/CustomTagsPage";
 import { useMemo } from "react";
 import SettingsPage from "./features/settings/SettingsPage";
 import { useSelector } from "react-redux";
@@ -28,7 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/custom-tags" element={<CustomTags />} />
+          <Route path="/custom-tags" element={<CustomTagsPage />} />
           <Route path="/help" element={<HelpPage />} />
         </Routes>
       </HashRouter>

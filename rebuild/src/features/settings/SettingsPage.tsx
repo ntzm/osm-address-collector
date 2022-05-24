@@ -1,16 +1,8 @@
+import { DarkMode, Straighten, Timeline, Vibration } from "@mui/icons-material";
 import {
-  ArrowBack,
-  DarkMode,
-  Straighten,
-  Timeline,
-  Vibration,
-} from "@mui/icons-material";
-import {
-  AppBar,
   Box,
   Container,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -19,12 +11,11 @@ import {
   Slider,
   Stack,
   Switch,
-  Toolbar,
   Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
+import SubPageTopMenu from "../../SubPageTopMenu";
 import {
   changeThrowDistance,
   selectDarkMode,
@@ -46,23 +37,7 @@ function SettingsPage() {
 
   return (
     <Container maxWidth="sm">
-      <AppBar color="default">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            component={Link}
-            to="/"
-            sx={{ mr: 2 }}
-          >
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Settings
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <SubPageTopMenu header="Settings" />
       <Box mt={10}>
         <List subheader={<ListSubheader>Recording</ListSubheader>}>
           <ListItem>

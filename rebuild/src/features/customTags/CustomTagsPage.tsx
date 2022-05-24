@@ -1,18 +1,15 @@
-import { Add, ArrowBack, Delete } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import {
   Container,
-  AppBar,
-  Toolbar,
   IconButton,
-  Typography,
   Box,
   List,
   ListItem,
   Grid,
   TextField,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import SubPageTopMenu from "../../SubPageTopMenu";
 import {
   addTag,
   changeTagKey,
@@ -21,29 +18,13 @@ import {
   selectCustomTags,
 } from "./slice";
 
-function CustomTags() {
+function CustomTagsPage() {
   const tags = useAppSelector(selectCustomTags);
   const dispatch = useAppDispatch();
 
   return (
     <Container maxWidth="sm">
-      <AppBar color="default">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            component={Link}
-            to="/"
-            sx={{ mr: 2 }}
-          >
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Custom tags
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <SubPageTopMenu header="Custom tags" />
       <Box mt={10}>
         <List>
           {tags.map((tag, i) => (
@@ -89,4 +70,4 @@ function CustomTags() {
   );
 }
 
-export default CustomTags;
+export default CustomTagsPage;
