@@ -22,14 +22,7 @@ const positionSlice = createSlice({
 export const { addPosition } = positionSlice.actions;
 
 export const selectPositions = (state: RootState) => state.positions;
-export const selectLatestPositionId = (state: RootState) => {
-  const latestPositionId = state.positions.length - 1;
-
-  if (latestPositionId === -1) {
-    throw new Error("No latest position");
-  }
-
-  return latestPositionId;
-};
+// todo this sucks if empty
+export const selectLatestPositionId = (state: RootState) => state.positions.length - 1;
 
 export default positionSlice.reducer;
