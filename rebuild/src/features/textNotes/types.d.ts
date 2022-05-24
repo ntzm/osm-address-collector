@@ -1,10 +1,10 @@
 import { Position } from "../positions/types";
 
 export interface TextNote {
-  content: string;
-  position: Position;
+  readonly content: string;
+  readonly position: Position;
 }
 
 export interface TimedTextNote extends TextNote {
-  timestamp: number;
+  readonly timestamp: number;
 }

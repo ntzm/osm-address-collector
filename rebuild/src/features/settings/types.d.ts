@@ -1,6 +1,6 @@
 export interface Settings {
-  throwDistance: number;
-  vibrate: boolean;
-  recordTrace: boolean;
-  darkMode: boolean;
+  readonly throwDistance: number;
+  readonly vibrate: boolean;
+  readonly recordTrace: boolean;
+  readonly darkMode: boolean;
 }

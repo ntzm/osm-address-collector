@@ -1,8 +1,8 @@
 export interface Position {
-  latitutde: number;
-  longitude: number;
+  readonly latitutde: number;
+  readonly longitude: number;
 }
 
 export interface TimedPosition extends Position {
-  timestamp: number;
+  readonly timestamp: number;
 }

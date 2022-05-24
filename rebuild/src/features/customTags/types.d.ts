@@ -1,4 +1,4 @@
 export interface CustomTag {
-  key: string;
-  value: string;
+  readonly key: string;
+  readonly value: string;
 }
