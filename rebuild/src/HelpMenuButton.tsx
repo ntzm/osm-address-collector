@@ -1,14 +1,18 @@
 import { Help } from "@mui/icons-material";
-import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { ListItemIcon } from "@mui/material";
+import ListItemLink from "./ListItemLink";
 
 function HelpMenuButton() {
   return (
-    <ListItemButton>
-      <ListItemIcon>
-        <Help />
-      </ListItemIcon>
-      <ListItemText primary="Help" />
-    </ListItemButton>
+    <ListItemLink
+      to="/help"
+      primary="Help"
+      icon={
+        <ListItemIcon>
+          <Help />
+        </ListItemIcon>
+      }
+    />
   );
 }
 

@@ -6,6 +6,7 @@ import SettingsPage from "./features/settings/SettingsPage";
 import { useSelector } from "react-redux";
 import { selectDarkMode } from "./features/settings/slice";
 import Main from "./Main";
+import HelpPage from "./HelpPage";
 
 function App() {
   const darkMode = useSelector(selectDarkMode);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/custom-tags" element={<CustomTags />} />
+          <Route path="/help" element={<HelpPage />} />
         </Routes>
       </HashRouter>
     </ThemeProvider>
