@@ -6,7 +6,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/hooks";
 import { selectLatestPositionId } from "../positions/slice";
@@ -51,4 +51,4 @@ function TextNoteDialog(props: TextNoteDialogProps) {
   );
 }
 
-export default TextNoteDialog;
+export default memo(TextNoteDialog);
