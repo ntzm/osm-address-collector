@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { AppThunk, RootState } from "../../app/store";
+import { selectLatestPositionId } from "../positions/slice";
 import { TextNote } from "./types";
 
 const initialState: TextNote[] = [];
@@ -14,7 +15,17 @@ const textNoteSlice = createSlice({
   },
 });
 
-export const { addTextNote } = textNoteSlice.actions;
+export const addTextNote =
+  (content: string): AppThunk =>
+  (dispatch, getState) => {
+    const positionId = selectLatestPositionId(getState());
+    dispatch(
+      textNoteSlice.actions.addTextNote({
+        content,
+        positionId,
+      })
+    );
+  };
 
 export const selectTextNotes = (state: RootState) => state.textNotes;
 

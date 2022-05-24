@@ -8,12 +8,10 @@ import { selectVibrate } from "./features/settings/slice";
 import { useAppDispatch } from "./app/hooks";
 import { addAddress } from "./features/addresses/slice";
 import { Direction } from "./features/addresses/enums";
-import { selectLatestPositionId } from "./features/positions/slice";
 
 function Keypad() {
   const [nameOrNumber, setNameOrNumber] = useState("");
   const shouldVibrate = useSelector(selectVibrate);
-  const latestPositionId = useSelector(selectLatestPositionId);
   const dispatch = useAppDispatch();
 
   function vibrate() {
@@ -23,13 +21,7 @@ function Keypad() {
   }
 
   function throwAddress(direction: Direction) {
-    dispatch(
-      addAddress({
-        nameOrNumber,
-        direction,
-        positionId: latestPositionId,
-      })
-    );
+    dispatch(addAddress(nameOrNumber, direction));
     setNameOrNumber("");
   }
 

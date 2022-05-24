@@ -7,9 +7,7 @@ import {
   Button,
 } from "@mui/material";
 import { memo, useState } from "react";
-import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../app/hooks";
-import { selectLatestPositionId } from "../positions/slice";
 import { addTextNote } from "./slice";
 
 interface TextNoteDialogProps {
@@ -19,11 +17,10 @@ interface TextNoteDialogProps {
 
 function TextNoteDialog(props: TextNoteDialogProps) {
   const [content, setContent] = useState("");
-  const latestPositionId = useSelector(selectLatestPositionId);
   const dispatch = useAppDispatch();
 
   function add() {
-    dispatch(addTextNote({ content, positionId: latestPositionId }));
+    dispatch(addTextNote(content));
 
     setContent("");
     props.onClose();
