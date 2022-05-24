@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { Address, TimedAddress } from "./types";
+import { Address } from "./types";
 
-const initialState: TimedAddress[] = [];
+const initialState: Address[] = [];
 
 const addressSlice = createSlice({
   name: "addresses",
   initialState,
   reducers: {
     addAddress(state, action: PayloadAction<Address>) {
-      state.push({ timestamp: Date.now(), ...action.payload });
+      state.push(action.payload);
     },
   },
 });

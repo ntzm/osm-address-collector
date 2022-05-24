@@ -3,6 +3,6 @@ export interface Position {
   readonly longitude: number;
 }
 
-export interface TimedPosition extends Position {
+export interface StoredPosition extends Position {
   readonly timestamp: number;
 }

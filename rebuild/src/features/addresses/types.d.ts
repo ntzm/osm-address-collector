@@ -4,8 +4,5 @@ import { Position } from "../positions/types";
 export interface Address {
   readonly nameOrNumber: string;
   readonly direction: Direction;
-}
-
-export interface TimedAddress extends Address {
-  readonly timestamp: number;
+  readonly positionId: number;
 }

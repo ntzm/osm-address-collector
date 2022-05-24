@@ -1,15 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { Position, TimedPosition } from "./types";
+import { Position, StoredPosition } from "./types";
 
-const initialState: TimedPosition[] = [];
+const initialState: StoredPosition[] = [];
 
 const positionSlice = createSlice({
   name: "positions",
   initialState,
   reducers: {
-    addPosition(state, action: PayloadAction<Position>) {
-      state.push({ timestamp: Date.now(), ...action.payload });
+    addPosition: {
+      reducer(state, action: PayloadAction<StoredPosition>) {
+        state.push(action.payload);
+      },
+      prepare(position: Position) {
+        return { payload: { timestamp: Date.now(), ...position } };
+      },
     },
   },
 });
@@ -17,14 +22,14 @@ const positionSlice = createSlice({
 export const { addPosition } = positionSlice.actions;
 
 export const selectPositions = (state: RootState) => state.positions;
-export const selectLatestPosition = (state: RootState) => {
-  const latestPosition = state.positions.at(-1);
+export const selectLatestPositionId = (state: RootState) => {
+  const latestPositionId = state.positions.length - 1;
 
-  if (latestPosition === undefined) {
+  if (latestPositionId === -1) {
     throw new Error("No latest position");
   }
 
-  return latestPosition;
+  return latestPositionId;
 };
 
 export default positionSlice.reducer;
