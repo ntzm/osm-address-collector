@@ -62,19 +62,6 @@ $distance.addEventListener("blur", () => {
 });
 
 /*
-SETTINGS - Record trace
-*/
-
-const $recordTrace = document.getElementById("record-trace");
-let recordTrace = Boolean(localStorage.getItem("recordTrace") ?? "1");
-$recordTrace.checked = recordTrace;
-
-$recordTrace.addEventListener("change", () => {
-  recordTrace = $recordTrace.checked;
-  localStorage.setItem("recordTrace", recordTrace ? "1" : "");
-});
-
-/*
 SETTINGS - Vibrate
 */
 
@@ -478,47 +465,11 @@ const getOsmFile = () => {
   return new XMLSerializer().serializeToString(xml);
 };
 
-const getTraceFile = () => {
-  const xml = document.implementation.createDocument("", "", null);
-
-  const gpx = xml.createElement("gpx");
-  gpx.setAttribute("version", "1.1");
-  gpx.setAttribute("creator", `OSM Address Collector ${VERSION}`);
-
-  const trk = xml.createElement("trk");
-  const trkseg = xml.createElement("trkseg");
-
-  positions.forEach((position) => {
-    const trkpt = xml.createElement("trkpt");
-    trkpt.setAttribute("lat", position.latitude);
-    trkpt.setAttribute("lon", position.longitude);
-
-    const time = xml.createElement("time");
-    time.textContent = position.time.toISOString();
-
-    trkpt.append(time);
-    trkseg.append(trkpt);
-  });
-
-  trk.append(trkseg);
-  gpx.append(trk);
-  xml.append(gpx);
-
-  return new XMLSerializer().serializeToString(xml);
-};
-
 onClick(document.getElementById("done"), async () => {
-  const zip = new JSZip();
-
-  zip.file("data.osm", getOsmFile());
-
-  if (recordTrace) {
-    zip.file("trace.gpx", getTraceFile());
-  }
-
-  const zipFile = await zip.generateAsync({ type: "blob" });
-
-  downloadBlob(`${getFormattedDate()}.zip`, zipFile);
+  downloadBlob(
+    `${getFormattedDate()}.osm`,
+    new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
+  );
 });
 
 /*
