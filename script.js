@@ -4,6 +4,14 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
 
+const onClick = ($el, cb) => {
+  $el.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    cb(e);
+  });
+  $el.addEventListener("click", cb);
+};
+
 /*
 HISTORY
 */
@@ -26,11 +34,11 @@ SETTINGS
 
 const $settings = document.getElementById("settings");
 
-document.getElementById("info-row").addEventListener("click", () => {
+onClick(document.getElementById("info-row"), () => {
   $settings.style.display = "block";
 });
 
-document.getElementById("close-settings").addEventListener("click", () => {
+onClick(document.getElementById("close-settings"), () => {
   $settings.style.display = "none";
 });
 
@@ -106,7 +114,7 @@ const addCustomTag = (key, value) => {
   const removeButton = document.createElement("button");
   removeButton.textContent = "x";
 
-  removeButton.addEventListener("click", () => {
+  onClick(removeButton, () => {
     container.remove();
     updateCustomTags();
   });
@@ -136,7 +144,7 @@ const addCustomTag = (key, value) => {
 
 Object.entries(customTags).forEach(([key, value]) => addCustomTag(key, value));
 
-$addCustomTag.addEventListener("click", () => addCustomTag("", ""));
+onClick($addCustomTag, () => addCustomTag("", ""));
 
 /*
 RECORDING
@@ -179,7 +187,7 @@ let currentPosition = null;
 let currentOrientation = null;
 
 [...document.getElementsByClassName("append")].forEach((append) => {
-  append.addEventListener("click", () => {
+  onClick(append, () => {
     $currentNumberOrName.value = $currentNumberOrName.value.concat(
       append.dataset.number
     );
@@ -187,7 +195,7 @@ let currentOrientation = null;
 });
 
 [...document.getElementsByClassName("submit")].forEach((submit) => {
-  submit.addEventListener("click", () => {
+  onClick(submit, () => {
     if (currentPosition === null) {
       alert("No GPS");
       return;
@@ -253,7 +261,7 @@ let watchId;
 const $accuracy = document.getElementById("accuracy");
 const positions = [];
 
-$startOrPause.addEventListener("click", async () => {
+onClick($startOrPause, async () => {
   if (started) {
     $startOrPause.textContent = "Start";
     currentPosition = null;
@@ -453,7 +461,7 @@ const getTraceFile = () => {
   return new XMLSerializer().serializeToString(xml);
 };
 
-document.getElementById("done").addEventListener("click", async () => {
+onClick(document.getElementById("done"), async () => {
   const zip = new JSZip();
 
   zip.file("data.osm", getOsmFile());
@@ -510,7 +518,7 @@ document.getElementById("done").addEventListener("click", async () => {
 CLEAR
 */
 
-document.getElementById("clear").addEventListener("click", () => {
+onClick(document.getElementById("clear"), () => {
   $currentNumberOrName.value = "";
 });
 
@@ -564,7 +572,7 @@ window.addEventListener(
 UNDO
 */
 
-document.getElementById("undo").addEventListener("click", () => {
+onClick(document.getElementById("undo"), () => {
   const address = addresses.pop();
   if (address !== undefined) {
     addAction(`- ${address.direction} ${address.numberOrName}`);
@@ -596,7 +604,7 @@ const $noteContent = document.getElementById("note-content");
 const $saveNote = document.getElementById("save-note");
 const $closeNoteWriter = document.getElementById("close-note-writer");
 
-$addNote.addEventListener("click", () => {
+onClick($addNote, () => {
   if (currentPosition === null) {
     alert("No GPS");
     return;
@@ -605,7 +613,7 @@ $addNote.addEventListener("click", () => {
   $noteWriter.style.display = "flex";
 });
 
-$saveNote.addEventListener("click", () => {
+onClick($saveNote, () => {
   notes.push({
     latitude: currentPosition.latitude,
     longitude: currentPosition.longitude,
@@ -617,7 +625,7 @@ $saveNote.addEventListener("click", () => {
   addAction("+ note");
 });
 
-$closeNoteWriter.addEventListener("click", () => {
+onClick($closeNoteWriter, () => {
   $noteContent.value = "";
   $noteWriter.style.display = "none";
 });
@@ -633,7 +641,7 @@ const audioNotes = [];
 let audioRecording = false;
 let recorder = null;
 
-$startOrFinishAudioNote.addEventListener("click", async () => {
+onClick($startOrFinishAudioNote, async () => {
   if (currentPosition === null) {
     alert("No GPS");
     return;
