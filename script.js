@@ -470,45 +470,6 @@ onClick(document.getElementById("done"), async () => {
     zip.file("trace.gpx", getTraceFile());
   }
 
-  await Promise.all(
-    photos.map(
-      (photo) =>
-        new Promise((resolve) => {
-          const reader = new FileReader();
-
-          reader.addEventListener("load", () => {
-            zip.file(photo.name, reader.result);
-            resolve();
-          });
-
-          reader.readAsArrayBuffer(photo);
-        })
-    )
-  );
-
-  photos.forEach((photo) => {
-    zip.file(photo.name);
-  });
-
-  await Promise.all(
-    audioNotes.map(
-      (audioNote) =>
-        new Promise((resolve) => {
-          const reader = new FileReader();
-
-          const fileName =
-            `${audioNote.latitude}-${audioNote.longitude}`.replace(/\./g, "_");
-
-          reader.addEventListener("load", () => {
-            zip.file(`${fileName}.ogg`, reader.result);
-            resolve();
-          });
-
-          reader.readAsArrayBuffer(audioNote.audio);
-        })
-    )
-  );
-
   const zipFile = await zip.generateAsync({ type: "blob" });
 
   downloadBlob(`${getFormattedDate()}.zip`, zipFile);
@@ -580,20 +541,6 @@ onClick(document.getElementById("undo"), () => {
 });
 
 /*
-PHOTO
-*/
-
-const photos = [];
-const $photo = document.getElementById("photo");
-
-$photo.addEventListener("change", () => {
-  photos.push($photo.files[0]);
-  $photo.value = "";
-
-  addAction("+ photo");
-});
-
-/*
 NOTE
 */
 
@@ -628,60 +575,4 @@ onClick($saveNote, () => {
 onClick($closeNoteWriter, () => {
   $noteContent.value = "";
   $noteWriter.style.display = "none";
-});
-
-/*
-AUDIO NOTES
-*/
-
-const $startOrFinishAudioNote = document.getElementById(
-  "start-or-finish-audio-note"
-);
-const audioNotes = [];
-let audioRecording = false;
-let recorder = null;
-
-onClick($startOrFinishAudioNote, async () => {
-  if (currentPosition === null) {
-    alert("No GPS");
-    return;
-  }
-
-  if (audioRecording) {
-    recorder.stop();
-
-    $startOrFinishAudioNote.style.background = null;
-    audioRecording = false;
-    return;
-  }
-
-  audioRecording = true;
-  $startOrFinishAudioNote.style.background = "#faa0a0";
-  const positionWhenStarted = {
-    latitude: currentPosition.latitude,
-    longitude: currentPosition.longitude,
-  };
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const chunks = [];
-  recorder = new MediaRecorder(stream);
-
-  recorder.addEventListener("dataavailable", (e) => {
-    chunks.push(e.data);
-  });
-
-  recorder.onstop = () => {
-    audioNotes.push({
-      latitude: positionWhenStarted.latitude,
-      longitude: positionWhenStarted.longitude,
-      audio: new Blob(chunks, { type: "audio/ogg; codecs=opus" }),
-    });
-
-    // Stops the recording icon showing in browser tab
-    stream.getTracks().forEach((track) => track.stop());
-
-    addAction("+ audio note");
-  };
-
-  recorder.start();
 });
