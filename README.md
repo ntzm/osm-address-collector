@@ -6,9 +6,8 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 
 ## Features
 
-- Easily record building numbers or names as you're walking
-- Supports text, photo and audio notes
-- GPX traces
+- Easily record building numbers or names as you're walking or cycling
+- Supports text notes
 - Works offline
 - Customisable tags for address nodes
 
@@ -21,10 +20,10 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 1. Enter the number using the keypad or the name device's keyboard
 1. Press the direction key to indicate where the building is location in comparison to the device's orientation
 1. Repeat from step 2 until you have finished your survey
-1. Press **Done** to download the generated `.zip` file
+1. Press **Done** to download the generated `.osm` file
 1. Share this file however you like, such as uploading to cloud storage
-1. On your computer, download the `.zip` file
-1. Unzip the file and open its contents in JOSM or any other editor that supports `.osm`, and optionally `.gpx`, image and audio files
+1. On your computer, download the `.osm` file
+1. Open its contents in JOSM or any other editor that supports `.osm`
    (In JOSM, if you open the `.osm` file then download data, it will merge the layers)
 1. Depending on preferences you can do any of the following:
    - Merge the generated address nodes with the building areas
@@ -40,10 +39,6 @@ History icon shows your last two action.
 
 Press the note icon to add a text note.
 
-Press the photo icon to add a photo note.
-
-Press the audio icon to add an audio note.
-
 ## Settings
 
 Click the top row with the icons on to open the settings.
@@ -52,10 +47,6 @@ Settings are saved in browser local storage so they will be the same when you co
 
 Distance - how far to move the address node from your current location (default 10m)
 (e.g. if you press 4 then left arrow, the address node will be 10m to your left)
-
-Record trace - whether or not a GPX file of your movements is generated
-
-Vibrate - does your device vibrate on certain events
 
 Custom tags can be added, modified and removed.
 These apply as you are surveying so you can change them halfway through and it will only apply to addresses you add after you change them.
@@ -81,8 +72,6 @@ NT = Not tested
 | -------------------- | -------------- | --------------- |
 | GPS                  | Y              | NT              |
 | Accurate orientation | Y              | NT              |
-| Photo                | Y              | NT              |
-| Audio notes          | Y              | NT              |
 
 ### iOS
 
