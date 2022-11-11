@@ -181,13 +181,50 @@ const move = (coords, bearing, amountKm) => {
   };
 };
 
+const guessNextNumber = () => {
+  const lastAddresses = addresses[addresses.length - 1];
+  const prev = addresses[addresses.length - 2];
+
+  if (prev === undefined) {
+    return;
+  }
+
+  const lNum = Number(lastAddresses.numberOrName);
+  const pNum = Number(prev.numberOrName);
+
+  if (isNaN(lNum) || isNaN(pNum)) {
+    return;
+  }
+
+  const difference = lNum - pNum;
+
+  if (![-2, -1, 1, 2].includes(difference)) {
+    return;
+  }
+
+  const nextNumber = lNum + difference;
+
+  if (nextNumber < 1) {
+    return;
+  }
+
+  return nextNumber;
+};
+
 const $currentNumberOrName = document.getElementById("current-number-or-name");
 const addresses = [];
+let numberIsGuessed = false;
 let currentPosition = null;
 let currentOrientation = null;
 
 [...document.getElementsByClassName("append")].forEach((append) => {
   onClick(append, () => {
+    if (numberIsGuessed) {
+      numberIsGuessed = false;
+      $currentNumberOrName.classList.remove("guessed");
+      $currentNumberOrName.value = "";
+    }
+
     $currentNumberOrName.value = $currentNumberOrName.value.concat(
       append.dataset.number
     );
@@ -247,7 +284,16 @@ let currentOrientation = null;
 
     addAction(`+ ${direction} ${numberOrName}`);
 
-    $currentNumberOrName.value = "";
+    const guessedNextNumber = guessNextNumber();
+
+    if (!guessedNextNumber) {
+      $currentNumberOrName.value = "";
+      return;
+    }
+
+    $currentNumberOrName.value = guessedNextNumber;
+    $currentNumberOrName.classList.add("guessed");
+    numberIsGuessed = true;
   });
 });
 

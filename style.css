@@ -42,6 +42,10 @@ html {
   appearance: none;
 }
 
+#current-number-or-name.guessed {
+  color: #999;
+}
+
 #done {
   background: #aec6cf;
 }
