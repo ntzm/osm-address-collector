@@ -12,6 +12,8 @@ const onClick = ($el, cb) => {
   $el.addEventListener("click", cb);
 };
 
+const $container = document.getElementById("main");
+
 /*
 HISTORY
 */
@@ -285,6 +287,7 @@ onClick($startOrPause, async () => {
     $accuracy.textContent = "N/A";
     $accuracy.style.color = "#333";
     started = false;
+    $container.classList.remove("started");
     addAction("Paused");
     return;
   }
@@ -313,6 +316,7 @@ onClick($startOrPause, async () => {
 
       $startOrPause.textContent = "Pause";
       started = true;
+      $container.classList.add("started");
 
       if (acc < 10) {
         $accuracy.style.color = "#c1e1c1";

@@ -39,11 +39,22 @@ html {
   padding: 0;
 }
 
-#done {
+.container button.requires-start,
+.container button.requires-start#done,
+.container button.requires-start#clear {
+  background: #999;
+  pointer-events: none;
+}
+
+.container.started button.requires-start {
+  background: #eee;
+}
+
+.container.started button.requires-start#done {
   background: #aec6cf;
 }
 
-#clear {
+.container.started button.requires-start#clear {
   background: #faa0a0;
 }
 
@@ -67,7 +78,7 @@ html {
   height: 100%;
 }
 
-.container .append {
+.container.started .append.requires-start {
   background: #c1e1c1;
 }
 
