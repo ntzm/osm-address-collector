@@ -457,6 +457,8 @@ onClick(document.getElementById("done"), async () => {
     `${getFormattedDate()}.osm`,
     new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
   );
+
+  window.location.reload();
 });
 
 /*
