@@ -48,14 +48,17 @@ html {
 
 .container.started button.requires-start {
   background: #eee;
+  pointer-events: unset;
 }
 
 .container.started button.requires-start#done {
   background: #aec6cf;
+  pointer-events: unset;
 }
 
 .container.started button.requires-start#clear {
   background: #faa0a0;
+  pointer-events: unset;
 }
 
 .container {
