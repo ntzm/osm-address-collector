@@ -178,7 +178,12 @@ const guessNextNumber = () => {
     return;
   }
 
-  const nextNumber = lNum + difference;
+  let nextNumber = lNum + difference;
+
+  // todo make configurable
+  if (nextNumber === 13) {
+    nextNumber += difference;
+  }
 
   if (nextNumber < 1) {
     return;
