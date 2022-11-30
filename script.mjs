@@ -1,6 +1,6 @@
 import guessNextNumber from "./guessNextNumber.mjs";
 
-const VERSION = "alpha";
+const VERSION = "1.0.0";
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
