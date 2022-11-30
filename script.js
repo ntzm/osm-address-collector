@@ -192,11 +192,27 @@ const guessNextNumber = () => {
   return nextNumber;
 };
 
+const saveAddresses = (a) =>
+  localStorage.setItem("addresses", JSON.stringify(a));
+
+const getSavedAddresses = () =>
+  JSON.parse(localStorage.getItem("addresses") ?? '[]');
+
 const $currentNumberOrName = document.getElementById("current-number-or-name");
-const addresses = [];
+let addresses = [];
 let numberIsGuessed = false;
 let currentPosition = null;
 let currentOrientation = null;
+
+const savedAddresses = getSavedAddresses();
+
+if (savedAddresses.length > 0) {
+  if (confirm(`You have ${savedAddresses.length} unsaved addresses from previous session, do you want to load them?`)) {
+    addresses = savedAddresses;
+  } else {
+    saveAddresses([]);
+  }
+}
 
 [...document.getElementsByClassName("append")].forEach((append) => {
   onClick(append, () => {
@@ -258,6 +274,7 @@ let currentOrientation = null;
       customTags,
       direction,
     });
+    saveAddresses(addresses);
 
     addAction(`+ ${direction} ${numberOrName}`);
 
@@ -462,6 +479,7 @@ onClick(document.getElementById("done"), async () => {
     `${getFormattedDate()}.osm`,
     new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
   );
+  saveAddresses([]);
 
   window.location.reload();
 });
@@ -527,6 +545,7 @@ UNDO
 onClick(document.getElementById("undo"), () => {
   const address = addresses.pop();
   if (address !== undefined) {
+    saveAddresses(addresses);
     addAction(`- ${address.direction} ${address.numberOrName}`);
   }
 });
