@@ -494,10 +494,13 @@ const getOsmFile = () => {
 };
 
 onClick(document.getElementById("done"), async () => {
-  downloadBlob(
-    `${getFormattedDate()}.osm`,
-    new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
-  );
+  if (addresses.length > 0) {
+    downloadBlob(
+      `${getFormattedDate()}.osm`,
+      new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
+    );
+  }
+
   saveAddresses([]);
 
   window.location.reload();
