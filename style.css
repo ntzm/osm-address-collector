@@ -10,6 +10,11 @@ html {
   width: 100%;
   font-family: sans-serif;
   color: #333;
+  font-size: 16pt;
+}
+
+input {
+  font-size: 16pt;
 }
 
 #current-number-or-name {
@@ -117,20 +122,16 @@ html {
   background: #fff;
   z-index: 5;
   display: none;
+  padding: 5px;
 }
 
 #close-settings,
 #close-note-writer,
 #add-custom-tag,
 #add-skip-number {
-  margin-left: 5px;
   margin-top: 5px;
   width: 30px;
   height: 30px;
-}
-
-.settings-container {
-  padding: 5px;
 }
 
 #built-in-settings {
