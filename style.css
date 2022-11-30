@@ -134,10 +134,10 @@ input {
   height: 30px;
 }
 
-#built-in-settings {
-  display: grid;
-  column-gap: 5px;
-  grid-template-columns: [label] auto [input] 1fr;
+h4,
+p {
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .custom-tag,
