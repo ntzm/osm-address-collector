@@ -1,8 +1,12 @@
-# [OSM Address Collector](https://ntzm.github.io/osm-address-collector/)
+<center>
 
-An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspired by [Keypad Mapper](https://wiki.openstreetmap.org/wiki/Keypad-Mapper_3)
+  # [OSM Address Collector](https://ntzm.github.io/osm-address-collector/)
 
-![](https://user-images.githubusercontent.com/3888578/204909727-d6ba792c-4756-419c-964c-36aa0afc32ec.png)
+  An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspired by [Keypad Mapper](https://wiki.openstreetmap.org/wiki/Keypad-Mapper_3)
+
+  ![](https://user-images.githubusercontent.com/3888578/204909727-d6ba792c-4756-419c-964c-36aa0afc32ec.png)
+
+</center>
 
 ## Features
 
