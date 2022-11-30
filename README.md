@@ -2,7 +2,7 @@
 
 An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspired by [Keypad Mapper](https://wiki.openstreetmap.org/wiki/Keypad-Mapper_3)
 
-![](https://user-images.githubusercontent.com/3888578/169166977-0b2674d7-00fc-4ef5-a2a0-7c74f12879c2.png)
+![](https://user-images.githubusercontent.com/3888578/204908807-a68978ff-b8d7-4cf6-ba2d-46372b1c61bd.png)
 
 ## Features
 
@@ -50,6 +50,9 @@ Distance - how far to move the address node from your current location (default 
 
 Custom tags can be added, modified and removed.
 These apply as you are surveying so you can change them halfway through and it will only apply to addresses you add after you change them.
+
+In some countries certain numbers aren't normally given to houses, such as number 13 in the UK.
+You can add numbers to skip when guessing the next number.
 
 You can see the orientation provider as well, this describes the way we get your current orientation:
 
