@@ -121,7 +121,8 @@ html {
 
 #close-settings,
 #close-note-writer,
-#add-custom-tag {
+#add-custom-tag,
+#add-skip-number {
   margin-left: 5px;
   margin-top: 5px;
   width: 30px;
@@ -138,17 +139,20 @@ html {
   grid-template-columns: [label] auto [input] 1fr;
 }
 
-.custom-tag {
+.custom-tag,
+.skip-number {
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
 }
 
-.custom-tag:last-of-type {
+.custom-tag:last-of-type,
+.skip-number:last-of-type {
   margin-bottom: 0;
 }
 
-.custom-tag input {
+.custom-tag input,
+.skip-number input {
   width: 100%;
   margin-left: 5px;
 }

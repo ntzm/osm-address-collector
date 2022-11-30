@@ -125,6 +125,54 @@ Object.entries(customTags).forEach(([key, value]) => addCustomTag(key, value));
 onClick($addCustomTag, () => addCustomTag("", ""));
 
 /*
+SETTINGS - SKIP NUMBERS
+*/
+
+let skipNumbers = JSON.parse(localStorage.getItem("skipNumbers") ?? "[]");
+const $skipNumbersContainer = document.getElementById("skip-numbers");
+
+const $addSkipNumber = document.getElementById("add-skip-number");
+
+const updateSkipNumbers = () => {
+  skipNumbers = [...document.querySelectorAll(".skip-number")]
+    .map(($tag) => $tag.querySelector(".number-input").value)
+    .filter((value) => value !== "")
+    .map(Number);
+
+  localStorage.setItem("skipNumbers", JSON.stringify(skipNumbers));
+};
+
+const addSkipNumber = (number) => {
+  const container = document.createElement("div");
+  container.classList.add("skip-number");
+
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "x";
+
+  onClick(removeButton, () => {
+    container.remove();
+    updateSkipNumbers();
+  });
+
+  const input = document.createElement("input");
+  input.type = "number";
+  input.value = number;
+  input.placeholder = "Number";
+  input.classList.add("number-input");
+
+  input.addEventListener("blur", updateSkipNumbers);
+
+  container.append(removeButton);
+  container.append(input);
+
+  $skipNumbersContainer.append(container);
+}
+
+skipNumbers.forEach((skipNumber) => addSkipNumber(skipNumber));
+
+onClick($addSkipNumber, () => addSkipNumber(""));
+
+/*
 RECORDING
 */
 
@@ -158,8 +206,6 @@ const move = (coords, bearing, amountKm) => {
     longitude: radiansToDegrees(movedLongitudeRadians),
   };
 };
-
-const skipNumbers = [13];
 
 const saveAddresses = (a) =>
   localStorage.setItem("addresses", JSON.stringify(a));
