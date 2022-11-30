@@ -1,3 +1,5 @@
+import guessNextNumber from "./guessNextNumber.mjs";
+
 const VERSION = "alpha";
 
 if ("serviceWorker" in navigator) {
@@ -157,40 +159,7 @@ const move = (coords, bearing, amountKm) => {
   };
 };
 
-const guessNextNumber = () => {
-  const lastAddresses = addresses[addresses.length - 1];
-  const prev = addresses[addresses.length - 2];
-
-  if (prev === undefined) {
-    return;
-  }
-
-  const lNum = Number(lastAddresses.numberOrName);
-  const pNum = Number(prev.numberOrName);
-
-  if (isNaN(lNum) || isNaN(pNum)) {
-    return;
-  }
-
-  const difference = lNum - pNum;
-
-  if (![-2, -1, 1, 2].includes(difference)) {
-    return;
-  }
-
-  let nextNumber = lNum + difference;
-
-  // todo make configurable
-  if (nextNumber === 13) {
-    nextNumber += difference;
-  }
-
-  if (nextNumber < 1) {
-    return;
-  }
-
-  return nextNumber;
-};
+const skipNumbers = [13];
 
 const saveAddresses = (a) =>
   localStorage.setItem("addresses", JSON.stringify(a));
@@ -200,6 +169,7 @@ const getSavedAddresses = () =>
 
 const $currentNumberOrName = document.getElementById("current-number-or-name");
 let addresses = [];
+let lastSkippedNumbers = [];
 let numberIsGuessed = false;
 let currentPosition = null;
 let currentOrientation = null;
@@ -218,6 +188,7 @@ if (savedAddresses.length > 0) {
   onClick(append, () => {
     if (numberIsGuessed) {
       numberIsGuessed = false;
+      lastSkippedNumbers = [];
       $currentNumberOrName.classList.remove("guessed");
       $currentNumberOrName.value = "";
     }
@@ -273,12 +244,14 @@ if (savedAddresses.length > 0) {
       numberOrName: numberOrName,
       customTags,
       direction,
+      skippedNumbers: lastSkippedNumbers,
     });
     saveAddresses(addresses);
 
     addAction(`+ ${direction} ${numberOrName}`);
 
-    const guessedNextNumber = guessNextNumber();
+    let guessedNextNumber;
+    [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(addresses, skipNumbers);
 
     if (!guessedNextNumber) {
       $currentNumberOrName.value = "";
