@@ -7,10 +7,6 @@ if ("serviceWorker" in navigator) {
 }
 
 const onClick = ($el, cb) => {
-  $el.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    cb(e);
-  });
   $el.addEventListener("click", cb);
 };
 
