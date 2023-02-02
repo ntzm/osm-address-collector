@@ -441,16 +441,13 @@ const getOsmFile = () => {
 
     const tag = xml.createElement("tag");
 
-    let numberOrName = address.numberOrName;
-
-    if (isNaN(numberOrName)) {
+    if (isNaN(address.numberOrName.charAt(0))) {
       tag.setAttribute("k", "addr:housename");
     } else {
-      numberOrName = Number(numberOrName);
       tag.setAttribute("k", "addr:housenumber");
     }
 
-    tag.setAttribute("v", numberOrName);
+    tag.setAttribute("v", address.numberOrName);
 
     node.append(tag);
 
