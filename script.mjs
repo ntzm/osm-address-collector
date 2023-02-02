@@ -226,6 +226,13 @@ if (savedAddresses.length > 0) {
   }
 }
 
+$currentNumberOrName.addEventListener("focus", (e) => {
+  if (numberIsGuessed) {
+    $currentNumberOrName.classList.remove("guessed");
+    $currentNumberOrName.value = "";
+  }
+});
+
 [...document.getElementsByClassName("append")].forEach((append) => {
   onClick(append, () => {
     if (numberIsGuessed) {
