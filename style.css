@@ -212,3 +212,7 @@ p {
 .status--bad {
   color: red;
 }
+
+.disclaimer {
+  font-size: 10pt;
+}
