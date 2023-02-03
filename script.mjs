@@ -44,6 +44,28 @@ onClick(document.getElementById("close-settings"), () => {
 });
 
 /*
+SETTINGS - Advanced
+*/
+
+let overpassTimeout = Number(localStorage.getItem("overpassTimeout") ?? 10_000);
+const $overpassTimeout = document.getElementById("overpass-timeout");
+$overpassTimeout.value = overpassTimeout;
+
+$overpassTimeout.addEventListener("blur", () => {
+  overpassTimeout = Number($overpassTimeout.value);
+  localStorage.setItem("overpassTimeout", overpassTimeout);
+});
+
+let overpassEndpoint = localStorage.getItem("overpassEndpoint") ?? "https://maps.mail.ru/osm/tools/overpass/api/interpreter";
+const $overpassEndpoint = document.getElementById("overpass-endpoint");
+$overpassEndpoint.value = overpassEndpoint;
+
+$overpassEndpoint.addEventListener("blur", () => {
+  overpassEndpoint = $overpassEndpoint.value;
+  localStorage.setItem("overpassEndpoint", overpassEndpoint);
+});
+
+/*
 SETTINGS - Info
 */
 
@@ -89,7 +111,12 @@ onClick($updateStreets, async () => {
   let nearestStreets;
 
   try {
-    nearestStreets = await findNearestStreets(currentPosition, STREET_SEARCH_METRES);
+    nearestStreets = await findNearestStreets(
+      currentPosition,
+      STREET_SEARCH_METRES,
+      overpassEndpoint,
+      overpassTimeout,
+    );
   } catch (error) {
     let message = error.message;
 

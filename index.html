@@ -97,14 +97,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
       <h4>Info</h4>
 
-      <p>Orientation provider: <span id="orientation-provider">None</span></p>
-      <p>Orientation: <span id="orientation">N/A</span></p>
-
       <p>
         <a href="https://github.com/ntzm/osm-address-collector" target="_blank"
           >GitHub</a
         >
       </p>
+
+      <h4>Advanced</h4>
+
+      <p>Orientation provider: <span id="orientation-provider">None</span></p>
+      <p>Orientation: <span id="orientation">N/A</span></p>
+
+      <div class="settings-container">
+        <label for="overpass-timeout">Overpass timeout (milliseconds)</label>
+        <br>
+        <input type="number" id="overpass-timeout" />
+      </div>
+
+      <div class="settings-container">
+        <label for="overpass-endpoint">Overpass endpoint</label>
+        <br>
+        <input type="text" id="overpass-endpoint" />
+      </div>
     </div>
 
     <div id="note-writer">

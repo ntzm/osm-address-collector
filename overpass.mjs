@@ -1,13 +1,9 @@
-const OVERPASS_ENDPOINT = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter';
-
-const TIMEOUT_MILLISECONDS = 10_000;
-
-export default async function overpassQuery(query) {
+export default async function overpassQuery(endpoint, query, timeout) {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MILLISECONDS);
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   const response  = await fetch(
-    `${OVERPASS_ENDPOINT}?data=${encodeURIComponent(query)}`,
+    `${endpoint}?data=${encodeURIComponent(query)}`,
     { signal: controller.signal }
   );
 
