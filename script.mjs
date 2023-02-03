@@ -1,5 +1,6 @@
 import findNearestStreets from "./findNearestStreets.mjs";
 import guessNextNumber from "./guessNextNumber.mjs";
+import { getOsmFile } from "./osmXml.mjs";
 
 const VERSION = "1.0.0";
 
@@ -581,79 +582,19 @@ const downloadBlob = (name, blob) => {
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace("T", "-").replace(/:/g, "");
 
-const getOsmFile = () => {
-  const xml = document.implementation.createDocument("", "", null);
-  const osm = xml.createElement("osm");
-  osm.setAttribute("version", "0.6");
-  osm.setAttribute("generator", `OSM Address Collector ${VERSION}`);
-
-  addresses.forEach((address, i) => {
-    const node = xml.createElement("node");
-    node.setAttribute("id", -surveyStart.getTime() - i);
-    node.setAttribute("version", 1);
-    node.setAttribute("lat", address.latitude);
-    node.setAttribute("lon", address.longitude);
-
-    const tag = xml.createElement("tag");
-
-    if (isNaN(address.numberOrName.charAt(0))) {
-      tag.setAttribute("k", "addr:housename");
-    } else {
-      tag.setAttribute("k", "addr:housenumber");
-    }
-
-    tag.setAttribute("v", address.numberOrName);
-
-    node.append(tag);
-
-    if (address.street) {
-      const streetTag = xml.createElement("tag");
-      streetTag.setAttribute("k", "addr:street");
-      streetTag.setAttribute("v", address.street);
-
-      node.append(streetTag);
-    }
-
-    Object.entries(address.customTags).forEach(([key, value]) => {
-      if (value === "") {
-        return;
-      }
-
-      const customTag = xml.createElement("tag");
-      customTag.setAttribute("k", key);
-      customTag.setAttribute("v", value);
-
-      node.append(customTag);
-    });
-
-    osm.append(node);
-  });
-
-  notes.forEach((note, i) => {
-    const node = xml.createElement("node");
-    node.setAttribute("id", -surveyStart.getTime() - addresses.length - i);
-    node.setAttribute("version", 1);
-    node.setAttribute("lat", note.latitude);
-    node.setAttribute("lon", note.longitude);
-
-    const tag = xml.createElement("tag");
-    tag.setAttribute("k", "note");
-    tag.setAttribute("v", note.content);
-
-    node.append(tag);
-    osm.append(node);
-  });
-
-  xml.append(osm);
-
-  return new XMLSerializer().serializeToString(xml);
-};
-
 onClick(document.getElementById("done"), async () => {
   if (addresses.length > 0) {
+    const contents = getOsmFile(
+      document.implementation,
+      (xml) => new XMLSerializer().serializeToString(xml),
+      addresses,
+      notes,
+      surveyStart,
+    );
+
     downloadBlob(
       `${getFormattedDate()}.osm`,
-      new Blob([getOsmFile()], { type: "application/vnd.osm+xml" })
+      new Blob([contents], { type: "application/vnd.osm+xml" })
     );
   }
 

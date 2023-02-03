@@ -1,0 +1,10 @@
+{
+  "name": "osm-address-collector",
+  "devDependencies": {
+    "jsdom": "^21.1.0",
+    "w3c-xmlserializer": "^4.0.0"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
+}
