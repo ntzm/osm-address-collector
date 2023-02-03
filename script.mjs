@@ -205,7 +205,11 @@ const $customTagContainer = document.getElementById("custom-tags");
 
 const $addCustomTag = document.getElementById("add-custom-tag");
 
-const updateCustomTags = () => {
+const updateCustomTags = (e) => {
+  if (e && e.target.classList.contains("key-input") && e.target.value === "addr:street") {
+    alert("Please use the street setting above to set the street instead of the custom tags");
+  }
+
   customTags = Object.fromEntries(
     [...document.querySelectorAll(".custom-tag")].map(($tag) => [
       $tag.querySelector(".key-input").value,
