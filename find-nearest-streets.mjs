@@ -1,4 +1,4 @@
-import createBoundingBox from './create-bounding-box.mjs'
+import {createBoundingBox} from './geo.mjs'
 import overpassQuery from './overpass.mjs'
 
 /**
