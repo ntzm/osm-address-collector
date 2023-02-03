@@ -2,6 +2,7 @@ Changelog
 
 03/02/23
 
+- Added a reset settings button
 - Save notes alongside addresses for next session
 - Added nearby street autocomplete
 - Added custom tag key autocomplete

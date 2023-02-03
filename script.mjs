@@ -62,22 +62,26 @@ Do not change the endpoint unless you know what you are doing!`,
   )
 })
 
-let overpassTimeout = storage.getNumber('overpassTimeout', 10_000)
+const overpassTimeoutKey = 'overpassTimeout'
+const defaultOverpassTimeout = 10_000
+let overpassTimeout = storage.getNumber(overpassTimeoutKey, defaultOverpassTimeout)
 const $overpassTimeout = document.querySelector('#overpass-timeout')
 $overpassTimeout.value = overpassTimeout
 
 $overpassTimeout.addEventListener('blur', () => {
   overpassTimeout = Number($overpassTimeout.value)
-  storage.set('overpassTimeout', overpassTimeout)
+  storage.set(overpassTimeoutKey, overpassTimeout)
 })
 
-let overpassEndpoint = storage.get('overpassEndpoint', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter')
+const overpassEndpointKey = 'overpassEndpoint'
+const defaultOverpassEndpoint = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+let overpassEndpoint = storage.get(overpassEndpointKey, defaultOverpassEndpoint)
 const $overpassEndpoint = document.querySelector('#overpass-endpoint')
 $overpassEndpoint.value = overpassEndpoint
 
 $overpassEndpoint.addEventListener('blur', () => {
   overpassEndpoint = $overpassEndpoint.value
-  storage.set('overpassEndpoint', overpassEndpoint)
+  storage.set(overpassEndpointKey, overpassEndpoint)
 })
 
 /*
@@ -97,8 +101,10 @@ If you add an address node by pressing the left arrow key, it will throw the nod
   )
 })
 
+const distanceKey = 'distance'
+const defaultDistance = 10
 const $distance = document.querySelector('#distance')
-let distance = storage.getNumber('distance', 10)
+let distance = storage.getNumber(distanceKey, defaultDistance)
 $distance.value = distance
 
 const $distanceDisplay = document.querySelector('#distance-display')
@@ -107,7 +113,7 @@ $distanceDisplay.textContent = distance
 $distance.addEventListener('input', () => {
   distance = Number($distance.value)
   $distanceDisplay.textContent = distance
-  storage.set('distance', distance)
+  storage.set(distanceKey, distance)
 })
 
 /*
@@ -128,7 +134,9 @@ const $street = document.querySelector('#street')
 const $updateStreets = document.querySelector('#update-streets')
 const $updateStreetsStatus = document.querySelector('#update-streets-status')
 
-let streetSearchDistance = storage.getNumber('streetSearchDistance', 10)
+const streetSearchDistanceKey = 'streetSearchDistance'
+const defaultStreetSearchDistance = 10
+let streetSearchDistance = storage.getNumber(streetSearchDistanceKey, defaultStreetSearchDistance)
 const $streetSearchDistance = document.querySelector('#street-search-distance')
 $streetSearchDistance.value = streetSearchDistance
 
@@ -139,7 +147,7 @@ $streetSearchDistance.addEventListener('input', () => {
   const temporaryStreetSearchDistance = Number($streetSearchDistance.value)
   streetSearchDistance = temporaryStreetSearchDistance
   $streetSearchDistanceDisplay.textContent = streetSearchDistance
-  storage.set('streetSearchDistance', streetSearchDistance)
+  storage.set(streetSearchDistanceKey, streetSearchDistance)
 })
 
 $street.addEventListener('focus', () => {
@@ -203,7 +211,9 @@ The tags you add will only be applied to addresses going forward.`,
   )
 })
 
-let customTags = storage.getJson('customTags', {})
+const customTagsKey = 'customTags'
+const defaultCustomTags = {}
+let customTags = storage.getJson(customTagsKey, defaultCustomTags)
 const $customTagContainer = document.querySelector('#custom-tags')
 
 const $addCustomTag = document.querySelector('#add-custom-tag')
@@ -220,7 +230,7 @@ const updateCustomTags = event => {
     ]),
   )
 
-  storage.setJson('customTags', customTags)
+  storage.setJson(customTagsKey, customTags)
 }
 
 const addCustomTag = (key, value) => {
@@ -276,7 +286,9 @@ For example, in the UK the number 13 is often skipped.`,
   )
 })
 
-let skipNumbers = storage.getJson('skipNumbers', [])
+const skipNumbersKey = 'skipNumbers'
+const defaultSkipNumbers = []
+let skipNumbers = storage.getJson(skipNumbersKey, [])
 const $skipNumbersContainer = document.querySelector('#skip-numbers')
 
 const $addSkipNumber = document.querySelector('#add-skip-number')
@@ -287,7 +299,7 @@ const updateSkipNumbers = () => {
     .filter(value => value !== '')
     .map(Number)
 
-  storage.setJson('skipNumbers', skipNumbers)
+  storage.setJson(skipNumbersKey, skipNumbers)
 }
 
 const addSkipNumber = number => {
@@ -321,6 +333,45 @@ for (const skipNumber of skipNumbers) {
 }
 
 onClick($addSkipNumber, () => addSkipNumber(''))
+
+/*
+SETTINGS - Reset
+*/
+
+const $resetSettings = document.querySelector('#reset-settings')
+onClick($resetSettings, () => {
+  if (!confirm('Are you sure you want to reset the settings to the default values?')) {
+    return
+  }
+
+  // This sucks - react would be lovely here
+
+  overpassTimeout = defaultOverpassTimeout
+  $overpassTimeout.value = defaultOverpassTimeout
+  storage.set(overpassTimeoutKey, defaultOverpassTimeout)
+
+  overpassEndpoint = defaultOverpassEndpoint
+  $overpassEndpoint.value = defaultOverpassEndpoint
+  storage.set(overpassEndpointKey, defaultOverpassEndpoint)
+
+  distance = defaultDistance
+  $distance.value = defaultDistance
+  $distanceDisplay.textContent = defaultDistance
+  storage.set(distanceKey, defaultDistance)
+
+  streetSearchDistance = defaultStreetSearchDistance
+  $streetSearchDistance.value = defaultStreetSearchDistance
+  $streetSearchDistanceDisplay.textContent = defaultStreetSearchDistance
+  storage.set(streetSearchDistanceKey, defaultStreetSearchDistance)
+
+  customTags = defaultCustomTags
+  $customTagContainer.replaceChildren()
+  storage.setJson(customTagsKey, defaultCustomTags)
+
+  skipNumbers = defaultSkipNumbers
+  $skipNumbersContainer.replaceChildren()
+  storage.setJson(skipNumbersKey, defaultSkipNumbers)
+})
 
 /*
 RECORDING
