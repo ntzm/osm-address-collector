@@ -92,7 +92,16 @@ const $streets = document.getElementById("streets");
 const $street = document.getElementById("street");
 const $updateStreets = document.getElementById("update-streets");
 const $updateStreetsStatus = document.getElementById("update-streets-status");
-const STREET_SEARCH_METRES = 10;
+
+let streetSearchDistance = Number(localStorage.getItem("street-search-distance") ?? 10);
+const $streetSearchDistance = document.getElementById("street-search-distance");
+$streetSearchDistance.value = streetSearchDistance;
+
+$streetSearchDistance.addEventListener("blur", () => {
+  const tempStreetSearchDistance = Number($streetSearchDistance.value);
+  streetSearchDistance = tempStreetSearchDistance;
+  localStorage.setItem("street-search-distance", streetSearchDistance);
+});
 
 $street.addEventListener("focus", () => {
   $street.value = "";
@@ -113,7 +122,7 @@ onClick($updateStreets, async () => {
   try {
     nearestStreets = await findNearestStreets(
       currentPosition,
-      STREET_SEARCH_METRES,
+      streetSearchDistance,
       overpassEndpoint,
       overpassTimeout,
     );
