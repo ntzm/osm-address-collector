@@ -1,4 +1,5 @@
 import findNearestStreets from "./findNearestStreets.mjs";
+import { move } from "./geo.mjs";
 import guessNextNumber from "./guessNextNumber.mjs";
 import { getOsmFile } from "./osmXml.mjs";
 
@@ -319,37 +320,6 @@ onClick($addSkipNumber, () => addSkipNumber(""));
 /*
 RECORDING
 */
-
-const degreesToRadians = (degrees) => (degrees * Math.PI) / 180;
-const radiansToDegrees = (radians) => (radians * 180) / Math.PI;
-const move = (coords, bearing, amountKm) => {
-  const radiusOfEarthKm = 6378.1;
-  const bearingRadians = degreesToRadians(bearing);
-
-  const latitudeRadians = degreesToRadians(coords.latitude);
-  const longitudeRadians = degreesToRadians(coords.longitude);
-
-  const movedLatitudeRadians = Math.asin(
-    Math.sin(latitudeRadians) * Math.cos(amountKm / radiusOfEarthKm) +
-      Math.cos(latitudeRadians) *
-        Math.sin(amountKm / radiusOfEarthKm) *
-        Math.cos(bearingRadians)
-  );
-  const movedLongitudeRadians =
-    longitudeRadians +
-    Math.atan2(
-      Math.sin(bearingRadians) *
-        Math.sin(amountKm / radiusOfEarthKm) *
-        Math.cos(latitudeRadians),
-      Math.cos(amountKm / radiusOfEarthKm) -
-        Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians)
-    );
-
-  return {
-    latitude: radiansToDegrees(movedLatitudeRadians),
-    longitude: radiansToDegrees(movedLongitudeRadians),
-  };
-};
 
 const saveAddresses = (a) =>
   localStorage.setItem("addresses", JSON.stringify(a));
