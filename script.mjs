@@ -97,7 +97,7 @@ const addCustomTag = (key, value) => {
   keyInput.type = "text";
   keyInput.value = key;
   keyInput.placeholder = "Key";
-  keyInput.autocapitalize = "no";
+  keyInput.autocapitalize = "none";
   keyInput.setAttribute("list", "tag-keys");
   keyInput.classList.add("key-input");
 
