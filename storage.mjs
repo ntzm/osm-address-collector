@@ -22,7 +22,11 @@ export default class Storage {
   }
 
   set(key, value) {
-    this.engine.setItem(key, value)
+    try {
+      this.engine.setItem(key, value)
+    } catch (error) {
+      alert('Address storage is full, please finish and start a new survey')
+    }
   }
 
   setJson(key, value) {
