@@ -1,15 +1,15 @@
 export default async function overpassQuery(endpoint, query, timeout) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
 
-  const response  = await fetch(
+  const response = await fetch(
     `${endpoint}?data=${encodeURIComponent(query)}`,
-    { signal: controller.signal }
-  );
+    {signal: controller.signal},
+  )
 
-  clearTimeout(timeoutId);
+  clearTimeout(timeoutId)
 
-  const body = await response.json();
+  const body = await response.json()
 
-  return body.elements;
+  return body.elements
 }

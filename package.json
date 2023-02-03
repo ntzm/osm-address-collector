@@ -2,9 +2,22 @@
   "name": "osm-address-collector",
   "devDependencies": {
     "jsdom": "^21.1.0",
-    "w3c-xmlserializer": "^4.0.0"
+    "w3c-xmlserializer": "^4.0.0",
+    "xo": "^0.53.1"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "lint": "xo",
+    "lint-fix": "xo --fix"
+  },
+  "xo": {
+    "space": true,
+    "envs": ["node", "serviceworker", "browser"],
+    "globals": ["workbox"],
+    "rules": {
+      "no-alert": "off",
+      "semi": ["error", "never"],
+      "no-mixed-operators": "off"
+    }
   }
 }

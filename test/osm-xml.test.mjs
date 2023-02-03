@@ -1,64 +1,64 @@
-import { it } from "node:test";
-import assert from "node:assert/strict";
-import { getOsmFile } from "../osmXml.mjs";
-import { JSDOM } from "jsdom";
-import serialize from "w3c-xmlserializer";
+import {it} from 'node:test'
+import assert from 'node:assert/strict'
+import {JSDOM} from 'jsdom'
+import serialize from 'w3c-xmlserializer'
+import {getOsmFile} from '../osm-xml.mjs'
 
-const implementation = new JSDOM().window.document.implementation;
+const implementation = new JSDOM().window.document.implementation
 
 function collapse(string) {
   return string
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line)
-    .join("");
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .join('')
 }
 
-it("creates an OSM XML file", () => {
+it('creates an OSM XML file', () => {
   const addresses = [
     {
       latitude: 1,
       longitude: 2,
-      numberOrName: "52",
+      numberOrName: '52',
       customTags: {},
-      direction: "L",
+      direction: 'L',
       skippedNumbers: [],
-      street: "Foo Road",
+      street: 'Foo Road',
     },
     {
       latitude: 2,
       longitude: 3,
-      numberOrName: "52a",
+      numberOrName: '52a',
       customTags: {
-        "addr:village": "Minton",
+        'addr:village': 'Minton',
       },
-      direction: "R",
+      direction: 'R',
       skippedNumbers: [],
-      street: "Foo Street",
+      street: 'Foo Street',
     },
     {
       latitude: 3,
       longitude: 4,
-      numberOrName: "Apple Cottage",
+      numberOrName: 'Apple Cottage',
       customTags: {
-        "addr:village": "Minton",
-        "addr:city": "Bimbom",
+        'addr:village': 'Minton',
+        'addr:city': 'Bimbom',
       },
-      direction: "F",
+      direction: 'F',
       skippedNumbers: [],
-      street: "Bar Road",
+      street: 'Bar Road',
     },
-  ];
+  ]
 
   const notes = [
     {
       latitude: 1,
       longitude: 2,
-      content: "Foo",
+      content: 'Foo',
     },
-  ];
+  ]
 
-  const surveyStart = new Date(Date.UTC(2020, 0, 1, 0, 0, 0, 0));
+  const surveyStart = new Date(Date.UTC(2020, 0, 1, 0, 0, 0, 0))
 
   assert.equal(
     getOsmFile(implementation, serialize, addresses, notes, surveyStart),
@@ -84,5 +84,5 @@ it("creates an OSM XML file", () => {
         </node>
       </osm>
     `),
-  );
-});
+  )
+})
