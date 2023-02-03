@@ -2,6 +2,9 @@ import findNearestStreets from './find-nearest-streets.mjs'
 import {move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
+import Storage from './storage.mjs'
+
+const storage = new Storage(localStorage)
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
@@ -59,22 +62,22 @@ Do not change the endpoint unless you know what you are doing!`,
   )
 })
 
-let overpassTimeout = Number(localStorage.getItem('overpassTimeout') ?? 10_000)
+let overpassTimeout = storage.getNumber('overpassTimeout', 10_000)
 const $overpassTimeout = document.querySelector('#overpass-timeout')
 $overpassTimeout.value = overpassTimeout
 
 $overpassTimeout.addEventListener('blur', () => {
   overpassTimeout = Number($overpassTimeout.value)
-  localStorage.setItem('overpassTimeout', overpassTimeout)
+  storage.set('overpassTimeout', overpassTimeout)
 })
 
-let overpassEndpoint = localStorage.getItem('overpassEndpoint') ?? 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+let overpassEndpoint = storage.get('overpassEndpoint', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter')
 const $overpassEndpoint = document.querySelector('#overpass-endpoint')
 $overpassEndpoint.value = overpassEndpoint
 
 $overpassEndpoint.addEventListener('blur', () => {
   overpassEndpoint = $overpassEndpoint.value
-  localStorage.setItem('overpassEndpoint', overpassEndpoint)
+  storage.set('overpassEndpoint', overpassEndpoint)
 })
 
 /*
@@ -95,7 +98,7 @@ If you add an address node by pressing the left arrow key, it will throw the nod
 })
 
 const $distance = document.querySelector('#distance')
-let distance = Number(localStorage.getItem('distance') ?? 10)
+let distance = storage.getNumber('distance', 10)
 $distance.value = distance
 
 const $distanceDisplay = document.querySelector('#distance-display')
@@ -104,7 +107,7 @@ $distanceDisplay.textContent = distance
 $distance.addEventListener('input', () => {
   distance = Number($distance.value)
   $distanceDisplay.textContent = distance
-  localStorage.setItem('distance', distance)
+  storage.set('distance', distance)
 })
 
 /*
@@ -125,7 +128,7 @@ const $street = document.querySelector('#street')
 const $updateStreets = document.querySelector('#update-streets')
 const $updateStreetsStatus = document.querySelector('#update-streets-status')
 
-let streetSearchDistance = Number(localStorage.getItem('street-search-distance') ?? 10)
+let streetSearchDistance = storage.getNumber('streetSearchDistance', 10)
 const $streetSearchDistance = document.querySelector('#street-search-distance')
 $streetSearchDistance.value = streetSearchDistance
 
@@ -136,7 +139,7 @@ $streetSearchDistance.addEventListener('input', () => {
   const temporaryStreetSearchDistance = Number($streetSearchDistance.value)
   streetSearchDistance = temporaryStreetSearchDistance
   $streetSearchDistanceDisplay.textContent = streetSearchDistance
-  localStorage.setItem('street-search-distance', streetSearchDistance)
+  storage.set('streetSearchDistance', streetSearchDistance)
 })
 
 $street.addEventListener('focus', () => {
@@ -200,7 +203,7 @@ The tags you add will only be applied to addresses going forward.`,
   )
 })
 
-let customTags = JSON.parse(localStorage.getItem('customTags') ?? '{}')
+let customTags = storage.getJson('customTags', {})
 const $customTagContainer = document.querySelector('#custom-tags')
 
 const $addCustomTag = document.querySelector('#add-custom-tag')
@@ -217,7 +220,7 @@ const updateCustomTags = event => {
     ]),
   )
 
-  localStorage.setItem('customTags', JSON.stringify(customTags))
+  storage.setJson('customTags', customTags)
 }
 
 const addCustomTag = (key, value) => {
@@ -273,7 +276,7 @@ For example, in the UK the number 13 is often skipped.`,
   )
 })
 
-let skipNumbers = JSON.parse(localStorage.getItem('skipNumbers') ?? '[]')
+let skipNumbers = storage.getJson('skipNumbers', [])
 const $skipNumbersContainer = document.querySelector('#skip-numbers')
 
 const $addSkipNumber = document.querySelector('#add-skip-number')
@@ -284,7 +287,7 @@ const updateSkipNumbers = () => {
     .filter(value => value !== '')
     .map(Number)
 
-  localStorage.setItem('skipNumbers', JSON.stringify(skipNumbers))
+  storage.setJson('skipNumbers', skipNumbers)
 }
 
 const addSkipNumber = number => {
@@ -324,10 +327,10 @@ RECORDING
 */
 
 const saveAddresses = addressesToSave =>
-  localStorage.setItem('addresses', JSON.stringify(addressesToSave))
+  storage.setJson('addresses', addressesToSave)
 
 const getSavedAddresses = () =>
-  JSON.parse(localStorage.getItem('addresses') ?? '[]')
+  storage.getJson('addresses', [])
 
 const $currentNumberOrName = document.querySelector('#current-number-or-name')
 let addresses = []
