@@ -56,10 +56,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
       <h4>Custom tags</h4>
 
+      <div class="settings-container">
+        <datalist id="streets">
+        </datalist>
+
+        <label for="street">Street</label>
+        <input type="text" id="street" list="streets" />
+
+        <button id="update-streets">Update streets</button>
+        <div id="update-streets-status">No streets</div>
+      </div>
+
       <p>Specify tags to add to every address node.</p>
 
       <datalist id="tag-keys">
-        <option value="addr:street" />
         <option value="addr:city" />
         <option value="addr:postcode" />
         <option value="addr:country" />

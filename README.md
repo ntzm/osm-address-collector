@@ -48,6 +48,9 @@ Settings are saved in browser local storage so they will be the same when you co
 Distance - how far to move the address node from your current location (default 10m)
 (e.g. if you press 4 then left arrow, the address node will be 10m to your left)
 
+Street - what to fill `addr:street` with.
+You can press the "Update streets" button to get the nearest streets to you.
+
 Custom tags can be added, modified and removed.
 These apply as you are surveying so you can change them halfway through and it will only apply to addresses you add after you change them.
 

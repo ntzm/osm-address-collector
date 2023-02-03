@@ -1,3 +1,4 @@
+import findNearestStreets from "./findNearestStreets.mjs";
 import guessNextNumber from "./guessNextNumber.mjs";
 
 const VERSION = "1.0.0";
@@ -59,6 +60,58 @@ $distance.value = distance;
 $distance.addEventListener("blur", () => {
   distance = Number($distance.value);
   localStorage.setItem("distance", distance);
+});
+
+/*
+SETTINGS - Street
+*/
+
+const $streets = document.getElementById("streets");
+const $street = document.getElementById("street");
+const $updateStreets = document.getElementById("update-streets");
+const $updateStreetsStatus = document.getElementById("update-streets-status");
+const STREET_SEARCH_METRES = 10;
+
+$street.addEventListener("focus", () => {
+  $street.value = "";
+});
+
+onClick($updateStreets, async () => {
+  if (currentPosition === null) {
+    // todo disable button before?
+    alert("GPS required");
+    return;
+  }
+
+  $updateStreets.disabled = true;
+  $updateStreetsStatus.textContent = "Updating streets...";
+
+  let nearestStreets;
+
+  try {
+    nearestStreets = await findNearestStreets(currentPosition, STREET_SEARCH_METRES);
+  } catch (error) {
+    let message = error.message;
+
+    if (error.name === "AbortError") {
+      message = "Timed out";
+    }
+
+    $updateStreetsStatus.textContent = `Overpass error: ${message}`;
+    return;
+  } finally {
+    $updateStreets.disabled = false;
+  }
+
+  $updateStreetsStatus.textContent = `Found ${nearestStreets.length} street${nearestStreets.length === 1 ? '' : 's'}`;
+
+  $streets.replaceChildren(
+    ...nearestStreets.map((street) => {
+      const $option = document.createElement("option");
+      $option.value = street;
+      return $option;
+    })
+  );
 });
 
 /*
@@ -295,6 +348,7 @@ $currentNumberOrName.addEventListener("focus", (e) => {
       customTags,
       direction,
       skippedNumbers: lastSkippedNumbers,
+      street: $street.value,
     });
     saveAddresses(addresses);
 
@@ -458,6 +512,14 @@ const getOsmFile = () => {
     tag.setAttribute("v", address.numberOrName);
 
     node.append(tag);
+
+    if (address.street) {
+      const streetTag = xml.createElement("tag");
+      streetTag.setAttribute("k", "addr:street");
+      streetTag.setAttribute("v", address.street);
+
+      node.append(streetTag);
+    }
 
     Object.entries(address.customTags).forEach(([key, value]) => {
       if (value === "") {
