@@ -79,8 +79,12 @@ const $distance = document.getElementById("distance");
 let distance = Number(localStorage.getItem("distance") ?? 10);
 $distance.value = distance;
 
-$distance.addEventListener("blur", () => {
+const $distanceDisplay = document.getElementById("distance-display");
+$distanceDisplay.textContent = distance;
+
+$distance.addEventListener("input", () => {
   distance = Number($distance.value);
+  $distanceDisplay.textContent = distance;
   localStorage.setItem("distance", distance);
 });
 
@@ -97,9 +101,13 @@ let streetSearchDistance = Number(localStorage.getItem("street-search-distance")
 const $streetSearchDistance = document.getElementById("street-search-distance");
 $streetSearchDistance.value = streetSearchDistance;
 
-$streetSearchDistance.addEventListener("blur", () => {
+const $streetSearchDistanceDisplay = document.getElementById("street-search-distance-display");
+$streetSearchDistanceDisplay.textContent = streetSearchDistance;
+
+$streetSearchDistance.addEventListener("input", () => {
   const tempStreetSearchDistance = Number($streetSearchDistance.value);
   streetSearchDistance = tempStreetSearchDistance;
+  $streetSearchDistanceDisplay.textContent = streetSearchDistance;
   localStorage.setItem("street-search-distance", streetSearchDistance);
 });
 
