@@ -332,6 +332,14 @@ const saveAddresses = addressesToSave =>
 const getSavedAddresses = () =>
   storage.getJson('addresses', [])
 
+const saveNotes = notesToSave =>
+  storage.setJson('notes', notesToSave)
+
+const getSavedNotes = () =>
+  storage.getJson('notes', [])
+
+let notes = []
+
 const $currentNumberOrName = document.querySelector('#current-number-or-name')
 let addresses = []
 let lastSkippedNumbers = []
@@ -340,12 +348,15 @@ let currentPosition = null
 let currentOrientation = null
 
 const savedAddresses = getSavedAddresses()
+const savedNotes = getSavedNotes()
 
-if (savedAddresses.length > 0) {
-  if (confirm(`You have ${savedAddresses.length} unsaved addresses from previous session, do you want to load them?`)) {
+if (savedAddresses.length + savedNotes.length > 0) {
+  if (confirm(`You have ${savedAddresses.length} unsaved addresses and ${savedNotes.length} unsaved notes from the previous session, do you want to load them?`)) {
     addresses = savedAddresses
+    notes = savedNotes
   } else {
     saveAddresses([])
+    saveNotes([])
   }
 }
 
@@ -573,6 +584,7 @@ onClick(document.querySelector('#done'), async () => {
   }
 
   saveAddresses([])
+  saveNotes([])
 
   window.location.reload()
 })
@@ -647,7 +659,6 @@ onClick(document.querySelector('#undo'), () => {
 NOTE
 */
 
-const notes = []
 const $addNote = document.querySelector('#add-note')
 const $noteWriter = document.querySelector('#note-writer')
 const $noteContent = document.querySelector('#note-content')
@@ -669,6 +680,7 @@ onClick($saveNote, () => {
     longitude: currentPosition.longitude,
     content: $noteContent.value,
   })
+  saveNotes(notes)
   $noteContent.value = ''
   $noteWriter.style.display = 'none'
 

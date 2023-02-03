@@ -2,6 +2,7 @@ Changelog
 
 03/02/23
 
+- Save notes alongside addresses for next session
 - Added nearby street autocomplete
 - Added custom tag key autocomplete
 - Improved UI of settings, with explanations
