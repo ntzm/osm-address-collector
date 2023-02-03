@@ -47,6 +47,18 @@ onClick(document.getElementById("close-settings"), () => {
 SETTINGS - Advanced
 */
 
+document.getElementById("setting-advanced").addEventListener("click", () => {
+  alert(
+`Orientation is used to throw address nodes in the correct direction.
+Orientation provider shows the method to get your device's orientation.
+Orientation shows your device's current orientation.
+
+We use Overpass API to find streets nearby to you.
+You can customise the timeout and the endpoint here.
+Do not change the endpoint unless you know what you are doing!`
+);
+});
+
 let overpassTimeout = Number(localStorage.getItem("overpassTimeout") ?? 10_000);
 const $overpassTimeout = document.getElementById("overpass-timeout");
 $overpassTimeout.value = overpassTimeout;
@@ -72,8 +84,15 @@ SETTINGS - Info
 const $orientationProvider = document.getElementById("orientation-provider");
 
 /*
-SETTINGS - Distance
+SETTINGS - General
 */
+
+document.getElementById("setting-general").addEventListener("click", () => {
+  alert(
+`Choose a distance to throw address nodes from your current position.
+If you add an address node by pressing the left arrow key, it will throw the node to your left by this amount.`
+);
+});
 
 const $distance = document.getElementById("distance");
 let distance = Number(localStorage.getItem("distance") ?? 10);
@@ -91,6 +110,15 @@ $distance.addEventListener("input", () => {
 /*
 SETTINGS - Street
 */
+
+document.getElementById("setting-street").addEventListener("click", () => {
+  alert(
+`Add a street to address nodes.
+The street you choose will only be applied to addresses going forward.
+You can type in the street name manually, or click "Get streets" to retrieve a list of streets near to you.
+You can change the distance it will look for nearby streets with the "Street search distance" slider.`
+);
+});
 
 const $streets = document.getElementById("streets");
 const $street = document.getElementById("street");
@@ -117,13 +145,14 @@ $street.addEventListener("focus", () => {
 
 onClick($updateStreets, async () => {
   if (currentPosition === null) {
-    // todo disable button before?
-    alert("GPS required");
+    $updateStreetsStatus.textContent = "GPS required";
+    $updateStreetsStatus.classList.add("status--bad");
     return;
   }
 
   $updateStreets.disabled = true;
   $updateStreetsStatus.textContent = "Updating streets...";
+  $updateStreetsStatus.classList.remove("status--good", "status--bad");
 
   let nearestStreets;
 
@@ -142,12 +171,14 @@ onClick($updateStreets, async () => {
     }
 
     $updateStreetsStatus.textContent = `Overpass error: ${message}`;
+    $updateStreetsStatus.classList.add("status--bad");
     return;
   } finally {
     $updateStreets.disabled = false;
   }
 
   $updateStreetsStatus.textContent = `Found ${nearestStreets.length} street${nearestStreets.length === 1 ? '' : 's'}`;
+  $updateStreetsStatus.classList.add("status--good");
 
   $streets.replaceChildren(
     ...nearestStreets.map((street) => {
@@ -161,6 +192,13 @@ onClick($updateStreets, async () => {
 /*
 SETTINGS - Custom tags
 */
+
+document.getElementById("setting-custom-tags").addEventListener("click", () => {
+  alert(
+`Add custom OSM tags to each address node.
+The tags you add will only be applied to addresses going forward.`
+);
+});
 
 let customTags = JSON.parse(localStorage.getItem("customTags") ?? "{}");
 const $customTagContainer = document.getElementById("custom-tags");
@@ -180,7 +218,7 @@ const updateCustomTags = () => {
 
 const addCustomTag = (key, value) => {
   const container = document.createElement("div");
-  container.classList.add("custom-tag");
+  container.classList.add("custom-tag", "setting-list__row");
 
   const removeButton = document.createElement("button");
   removeButton.textContent = "x";
@@ -196,13 +234,13 @@ const addCustomTag = (key, value) => {
   keyInput.placeholder = "Key";
   keyInput.autocapitalize = "none";
   keyInput.setAttribute("list", "tag-keys");
-  keyInput.classList.add("key-input");
+  keyInput.classList.add("key-input", "setting-input", "setting-list__input");
 
   const valueInput = document.createElement("input");
   valueInput.type = "text";
   valueInput.value = value;
   valueInput.placeholder = "Value";
-  valueInput.classList.add("value-input");
+  valueInput.classList.add("value-input", "setting-input", "setting-list__input");
 
   keyInput.addEventListener("blur", updateCustomTags);
   valueInput.addEventListener("blur", updateCustomTags);
@@ -222,6 +260,13 @@ onClick($addCustomTag, () => addCustomTag("", ""));
 SETTINGS - SKIP NUMBERS
 */
 
+document.getElementById("setting-skip-numbers").addEventListener("click", () => {
+  alert(
+`Choose some numbers to skip when the app tries to guess the next number in the sequence.
+For example, in the UK the number 13 is often skipped.`
+);
+});
+
 let skipNumbers = JSON.parse(localStorage.getItem("skipNumbers") ?? "[]");
 const $skipNumbersContainer = document.getElementById("skip-numbers");
 
@@ -238,7 +283,7 @@ const updateSkipNumbers = () => {
 
 const addSkipNumber = (number) => {
   const container = document.createElement("div");
-  container.classList.add("skip-number");
+  container.classList.add("skip-number", "setting-list__row");
 
   const removeButton = document.createElement("button");
   removeButton.textContent = "x";
@@ -252,7 +297,7 @@ const addSkipNumber = (number) => {
   input.type = "number";
   input.value = number;
   input.placeholder = "Number";
-  input.classList.add("number-input");
+  input.classList.add("number-input", "setting-input", "setting-list__input");
 
   input.addEventListener("blur", updateSkipNumbers);
 

@@ -49,80 +49,122 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <div id="settings">
       <button id="close-settings">x</button>
 
-      <div class="settings-container" id="built-in-settings">
-        <label for="distance">Distance: <span id="distance-display"></span>m</label>
-        <br>
-        <input type="range" id="distance" min="1" max="100" />
-      </div>
+      <div class="setting-category">
+        <h2 class="setting-category__heading" id="setting-street">
+          <span class="setting-category__info">ⓘ</span>
+          Street
+        </h2>
 
-      <h4>Custom tags</h4>
-
-      <div class="settings-container">
         <datalist id="streets">
         </datalist>
 
-        <label for="street">Street</label>
-        <input type="text" id="street" list="streets" />
+        <div class="setting">
+          <input class="setting-input" type="text" id="street" list="streets" placeholder="Street" autocomplete="off" />
+        </div>
 
-        <button id="update-streets">Update streets</button>
-        <div id="update-streets-status">No streets</div>
+        <div class="setting">
+          <button class="setting-button" id="update-streets">Get streets</button>
+          <span class="status" id="update-streets-status">No streets</span>
+        </div>
 
-        <label for="street-search-distance">Street search distance: <span id="street-search-distance-display"></span>m</label>
-        <br>
-        <input type="range" id="street-search-distance" min="0" max="50">
+        <div class="setting">
+          <label for="street-search-distance">Street search distance: <span id="street-search-distance-display"></span>m</label>
+          <br>
+          <input class="setting-input" type="range" id="street-search-distance" min="0" max="50">
+        </div>
       </div>
 
-      <p>Specify tags to add to every address node.</p>
+      <div class="setting-category">
+        <h2 class="setting-category__heading" id="setting-custom-tags">
+          <span class="setting-category__info">ⓘ</span>
+          Custom tags
+        </h2>
 
-      <datalist id="tag-keys">
-        <option value="addr:city" />
-        <option value="addr:postcode" />
-        <option value="addr:country" />
-        <option value="addr:state" />
-        <option value="addr:place" />
-        <option value="addr:suburb" />
-        <option value="addr:province" />
-        <option value="addr:district" />
-        <option value="addr:subdistrict" />
-        <option value="addr:hamlet" />
-        <option value="addr:village" />
-        <option value="addr:town" />
-        <option value="addr:county" />
-      </datalist>
+        <datalist id="tag-keys">
+          <option value="addr:city" />
+          <option value="addr:postcode" />
+          <option value="addr:country" />
+          <option value="addr:state" />
+          <option value="addr:place" />
+          <option value="addr:suburb" />
+          <option value="addr:province" />
+          <option value="addr:district" />
+          <option value="addr:subdistrict" />
+          <option value="addr:hamlet" />
+          <option value="addr:village" />
+          <option value="addr:town" />
+          <option value="addr:county" />
+        </datalist>
 
-      <div class="settings-container" id="custom-tags"></div>
-      <button id="add-custom-tag">+</button>
-
-      <h4>Skip numbers</h4>
-
-      <p>In some countries certain numbers aren't normally given to houses, such as number 13 in the UK. You can add numbers to skip when guessing the next number here.</p>
-
-      <div class="settings-container" id="skip-numbers"></div>
-      <button id="add-skip-number">+</button>
-
-      <h4>Info</h4>
-
-      <p>
-        <a href="https://github.com/ntzm/osm-address-collector" target="_blank"
-          >GitHub</a
-        >
-      </p>
-
-      <h4>Advanced</h4>
-
-      <p>Orientation provider: <span id="orientation-provider">None</span></p>
-      <p>Orientation: <span id="orientation">N/A</span></p>
-
-      <div class="settings-container">
-        <label for="overpass-timeout">Overpass timeout (milliseconds)</label>
-        <br>
-        <input type="number" id="overpass-timeout" />
+        <div class="setting">
+          <div class="setting-list">
+            <div id="custom-tags"></div>
+            <button class="setting-list__add" id="add-custom-tag">+</button>
+          </div>
+        </div>
       </div>
 
-      <div class="settings-container">
-        <label for="overpass-endpoint">Overpass endpoint</label>
-        <br>
-        <input type="text" id="overpass-endpoint" />
+      <div class="setting-category">
+        <h2 class="setting-category__heading" id="setting-general">
+          <span class="setting-category__info">ⓘ</span>
+          General
+        </h2>
+
+        <div class="setting">
+          <label for="distance">Throw distance: <span id="distance-display"></span>m</label>
+          <input class="setting-input" type="range" id="distance" min="1" max="100" />
+        </div>
+      </div>
+
+      <div class="setting-category">
+        <h2 class="setting-category__heading" id="setting-skip-numbers">
+          <span class="setting-category__info">ⓘ</span>
+          Skip numbers
+        </h2>
+
+        <div class="setting">
+          <div class="setting-list">
+            <div id="skip-numbers"></div>
+            <button class="setting-list__add" id="add-skip-number">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-category">
+        <h2 class="setting-category__heading">Info</h2>
+
+        <div class="setting">
+          <a href="https://github.com/ntzm/osm-address-collector" target="_blank">GitHub</a>
+        </div>
+
+        <div class="setting">
+          <a href="https://github.com/ntzm/osm-address-collector/issues/new" target="_blank">Report a bug or request a feature</a>
+        </div>
+      </div>
+
+      <div class="setting-category">
+        <h2 class="setting-category__heading" id="setting-advanced">
+          <span class="setting-category__info">ⓘ</span>
+          Advanced
+        </h2>
+
+        <div class="setting">
+          Orientation provider: <span id="orientation-provider">None</span>
+        </div>
+
+        <div class="setting">
+          Orientation: <span id="orientation">N/A</span>
+        </div>
+
+        <div class="setting">
+          <label for="overpass-timeout">Overpass timeout (milliseconds)</label>
+          <input class="setting-input" type="number" id="overpass-timeout" />
+        </div>
+
+        <div class="setting">
+          <label for="overpass-endpoint">Overpass endpoint</label>
+          <input class="setting-input" type="text" id="overpass-endpoint" />
+        </div>
       </div>
     </div>
 
