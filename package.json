@@ -17,7 +17,8 @@
     "rules": {
       "no-alert": "off",
       "semi": ["error", "never"],
-      "no-mixed-operators": "off"
+      "no-mixed-operators": "off",
+      "unicorn/prefer-number-properties": "off"
     }
   }
 }

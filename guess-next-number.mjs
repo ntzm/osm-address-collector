@@ -17,7 +17,7 @@ export default function guessNextNumber(addresses, skipNumbers) {
     pNumber = justSkipped[justSkipped.length - 1]
   }
 
-  if (Number.isNaN(lNumber) || Number.isNaN(pNumber)) {
+  if (isNaN(lNumber) || isNaN(pNumber)) {
     return defaultReturn
   }
 

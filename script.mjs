@@ -501,7 +501,7 @@ onClick($startOrPause, async () => {
         }
 
         // If we haven't moved, heading can be NAN
-        if (Number.isNaN(heading)) {
+        if (isNaN(heading)) {
           return
         }
 

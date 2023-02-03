@@ -19,7 +19,7 @@ export function getOsmFile(
 
     const tag = xml.createElement('tag')
 
-    if (Number.isNaN(address.numberOrName.charAt(0))) {
+    if (isNaN(address.numberOrName.charAt(0))) {
       tag.setAttribute('k', 'addr:housename')
     } else {
       tag.setAttribute('k', 'addr:housenumber')
