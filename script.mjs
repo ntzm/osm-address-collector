@@ -549,7 +549,7 @@ onClick($startOrPause, async () => {
   })
 
   const maybeAbsoluteDeviceOrientationHandler = event => {
-    if (event.webkitCompassHeading) {
+    if (typeof event.webkitCompassHeading !== 'undefined') {
       updateOrientation(event.webkitCompassHeading, 'Webkit compass heading', true)
       return
     }
