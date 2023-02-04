@@ -11,6 +11,16 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 - Works offline
 - Customisable tags for address nodes
 
+## Device Compatibility
+
+| Device + Browser      | Compatible? | GPS        | Orientation          | File download | Notes                                               |
+|-----------------------|-------------|------------|----------------------|---------------|-----------------------------------------------------|
+| **Chrome Android**    | Yes         | Yes        | Yes - Absolute       | Yes           |                                                     |
+| **Safari iOS**        | Yes         | Yes        | Yes - Webkit Heading | Yes           | [iOS compatibility notes](#ios-compatibility-notes) |
+| **Chrome iOS**        | Yes         | Yes        | Yes - Webkit Heading | Yes           | [iOS compatibility notes](#ios-compatibility-notes) |
+| Google Search App iOS | No          | Yes        | Yes - Webkit Heading | No            | File download not supported                         |
+| Everything else       | Not tested  | Not tested | Not tested           | Not tested    |                                                     |
+
 ## Workflow
 
 (video coming soon)
@@ -66,21 +76,7 @@ You can see the orientation provider as well, this describes the way we get your
 
 You can also see your current orientation according to the orientation provider.
 
-## Device Compatibility
-
-Y = Yes
-
-N = No
-
-NT = Not tested
-
-|                      | Chrome Android | Safari iOS | Chrome iOS | Everything else |
-| -------------------- | -------------- | ---------- | ---------- | --------------- |
-| GPS                  | Y              | Y          | Y          | NT              |
-| Accurate orientation | Y              | Y          | Y          | NT              |
-| File saving          | Y              | Y          | N          |                 |
-
-### iOS
+### iOS Compatibility Notes
 
 - Ensure that precise location services are enabled for the browser
 - When the site asks for orientation and motion permissions, ALLOW! Otherwise you will have to clear your Safari cache
