@@ -74,6 +74,8 @@ class SavedValue extends Value {
         this.val = this.defaultValue
       } else if (this.fromStored) {
         this.val = this.fromStored(stored)
+      } else {
+        this.val = stored
       }
     }
 
