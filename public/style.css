@@ -45,12 +45,6 @@ input {
   padding: 0;
 }
 
-.container a.button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 #done {
   background: #aec6cf;
   pointer-events: unset;

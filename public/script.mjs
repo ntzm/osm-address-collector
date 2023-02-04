@@ -4,6 +4,7 @@ import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
 import {State, SurveyStatus} from './state.mjs'
 import Storage from './storage.mjs'
+import {saveAs} from './vendor/FileSaver.js'
 
 const storage = new Storage(localStorage)
 const state = new State(storage)
@@ -13,8 +14,6 @@ surveyStatus.value = SurveyStatus.UNSTARTED
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
 }
-
-const isChromeIos = navigator.userAgent.includes('CriOS')
 
 const onClick = ($element, callback) => {
   $element.addEventListener('click', callback)
@@ -435,7 +434,7 @@ surveyStatus.subscribe(() => {
     ...document.querySelectorAll('.append'),
     ...document.querySelectorAll('.submit'),
     $undo,
-    $doneOrDownload,
+    $done,
     $addNote,
     $clear,
   ]
@@ -454,7 +453,7 @@ surveyStatus.subscribe(() => {
   }
 
   if (surveyStatus.isFinished) {
-    $doneOrDownload.classList.remove('disabled')
+    $done.classList.remove('disabled')
   }
 })
 
@@ -695,31 +694,9 @@ const surveyStart = new Date()
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace('T', '-').replace(/:/g, '')
 
-const $doneOrDownload = document.querySelector('#done')
+const $done = document.querySelector('#done')
 
-surveyStatus.subscribe(() => {
-  if (surveyStatus.isFinished) {
-    $doneOrDownload.textContent = 'Download'
-    return
-  }
-
-  // Todo maybe check if went from finished?
-  if (surveyStatus.isStarting) {
-    $doneOrDownload.textContent = 'Done'
-    URL.revokeObjectURL($doneOrDownload.href)
-    $doneOrDownload.href = '#'
-    $doneOrDownload.removeAttribute('download')
-    return
-  }
-})
-
-onClick($doneOrDownload, event => {
-  if (surveyStatus.isFinished) {
-    $doneOrDownload.textContent = 'Downloading...'
-    return
-  }
-
-  event.preventDefault()
+onClick($done, () => {
   surveyStatus.finishing()
 
   const contents = getOsmFile(
@@ -730,22 +707,13 @@ onClick($doneOrDownload, event => {
     surveyStart,
   )
 
-  const blob = new Blob([contents], { type: 'application/vnd.osm+xml' })
-
-  if (isChromeIos) {
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      $doneOrDownload.href = reader.result
-    }
-    reader.readAsDataURL(blob)
-  } else {
-    $doneOrDownload.href = URL.createObjectURL(blob)
-    $doneOrDownload.download = `${getFormattedDate()}.osm`
-  }
+  saveAs(
+    new Blob([contents], { type: 'application/vnd.osm+xml' }),
+    `${getFormattedDate()}.osm`,
+  )
 
   surveyStatus.finished()
 
-  // todo to restart download
   saveAddresses([])
   saveNotes([])
 
