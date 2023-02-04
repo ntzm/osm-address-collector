@@ -530,7 +530,7 @@ onClick($startOrPause, async () => {
     return
   }
 
-  // On iOS you must request permission
+  // On iOS Safari you must request permission
   // You can only request permission after a user action
   if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
     const permissionState = await DeviceOrientationEvent.requestPermission()
