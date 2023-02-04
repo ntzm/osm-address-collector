@@ -3,6 +3,7 @@ import {move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
 import Storage from './storage.mjs'
+import saveAs from './vendor/file-saver.mjs'
 
 const storage = new Storage(localStorage)
 
@@ -610,22 +611,10 @@ DONE
 
 const surveyStart = new Date()
 
-const downloadBlob = (name, blob) => {
-  const link = document.createElement('a')
-  const url = URL.createObjectURL(blob)
-  link.setAttribute('href', url)
-  link.setAttribute('download', name)
-  link.style.display = 'none'
-  document.body.append(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
-}
-
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace('T', '-').replace(/:/g, '')
 
-onClick(document.querySelector('#done'), async () => {
+onClick(document.querySelector('#done'), () => {
   if (addresses.length > 0) {
     const contents = getOsmFile(
       document.implementation,
@@ -635,9 +624,9 @@ onClick(document.querySelector('#done'), async () => {
       surveyStart,
     )
 
-    downloadBlob(
-      `${getFormattedDate()}.osm`,
+    saveAs(
       new Blob([contents], {type: 'application/vnd.osm+xml'}),
+      `${getFormattedDate()}.osm`,
     )
   }
 
