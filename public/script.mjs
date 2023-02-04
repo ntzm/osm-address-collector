@@ -201,7 +201,7 @@ streets.subscribe(({value}) => {
 })
 
 onClick($updateStreets, async () => {
-  if (currentPosition === null) {
+  if (currentPosition.value === undefined) {
     $updateStreetsStatus.textContent = 'GPS required'
     $updateStreetsStatus.classList.add('status--bad')
     return
@@ -213,7 +213,7 @@ onClick($updateStreets, async () => {
 
   try {
     streets.value = await findNearestStreets(
-      currentPosition,
+      currentPosition.value,
       streetSearchDistance.value,
       overpassEndpoint.value,
       overpassTimeout.value,
@@ -401,8 +401,9 @@ const addresses = state.addresses
 const $currentNumberOrName = document.querySelector('#current-number-or-name')
 let lastSkippedNumbers = []
 let numberIsGuessed = false
-let currentPosition = null
-let currentOrientation = null
+
+const currentPosition = state.position
+const orientation = state.orientation
 
 {
   const addressCount = addresses.value.length
@@ -469,7 +470,7 @@ for (const append of document.querySelectorAll('.append')) {
 
 for (const submit of document.querySelectorAll('.submit')) {
   onTouch(submit, () => {
-    if (currentPosition === null) {
+    if (currentPosition.value === undefined) {
       alert('No GPS')
       return
     }
@@ -481,7 +482,7 @@ for (const submit of document.querySelectorAll('.submit')) {
       return
     }
 
-    let bearing = currentOrientation
+    let bearing = orientation.value.degrees
 
     if (bearing === null) {
       alert('No orientation available')
@@ -504,7 +505,7 @@ for (const submit of document.querySelectorAll('.submit')) {
       bearing += 360
     }
 
-    const newPosition = move(currentPosition, bearing, distance.value)
+    const newPosition = move(currentPosition.value, bearing, distance.value)
 
     addresses.add({
       latitude: newPosition.latitude,
@@ -555,7 +556,7 @@ surveyStatus.subscribe(() => {
   if (!surveyStatus.isStarted) {
     $accuracy.textContent = 'N/A'
     $accuracy.style.color = '#333'
-    currentPosition = null
+    currentPosition.reset()
     navigator.geolocation.clearWatch(watchId)
   }
 })
@@ -584,21 +585,29 @@ onClick($startOrPause, async () => {
       heading = compassHeading(event.alpha, event.beta, event.gamma)
     }
 
-    updateOrientation(
-      heading,
-      'Absolute device orientation',
-      true,
-    )
+    orientation.value = {
+      degrees: Math.round(heading),
+      provider: 'Absolute device orientation',
+      isExact: true,
+    }
   })
 
   const maybeAbsoluteDeviceOrientationHandler = event => {
     if (typeof event.webkitCompassHeading !== 'undefined') {
-      updateOrientation(event.webkitCompassHeading, 'Webkit compass heading', true)
+      orientation.value = {
+        degrees: Math.round(event.webkitCompassHeading),
+        provider: 'Webkit compass heading',
+        isExact: true,
+      }
       return
     }
 
     if (event.absolute) {
-      updateOrientation(compassHeading(event.alpha, event.beta, event.gamma), 'Device orientation', true)
+      orientation.value = {
+        degrees: compassHeading(event.alpha, event.beta, event.gamma),
+        provider: 'Device orientation',
+        isExact: true,
+      }
       return
     }
 
@@ -617,15 +626,15 @@ onClick($startOrPause, async () => {
 
   watchId = navigator.geolocation.watchPosition(
     position => {
-      currentPosition = position.coords
+      currentPosition.value = position.coords
 
       positions.push({
-        latitude: currentPosition.latitude,
-        longitude: currentPosition.longitude,
+        latitude: currentPosition.value.latitude,
+        longitude: currentPosition.value.longitude,
         time: new Date(),
       })
 
-      const acc = Math.round(currentPosition.accuracy)
+      const acc = Math.round(currentPosition.value.accuracy)
       $accuracy.textContent = `${acc}m`
 
       surveyStatus.started()
@@ -640,7 +649,7 @@ onClick($startOrPause, async () => {
 
       // If we aren't able to get the orientation from the device, fall back to the heading
       if (!isOrientationExact) {
-        const heading = currentPosition.heading
+        const heading = currentPosition.value.heading
 
         // Some geolocation methods don't support heading
         if (heading === null) {
@@ -652,7 +661,11 @@ onClick($startOrPause, async () => {
           return
         }
 
-        updateOrientation(heading, 'GPS heading', false)
+        orientation.value = {
+          degrees: heading,
+          provider: 'GPS heading',
+          isExact: false,
+        }
       }
     },
     event => {
@@ -731,12 +744,11 @@ ORIENTATION
 const $orientation = document.querySelector('#orientation')
 let isOrientationExact = false
 
-const updateOrientation = (orientation, provider, isExact) => {
-  currentOrientation = Math.round(orientation)
-  $orientation.textContent = `${currentOrientation}°`
+orientation.subscribe(({value: {degrees, provider, isExact}}) => {
+  $orientation.textContent = `${degrees}°`
   $orientationProvider.textContent = provider
   isOrientationExact = isExact
-}
+})
 
 /*
 UNDO
@@ -762,7 +774,7 @@ const $saveNote = document.querySelector('#save-note')
 const $closeNoteWriter = document.querySelector('#close-note-writer')
 
 onTouch($addNote, () => {
-  if (currentPosition === null) {
+  if (currentPosition.value === undefined) {
     alert('No GPS')
     return
   }
@@ -772,8 +784,8 @@ onTouch($addNote, () => {
 
 onClick($saveNote, () => {
   notes.add({
-    latitude: currentPosition.latitude,
-    longitude: currentPosition.longitude,
+    latitude: currentPosition.value.latitude,
+    longitude: currentPosition.value.longitude,
     content: $noteContent.value,
   })
   $noteContent.value = ''
@@ -807,6 +819,8 @@ const statesToSubscribe = [
   state.distance,
   state.streetSearchDistance,
   state.streets,
+  state.orientation,
+  state.position,
 ]
 
 for (const stateValue of statesToSubscribe) {
@@ -833,6 +847,11 @@ for (const stateValue of statesToSubscribe) {
       }
 
       logger.log(`${name} unknown update`)
+      return
+    }
+
+    if (typeof value === 'object') {
+      logger.log(`${name} changed`, value)
       return
     }
 

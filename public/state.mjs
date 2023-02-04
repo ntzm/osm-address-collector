@@ -9,6 +9,8 @@ export class State {
     this.distance = new Distance(storage)
     this.streetSearchDistance = new StreetSearchDistance(storage)
     this.streets = new Streets()
+    this.orientation = new Orientation()
+    this.position = new Position()
   }
 }
 
@@ -220,3 +222,5 @@ class StreetSearchDistance extends SavedNumberValue {
 }
 
 class Streets extends Value {}
+class Orientation extends Value {}
+class Position extends Value {}
