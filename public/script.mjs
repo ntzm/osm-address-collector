@@ -399,9 +399,17 @@ let numberIsGuessed = false
 let currentPosition = null
 let currentOrientation = null
 
-if (addresses.value.length + notes.value.length > 0 && !confirm(`You have ${addresses.value.length} unsaved addresses and ${notes.value.length} unsaved notes from the previous session, do you want to load them?`)) {
-  addresses.reset()
-  notes.reset()
+{
+  const addressCount = addresses.value.length
+  const noteCount = notes.value.length
+
+  if (
+    addressCount + noteCount > 0
+    && !confirm(`You have ${addressCount} unsaved address${addressCount === 1 ? '' : 'es'} and ${noteCount} unsaved note${noteCount === 1 ? '' : 's'} from the previous session, do you want to load them?`)
+  ) {
+    addresses.reset()
+    notes.reset()
+  }
 }
 
 $currentNumberOrName.addEventListener('focus', () => {
