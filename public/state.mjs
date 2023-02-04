@@ -1,6 +1,7 @@
 export class State {
   constructor(storage) {
     this.addresses = new Addresses(storage)
+    this.notes = new Notes(storage)
     this.surveyStatus = new SurveyStatus()
     this.overpassTimeout = new OverpassTimeout(storage)
     this.overpassEndpoint = new OverpassEndpoint(storage)
@@ -95,6 +96,15 @@ class Addresses extends JsonValue {
     this.value = addresses.slice(0, -1)
 
     return popped
+  }
+}
+
+class Notes extends JsonValue {
+  storageKey = 'notes'
+  defaultValue = []
+
+  add(note) {
+    this.value = [...this.value, note]
   }
 }
 

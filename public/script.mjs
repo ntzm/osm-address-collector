@@ -390,17 +390,7 @@ onClick($resetSettings, () => {
 RECORDING
 */
 
-const saveAddresses = addressesToSave =>
-  storage.setJson('addresses', addressesToSave)
-
-const saveNotes = notesToSave =>
-  storage.setJson('notes', notesToSave)
-
-const getSavedNotes = () =>
-  storage.getJson('notes', [])
-
-let notes = []
-
+const notes = state.notes
 const addresses = state.addresses
 
 const $currentNumberOrName = document.querySelector('#current-number-or-name')
@@ -409,15 +399,9 @@ let numberIsGuessed = false
 let currentPosition = null
 let currentOrientation = null
 
-const savedNotes = getSavedNotes()
-
-if (addresses.value.length + savedNotes.length > 0) {
-  if (confirm(`You have ${addresses.value.length} unsaved addresses and ${savedNotes.length} unsaved notes from the previous session, do you want to load them?`)) {
-    notes = savedNotes
-  } else {
-    addresses.reset()
-    saveNotes([])
-  }
+if (addresses.value.length + notes.value.length > 0 && !confirm(`You have ${addresses.value.length} unsaved addresses and ${notes.value.length} unsaved notes from the previous session, do you want to load them?`)) {
+  addresses.reset()
+  notes.reset()
 }
 
 $currentNumberOrName.addEventListener('focus', () => {
@@ -700,7 +684,7 @@ onClick($done, () => {
     document.implementation,
     xml => new XMLSerializer().serializeToString(xml),
     addresses.value,
-    notes,
+    notes.value,
     surveyStart,
   )
 
@@ -711,8 +695,8 @@ onClick($done, () => {
 
   surveyStatus.finished()
 
-  saveAddresses([])
-  saveNotes([])
+  addresses.reset()
+  notes.reset()
 
   window.location.reload()
 })
@@ -774,12 +758,11 @@ onTouch($addNote, () => {
 })
 
 onClick($saveNote, () => {
-  notes.push({
+  notes.add({
     latitude: currentPosition.latitude,
     longitude: currentPosition.longitude,
     content: $noteContent.value,
   })
-  saveNotes(notes)
   $noteContent.value = ''
   $noteWriter.style.display = 'none'
 
