@@ -161,6 +161,8 @@ You can change the distance it will look for nearby streets with the "Street sea
   )
 })
 
+const streets = state.streets
+
 const $streets = document.querySelector('#streets')
 const $street = document.querySelector('#street')
 const $updateStreets = document.querySelector('#update-streets')
@@ -185,6 +187,19 @@ $street.addEventListener('focus', () => {
   $street.value = ''
 })
 
+streets.subscribe(({value}) => {
+  $streets.replaceChildren(
+    ...value.map(street => {
+      const $option = document.createElement('option')
+      $option.value = street
+      return $option
+    }),
+  )
+
+  $updateStreetsStatus.textContent = `Found ${value.length} street${value.length === 1 ? '' : 's'}`
+  $updateStreetsStatus.classList.add('status--good')
+})
+
 onClick($updateStreets, async () => {
   if (currentPosition === null) {
     $updateStreetsStatus.textContent = 'GPS required'
@@ -196,10 +211,8 @@ onClick($updateStreets, async () => {
   $updateStreetsStatus.textContent = 'Updating streets...'
   $updateStreetsStatus.classList.remove('status--good', 'status--bad')
 
-  let nearestStreets
-
   try {
-    nearestStreets = await findNearestStreets(
+    streets.value = await findNearestStreets(
       currentPosition,
       streetSearchDistance.value,
       overpassEndpoint.value,
@@ -218,17 +231,6 @@ onClick($updateStreets, async () => {
   } finally {
     $updateStreets.disabled = false
   }
-
-  $updateStreetsStatus.textContent = `Found ${nearestStreets.length} street${nearestStreets.length === 1 ? '' : 's'}`
-  $updateStreetsStatus.classList.add('status--good')
-
-  $streets.replaceChildren(
-    ...nearestStreets.map(street => {
-      const $option = document.createElement('option')
-      $option.value = street
-      return $option
-    }),
-  )
 })
 
 /*
@@ -804,6 +806,7 @@ const statesToSubscribe = [
   state.overpassEndpoint,
   state.distance,
   state.streetSearchDistance,
+  state.streets,
 ]
 
 for (const stateValue of statesToSubscribe) {
@@ -811,13 +814,19 @@ for (const stateValue of statesToSubscribe) {
     const name = stateValue.constructor.name
 
     if (Array.isArray(value)) {
-      if (value.length > previous.length) {
+      // Bad hack
+      if (name === 'Streets') {
+        logger.log(`${name} added`, value)
+        return
+      }
+
+      if (value.length === previous.length + 1) {
         // At the moment array states can only be added to one at a time
         logger.log(`${name} added`, value[value.length - 1])
         return
       }
 
-      if (previous.length > value.length) {
+      if (value.length === previous.length - 1) {
         // At the moment array states can only be popped, one at a time
         logger.log(`${name} removed`, previous[previous.length - 1])
         return

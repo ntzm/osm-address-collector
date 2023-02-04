@@ -8,6 +8,7 @@ export class State {
     this.overpassEndpoint = new OverpassEndpoint(storage)
     this.distance = new Distance(storage)
     this.streetSearchDistance = new StreetSearchDistance(storage)
+    this.streets = new Streets()
   }
 }
 
@@ -217,3 +218,5 @@ class StreetSearchDistance extends SavedNumberValue {
   storageKey = 'streetSearchDistance'
   defaultValue = 10
 }
+
+class Streets extends Value {}
