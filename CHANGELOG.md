@@ -1,19 +1,15 @@
-Changelog
+# Changelog
 
-04/02/23
+## Unreleased
+
+## 1.1.0
 
 - Improve button pressing behaviour
 - Better iOS support (for Safari - Chrome seems impossible to fix file downloads)
-
-03/02/23
-
 - Added a reset settings button
 - Save notes alongside addresses for next session
 - Added nearby street autocomplete
 - Added custom tag key autocomplete
 - Improved UI of settings, with explanations
 - Custom tag keys are not autocapitalised
-
-02/02/23
-
 - House numbers containing letters (51a, 52-53) are considered to be house numbers instead of names
