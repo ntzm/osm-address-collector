@@ -184,7 +184,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <button id="save-note">Save</button>
     </div>
 
-    <div id="main" class="container">
+    <div class="container">
       <div class="row" id="info-row">
         <div class="info">
           <svg
@@ -290,7 +290,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       </div>
 
       <div class="row">
-        <button class="submit requires-start" data-direction="L">
+        <button class="submit disabled" data-direction="L">
           <svg
             class="button-icon"
             style="transform: rotate(-90deg)"
@@ -314,7 +314,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             />
           </svg>
         </button>
-        <button class="submit requires-start" data-direction="F">
+        <button class="submit disabled" data-direction="F">
           <svg
             class="button-icon"
             width="80"
@@ -337,7 +337,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             />
           </svg>
         </button>
-        <button class="submit requires-start" data-direction="R">
+        <button class="submit disabled" data-direction="R">
           <svg
             class="button-icon"
             style="transform: rotate(90deg)"
@@ -364,27 +364,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       </div>
 
       <div class="row">
-        <button class="append requires-start" data-number="1">1</button>
-        <button class="append requires-start" data-number="2">2</button>
-        <button class="append requires-start" data-number="3">3</button>
+        <button class="append disabled" data-number="1">1</button>
+        <button class="append disabled" data-number="2">2</button>
+        <button class="append disabled" data-number="3">3</button>
       </div>
 
       <div class="row">
-        <button class="append requires-start" data-number="4">4</button>
-        <button class="append requires-start" data-number="5">5</button>
-        <button class="append requires-start" data-number="6">6</button>
+        <button class="append disabled" data-number="4">4</button>
+        <button class="append disabled" data-number="5">5</button>
+        <button class="append disabled" data-number="6">6</button>
       </div>
 
       <div class="row">
-        <button class="append requires-start" data-number="7">7</button>
-        <button class="append requires-start" data-number="8">8</button>
-        <button class="append requires-start" data-number="9">9</button>
+        <button class="append disabled" data-number="7">7</button>
+        <button class="append disabled" data-number="8">8</button>
+        <button class="append disabled" data-number="9">9</button>
       </div>
 
       <div class="row">
         <button id="start-or-pause">Start</button>
-        <button class="append requires-start" data-number="0">0</button>
-        <button id="clear" class="requires-start">
+        <button class="append disabled" data-number="0">0</button>
+        <button id="clear" class="disabled">
           <svg
             class="button-icon"
             width="80"
@@ -410,7 +410,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       </div>
 
       <div class="row">
-        <button id="add-note" class="requires-start">
+        <button id="add-note" class="disabled">
           <svg
             class="button-icon"
             width="80"
@@ -457,8 +457,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             />
           </svg>
         </button>
-        <button id="done" class="requires-start">Done</button>
-        <button id="undo" class="requires-start">
+        <a target="_blank" href="#" id="done" class="disabled button">Done</a>
+        <button id="undo" class="disabled">
           <svg
             class="button-icon"
             transform="scale(-1, 1)"

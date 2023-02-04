@@ -33,7 +33,8 @@ input {
   color: #999;
 }
 
-.container button {
+.container button,
+.container a.button {
   font-size: 24pt;
   width: 100%;
   height: 100%;
@@ -44,26 +45,25 @@ input {
   padding: 0;
 }
 
-.container button.requires-start,
-.container button.requires-start#done,
-.container button.requires-start#clear {
-  background: #999;
-  pointer-events: none;
+.container a.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.container.started button.requires-start {
-  background: #eee;
-  pointer-events: unset;
-}
-
-.container.started button.requires-start#done {
+#done {
   background: #aec6cf;
   pointer-events: unset;
 }
 
-.container.started button.requires-start#clear {
+#clear {
   background: #faa0a0;
   pointer-events: unset;
+}
+
+.disabled {
+  background: #999 !important;
+  pointer-events: none !important;
 }
 
 .container {
@@ -86,7 +86,7 @@ input {
   height: 100%;
 }
 
-.container.started .append.requires-start {
+.container .append {
   background: #c1e1c1;
 }
 

@@ -2,20 +2,19 @@ import findNearestStreets from './find-nearest-streets.mjs'
 import {compassHeading, move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
-import {State} from './state.mjs'
+import {State, SurveyStatus} from './state.mjs'
 import Storage from './storage.mjs'
-import {saveAs} from './vendor/FileSaver.js'
 
 const storage = new Storage(localStorage)
 const state = new State(storage)
+const surveyStatus = state.surveyStatus
+surveyStatus.value = SurveyStatus.UNSTARTED
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
 }
 
-if (navigator.userAgent.match('CriOS')) {
-  alert('OSM Address Collector does not work on iOS Chrome! Please use Safari.')
-}
+const isChromeIos = navigator.userAgent.includes('CriOS')
 
 const onClick = ($element, callback) => {
   $element.addEventListener('click', callback)
@@ -29,8 +28,6 @@ const onTouch = ($element, callback) => {
 
   $element.addEventListener('click', callback)
 }
-
-const $container = document.querySelector('#main')
 
 /*
 HISTORY
@@ -47,6 +44,17 @@ const addAction = action => {
     $history.lastChild.remove()
   }
 }
+
+surveyStatus.subscribe(() => {
+  addAction({
+    [surveyStatus.isPaused]: 'Paused',
+    [surveyStatus.isStarting]: 'Starting',
+    [surveyStatus.isStarted]: 'Started',
+    [surveyStatus.isError]: 'Error',
+    [surveyStatus.isFinishing]: 'Finishing',
+    [surveyStatus.isFinished]: 'Finished',
+  }.true)
+})
 
 /*
 SETTINGS
@@ -420,6 +428,34 @@ $currentNumberOrName.addEventListener('focus', () => {
   }
 })
 
+surveyStatus.subscribe(() => {
+  const elements = [
+    ...document.querySelectorAll('.append'),
+    ...document.querySelectorAll('.submit'),
+    $undo,
+    $doneOrDownload,
+    $addNote,
+    $clear,
+  ]
+
+  if (surveyStatus.isStarted) {
+    for (const element of elements) {
+      element.classList.remove('disabled')
+    }
+
+    return
+  }
+
+  // Todo only if previous
+  for (const element of elements) {
+    element.classList.add('disabled')
+  }
+
+  if (surveyStatus.isFinished) {
+    $doneOrDownload.classList.remove('disabled')
+  }
+})
+
 for (const append of document.querySelectorAll('.append')) {
   onTouch(append, () => {
     if (numberIsGuessed) {
@@ -506,21 +542,32 @@ GPS
 */
 
 const $startOrPause = document.querySelector('#start-or-pause')
-let started = false
 let watchId
 const $accuracy = document.querySelector('#accuracy')
 const positions = []
 
-onClick($startOrPause, async () => {
-  if (started) {
-    $startOrPause.textContent = 'Start'
-    currentPosition = null
-    navigator.geolocation.clearWatch(watchId)
+surveyStatus.subscribe(() => {
+  $startOrPause.textContent = {
+    [surveyStatus.isPaused]: 'Start',
+    [surveyStatus.isStarting]: 'Starting',
+    [surveyStatus.isStarted]: 'Pause',
+    [surveyStatus.isError]: 'Start',
+    [surveyStatus.isFinished]: 'Start',
+  }.true
+})
+
+surveyStatus.subscribe(() => {
+  if (!surveyStatus.isStarted) {
     $accuracy.textContent = 'N/A'
     $accuracy.style.color = '#333'
-    started = false
-    $container.classList.remove('started')
-    addAction('Paused')
+    currentPosition = null
+    navigator.geolocation.clearWatch(watchId)
+  }
+})
+
+onClick($startOrPause, async () => {
+  if (surveyStatus.isStarted) {
+    surveyStatus.paused()
     return
   }
 
@@ -571,8 +618,7 @@ onClick($startOrPause, async () => {
     maybeAbsoluteDeviceOrientationHandler,
   )
 
-  $startOrPause.textContent = 'Starting'
-  addAction('Started')
+  surveyStatus.starting()
 
   watchId = navigator.geolocation.watchPosition(
     position => {
@@ -587,9 +633,7 @@ onClick($startOrPause, async () => {
       const acc = Math.round(currentPosition.accuracy)
       $accuracy.textContent = `${acc}m`
 
-      $startOrPause.textContent = 'Pause'
-      started = true
-      $container.classList.add('started')
+      surveyStatus.started()
 
       if (acc < 10) {
         $accuracy.style.color = '#c1e1c1'
@@ -617,7 +661,7 @@ onClick($startOrPause, async () => {
       }
     },
     event => {
-      $startOrPause.textContent = 'Start'
+      surveyStatus.error()
 
       if (event.code === event.PERMISSION_DENIED) {
         alert(`GPS permission denied: ${event.message}`)
@@ -649,22 +693,57 @@ const surveyStart = new Date()
 const getFormattedDate = () =>
   new Date().toISOString().slice(0, 19).replace('T', '-').replace(/:/g, '')
 
-onClick(document.querySelector('#done'), () => {
-  if (addresses.length > 0) {
-    const contents = getOsmFile(
-      document.implementation,
-      xml => new XMLSerializer().serializeToString(xml),
-      addresses,
-      notes,
-      surveyStart,
-    )
+const $doneOrDownload = document.querySelector('#done')
 
-    saveAs(
-      new Blob([contents], {type: 'application/vnd.osm+xml'}),
-      `${getFormattedDate()}.osm`,
-    )
+surveyStatus.subscribe(() => {
+  if (surveyStatus.isFinished) {
+    $doneOrDownload.textContent = 'Download'
+    return
   }
 
+  // Todo maybe check if went from finished?
+  if (surveyStatus.isStarting) {
+    $doneOrDownload.textContent = 'Done'
+    URL.revokeObjectURL($doneOrDownload.href)
+    $doneOrDownload.href = '#'
+    $doneOrDownload.removeAttribute('download')
+    return
+  }
+})
+
+onClick($doneOrDownload, event => {
+  if (surveyStatus.isFinished) {
+    $doneOrDownload.textContent = 'Downloading...'
+    return
+  }
+
+  event.preventDefault()
+  surveyStatus.finishing()
+
+  const contents = getOsmFile(
+    document.implementation,
+    xml => new XMLSerializer().serializeToString(xml),
+    addresses,
+    notes,
+    surveyStart,
+  )
+
+  const blob = new Blob([contents], { type: 'application/vnd.osm+xml' })
+
+  if (isChromeIos) {
+    const reader = new FileReader()
+    reader.onload = () => {
+      $doneOrDownload.href = reader.result
+    }
+    reader.readAsDataURL(blob)
+  } else {
+    $doneOrDownload.href = URL.createObjectURL(blob)
+    $doneOrDownload.download = `${getFormattedDate()}.osm`
+  }
+
+  surveyStatus.finished()
+
+  // todo to restart download
   saveAddresses([])
   saveNotes([])
 
@@ -675,7 +754,9 @@ onClick(document.querySelector('#done'), () => {
 CLEAR
 */
 
-onTouch(document.querySelector('#clear'), () => {
+const $clear = document.querySelector('#clear')
+
+onTouch($clear, () => {
   $currentNumberOrName.value = ''
 })
 
@@ -697,7 +778,9 @@ const updateOrientation = (orientation, provider, isExact) => {
 UNDO
 */
 
-onTouch(document.querySelector('#undo'), () => {
+const $undo = document.querySelector('#undo')
+
+onTouch($undo, () => {
   const address = addresses.pop()
   if (address !== undefined) {
     saveAddresses(addresses)

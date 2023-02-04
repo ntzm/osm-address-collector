@@ -1,5 +1,6 @@
 export class State {
   constructor(storage) {
+    this.surveyStatus = new SurveyStatus()
     this.overpassTimeout = new OverpassTimeout(storage)
     this.overpassEndpoint = new OverpassEndpoint(storage)
     this.distance = new Distance(storage)
@@ -65,6 +66,64 @@ class SavedValue extends Value {
     if (value !== this.val) {
       this.#store()
     }
+  }
+}
+
+export class SurveyStatus extends Value {
+  static UNSTARTED = 'unstarted'
+  static STARTING = 'starting'
+  static STARTED = 'started'
+  static PAUSED = 'paused'
+  static FINISHING = 'finishing'
+  static FINISHED = 'finished'
+  static ERROR = 'error'
+
+  get isStarting() {
+    return this.value === SurveyStatus.STARTING
+  }
+
+  get isStarted() {
+    return this.value === SurveyStatus.STARTED
+  }
+
+  get isPaused() {
+    return this.value === SurveyStatus.PAUSED
+  }
+
+  get isFinishing() {
+    return this.value === SurveyStatus.FINISHING
+  }
+
+  get isFinished() {
+    return this.value === SurveyStatus.FINISHED
+  }
+
+  get isError() {
+    return this.value === SurveyStatus.ERROR
+  }
+
+  starting() {
+    this.value = SurveyStatus.STARTING
+  }
+
+  started() {
+    this.value = SurveyStatus.STARTED
+  }
+
+  paused() {
+    this.value = SurveyStatus.PAUSED
+  }
+
+  finishing() {
+    this.value = SurveyStatus.FINISHING
+  }
+
+  finished() {
+    this.value = SurveyStatus.FINISHED
+  }
+
+  error() {
+    this.value = SurveyStatus.ERROR
   }
 }
 
