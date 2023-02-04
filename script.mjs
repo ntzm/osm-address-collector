@@ -15,13 +15,15 @@ if (navigator.userAgent.match('CriOS')) {
   alert('OSM Address Collector does not work on iOS Chrome! Please use Safari.')
 }
 
-const onClick = ($element, callback, requiresInteraction) => {
-  if (!requiresInteraction) {
-    $element.addEventListener('touchstart', event => {
-      event.preventDefault()
-      callback(event)
-    })
-  }
+const onClick = ($element, callback) => {
+  $element.addEventListener('click', callback)
+}
+
+const onTouch = ($element, callback) => {
+  $element.addEventListener('touchstart', event => {
+    event.preventDefault()
+    callback(event)
+  })
 
   $element.addEventListener('click', callback)
 }
@@ -431,7 +433,7 @@ $currentNumberOrName.addEventListener('focus', () => {
 })
 
 for (const append of document.querySelectorAll('.append')) {
-  onClick(append, () => {
+  onTouch(append, () => {
     if (numberIsGuessed) {
       numberIsGuessed = false
       lastSkippedNumbers = []
@@ -446,7 +448,7 @@ for (const append of document.querySelectorAll('.append')) {
 }
 
 for (const submit of document.querySelectorAll('.submit')) {
-  onClick(submit, () => {
+  onTouch(submit, () => {
     if (currentPosition === null) {
       alert('No GPS')
       return
@@ -641,7 +643,7 @@ onClick($startOrPause, async () => {
       maximumAge: 0,
     },
   )
-}, true)
+})
 
 /*
 DONE
@@ -672,13 +674,13 @@ onClick(document.querySelector('#done'), () => {
   saveNotes([])
 
   window.location.reload()
-}, true)
+})
 
 /*
 CLEAR
 */
 
-onClick(document.querySelector('#clear'), () => {
+onTouch(document.querySelector('#clear'), () => {
   $currentNumberOrName.value = ''
 })
 
@@ -700,7 +702,7 @@ const updateOrientation = (orientation, provider, isExact) => {
 UNDO
 */
 
-onClick(document.querySelector('#undo'), () => {
+onTouch(document.querySelector('#undo'), () => {
   const address = addresses.pop()
   if (address !== undefined) {
     saveAddresses(addresses)
@@ -718,7 +720,7 @@ const $noteContent = document.querySelector('#note-content')
 const $saveNote = document.querySelector('#save-note')
 const $closeNoteWriter = document.querySelector('#close-note-writer')
 
-onClick($addNote, () => {
+onTouch($addNote, () => {
   if (currentPosition === null) {
     alert('No GPS')
     return

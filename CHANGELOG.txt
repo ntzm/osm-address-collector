@@ -2,6 +2,7 @@ Changelog
 
 04/02/23
 
+- Improve button pressing behaviour
 - Better iOS support (for Safari - Chrome seems impossible to fix file downloads)
 
 03/02/23
