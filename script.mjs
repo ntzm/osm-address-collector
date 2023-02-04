@@ -533,7 +533,11 @@ onClick($startOrPause, async () => {
   // On iOS you must request permission
   // You can only request permission after a user action
   if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
-    await DeviceOrientationEvent.requestPermission()
+    const permissionState = await DeviceOrientationEvent.requestPermission()
+
+    if (permissionState !== 'granted') {
+      alert('Device orientation permission is required, please allow!')
+    }
   }
 
   $startOrPause.textContent = 'Starting'
