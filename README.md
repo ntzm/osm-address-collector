@@ -74,10 +74,11 @@ N = No
 
 NT = Not tested
 
-|                      | Chrome Android | Everything else |
-| -------------------- | -------------- | --------------- |
-| GPS                  | Y              | NT              |
-| Accurate orientation | Y              | NT              |
+|                      | Chrome Android | Safari iOS | Chrome iOS | Everything else |
+| -------------------- | -------------- | ---------- | ---------- | --------------- |
+| GPS                  | Y              | Y          | Y          | NT              |
+| Accurate orientation | Y              | Y          | Y          | NT              |
+| File saving          | Y              | Y          | N          |                 |
 
 ### iOS
 

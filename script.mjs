@@ -11,6 +11,10 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
 }
 
+if (navigator.userAgent.match('CriOS')) {
+  alert('OSM Address Collector does not work on iOS Chrome! Please use Safari.')
+}
+
 const onClick = ($element, callback, requiresInteraction) => {
   if (!requiresInteraction) {
     $element.addEventListener('touchstart', event => {
