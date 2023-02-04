@@ -1,6 +1,6 @@
 import {it} from 'node:test'
 import assert from 'node:assert/strict'
-import guessNextNumber from '../guess-next-number.mjs'
+import guessNextNumber from '../public/guess-next-number.mjs'
 
 function makeAddresses(...numbers) {
   return numbers.map(number => ({numberOrName: String(number), skippedNumbers: []}))

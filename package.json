@@ -1,5 +1,8 @@
 {
   "name": "osm-address-collector",
+  "dependencies": {
+    "file-saver-es": "^2.0.5"
+  },
   "devDependencies": {
     "jsdom": "^21.1.0",
     "w3c-xmlserializer": "^4.0.0",
@@ -8,16 +11,28 @@
   "scripts": {
     "test": "node --test",
     "lint": "xo",
-    "lint-fix": "xo --fix"
+    "lint-fix": "xo --fix",
+    "build": "cp node_modules/file-saver-es/src/FileSaver.js public/vendor"
   },
   "xo": {
     "space": true,
-    "envs": ["node", "serviceworker", "browser"],
-    "globals": ["workbox"],
-    "ignore": ["vendor"],
+    "envs": [
+      "node",
+      "serviceworker",
+      "browser"
+    ],
+    "globals": [
+      "workbox"
+    ],
+    "ignore": [
+      "public/vendor"
+    ],
     "rules": {
       "no-alert": "off",
-      "semi": ["error", "never"],
+      "semi": [
+        "error",
+        "never"
+      ],
       "no-mixed-operators": "off",
       "unicorn/prefer-number-properties": "off"
     }

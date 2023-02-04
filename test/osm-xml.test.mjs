@@ -2,7 +2,7 @@ import {it} from 'node:test'
 import assert from 'node:assert/strict'
 import {JSDOM} from 'jsdom'
 import serialize from 'w3c-xmlserializer'
-import {getOsmFile} from '../osm-xml.mjs'
+import {getOsmFile} from '../public/osm-xml.mjs'
 
 const implementation = new JSDOM().window.document.implementation
 

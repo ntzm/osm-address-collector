@@ -3,7 +3,7 @@ import {compassHeading, move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
 import Storage from './storage.mjs'
-import saveAs from './vendor/file-saver.mjs'
+import {saveAs} from './vendor/FileSaver.js'
 
 const storage = new Storage(localStorage)
 
