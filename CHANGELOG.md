@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Cap street search distance inaccuracy modifier at 20m
+- Add debug logs
+
 ## 1.1.0
 
 - Improve button pressing behaviour
