@@ -7,10 +7,6 @@ export default class Storage {
     return this.engine.getItem(key) ?? def
   }
 
-  getNumber(key, def) {
-    return Number(this.get(key, def))
-  }
-
   getJson(key, def) {
     const value = this.get(key)
 

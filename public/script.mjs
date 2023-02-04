@@ -2,10 +2,12 @@ import findNearestStreets from './find-nearest-streets.mjs'
 import {compassHeading, move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
+import {State} from './state.mjs'
 import Storage from './storage.mjs'
 import {saveAs} from './vendor/FileSaver.js'
 
 const storage = new Storage(localStorage)
+const state = new State(storage)
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
@@ -76,26 +78,28 @@ Do not change the endpoint unless you know what you are doing!`,
   )
 })
 
-const overpassTimeoutKey = 'overpassTimeout'
-const defaultOverpassTimeout = 10_000
-let overpassTimeout = storage.getNumber(overpassTimeoutKey, defaultOverpassTimeout)
+const overpassTimeout = state.overpassTimeout
 const $overpassTimeout = document.querySelector('#overpass-timeout')
-$overpassTimeout.value = overpassTimeout
+$overpassTimeout.value = overpassTimeout.value
 
-$overpassTimeout.addEventListener('blur', () => {
-  overpassTimeout = Number($overpassTimeout.value)
-  storage.set(overpassTimeoutKey, overpassTimeout)
+overpassTimeout.subscribe(value => {
+  $overpassTimeout.value = value
 })
 
-const overpassEndpointKey = 'overpassEndpoint'
-const defaultOverpassEndpoint = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
-let overpassEndpoint = storage.get(overpassEndpointKey, defaultOverpassEndpoint)
-const $overpassEndpoint = document.querySelector('#overpass-endpoint')
-$overpassEndpoint.value = overpassEndpoint
+$overpassTimeout.addEventListener('input', () => {
+  overpassTimeout.value = $overpassTimeout.value
+})
 
-$overpassEndpoint.addEventListener('blur', () => {
-  overpassEndpoint = $overpassEndpoint.value
-  storage.set(overpassEndpointKey, overpassEndpoint)
+const overpassEndpoint = state.overpassEndpoint
+const $overpassEndpoint = document.querySelector('#overpass-endpoint')
+$overpassEndpoint.value = overpassEndpoint.value
+
+overpassEndpoint.subscribe(value => {
+  $overpassEndpoint.value = value
+})
+
+$overpassEndpoint.addEventListener('input', () => {
+  overpassEndpoint.value = $overpassEndpoint.value
 })
 
 /*
@@ -115,19 +119,19 @@ If you add an address node by pressing the left arrow key, it will throw the nod
   )
 })
 
-const distanceKey = 'distance'
-const defaultDistance = 10
+const distance = state.distance
 const $distance = document.querySelector('#distance')
-let distance = storage.getNumber(distanceKey, defaultDistance)
-$distance.value = distance
-
 const $distanceDisplay = document.querySelector('#distance-display')
-$distanceDisplay.textContent = distance
+$distance.value = distance.value
+$distanceDisplay.textContent = distance.value
+
+distance.subscribe(value => {
+  $distance.value = value
+  $distanceDisplay.textContent = value
+})
 
 $distance.addEventListener('input', () => {
-  distance = Number($distance.value)
-  $distanceDisplay.textContent = distance
-  storage.set(distanceKey, distance)
+  distance.value = $distance.value
 })
 
 /*
@@ -148,20 +152,19 @@ const $street = document.querySelector('#street')
 const $updateStreets = document.querySelector('#update-streets')
 const $updateStreetsStatus = document.querySelector('#update-streets-status')
 
-const streetSearchDistanceKey = 'streetSearchDistance'
-const defaultStreetSearchDistance = 10
-let streetSearchDistance = storage.getNumber(streetSearchDistanceKey, defaultStreetSearchDistance)
+const streetSearchDistance = state.streetSearchDistance
 const $streetSearchDistance = document.querySelector('#street-search-distance')
-$streetSearchDistance.value = streetSearchDistance
-
 const $streetSearchDistanceDisplay = document.querySelector('#street-search-distance-display')
-$streetSearchDistanceDisplay.textContent = streetSearchDistance
+$streetSearchDistance.value = streetSearchDistance.value
+$streetSearchDistanceDisplay.textContent = streetSearchDistance.value
+
+streetSearchDistance.subscribe(value => {
+  $streetSearchDistance.value = value
+  $streetSearchDistanceDisplay.textContent = value
+})
 
 $streetSearchDistance.addEventListener('input', () => {
-  const temporaryStreetSearchDistance = Number($streetSearchDistance.value)
-  streetSearchDistance = temporaryStreetSearchDistance
-  $streetSearchDistanceDisplay.textContent = streetSearchDistance
-  storage.set(streetSearchDistanceKey, streetSearchDistance)
+  streetSearchDistance.value = $streetSearchDistance.value
 })
 
 $street.addEventListener('focus', () => {
@@ -184,9 +187,9 @@ onClick($updateStreets, async () => {
   try {
     nearestStreets = await findNearestStreets(
       currentPosition,
-      streetSearchDistance,
-      overpassEndpoint,
-      overpassTimeout,
+      streetSearchDistance.value,
+      overpassEndpoint.value,
+      overpassTimeout.value,
     )
   } catch (error) {
     let message = error.message
@@ -358,25 +361,10 @@ onClick($resetSettings, () => {
     return
   }
 
-  // This sucks - react would be lovely here
-
-  overpassTimeout = defaultOverpassTimeout
-  $overpassTimeout.value = defaultOverpassTimeout
-  storage.set(overpassTimeoutKey, defaultOverpassTimeout)
-
-  overpassEndpoint = defaultOverpassEndpoint
-  $overpassEndpoint.value = defaultOverpassEndpoint
-  storage.set(overpassEndpointKey, defaultOverpassEndpoint)
-
-  distance = defaultDistance
-  $distance.value = defaultDistance
-  $distanceDisplay.textContent = defaultDistance
-  storage.set(distanceKey, defaultDistance)
-
-  streetSearchDistance = defaultStreetSearchDistance
-  $streetSearchDistance.value = defaultStreetSearchDistance
-  $streetSearchDistanceDisplay.textContent = defaultStreetSearchDistance
-  storage.set(streetSearchDistanceKey, defaultStreetSearchDistance)
+  overpassTimeout.reset()
+  overpassEndpoint.reset()
+  distance.reset()
+  streetSearchDistance.reset()
 
   customTags = defaultCustomTags
   $customTagContainer.replaceChildren()
@@ -484,7 +472,7 @@ for (const submit of document.querySelectorAll('.submit')) {
       bearing += 360
     }
 
-    const newPosition = move(currentPosition, bearing, distance)
+    const newPosition = move(currentPosition, bearing, distance.value)
 
     addresses.push({
       latitude: newPosition.latitude,
