@@ -734,7 +734,7 @@ onClick($doneOrDownload, event => {
 
   if (isChromeIos) {
     const reader = new FileReader()
-    reader.onload = () => {
+    reader.onloadend = () => {
       $doneOrDownload.href = reader.result
     }
     reader.readAsDataURL(blob)
