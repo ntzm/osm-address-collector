@@ -10,8 +10,15 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
 }
 
-const onClick = ($element, cb) => {
-  $element.addEventListener('click', cb)
+const onClick = ($element, callback, requiresInteraction) => {
+  if (!requiresInteraction) {
+    $element.addEventListener('touchstart', event => {
+      event.preventDefault()
+      callback(event)
+    })
+  }
+
+  $element.addEventListener('click', callback)
 }
 
 const $container = document.querySelector('#main')
@@ -595,7 +602,7 @@ onClick($startOrPause, async () => {
       maximumAge: 0,
     },
   )
-})
+}, true)
 
 /*
 DONE
@@ -638,7 +645,7 @@ onClick(document.querySelector('#done'), async () => {
   saveNotes([])
 
   window.location.reload()
-})
+}, true)
 
 /*
 CLEAR
