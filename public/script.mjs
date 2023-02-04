@@ -110,6 +110,8 @@ $overpassEndpoint.addEventListener('input', () => {
   overpassEndpoint.value = $overpassEndpoint.value
 })
 
+document.querySelector('#user-agent').textContent = navigator.userAgent
+
 /*
 SETTINGS - Info
 */
