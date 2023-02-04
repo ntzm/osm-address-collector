@@ -547,8 +547,15 @@ onClick($startOrPause, async () => {
   }
 
   window.addEventListener('deviceorientationabsolute', event => {
+    let heading = 0
+
+    // Fix for chrome on non-mobile - for testing
+    if (event.alpha !== null) {
+      heading = compassHeading(event.alpha, event.beta, event.gamma)
+    }
+
     updateOrientation(
-      compassHeading(event.alpha, event.beta, event.gamma),
+      heading,
       'Absolute device orientation',
       true,
     )
