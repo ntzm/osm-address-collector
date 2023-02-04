@@ -393,9 +393,6 @@ RECORDING
 const saveAddresses = addressesToSave =>
   storage.setJson('addresses', addressesToSave)
 
-const getSavedAddresses = () =>
-  storage.getJson('addresses', [])
-
 const saveNotes = notesToSave =>
   storage.setJson('notes', notesToSave)
 
@@ -404,22 +401,21 @@ const getSavedNotes = () =>
 
 let notes = []
 
+const addresses = state.addresses
+
 const $currentNumberOrName = document.querySelector('#current-number-or-name')
-let addresses = []
 let lastSkippedNumbers = []
 let numberIsGuessed = false
 let currentPosition = null
 let currentOrientation = null
 
-const savedAddresses = getSavedAddresses()
 const savedNotes = getSavedNotes()
 
-if (savedAddresses.length + savedNotes.length > 0) {
-  if (confirm(`You have ${savedAddresses.length} unsaved addresses and ${savedNotes.length} unsaved notes from the previous session, do you want to load them?`)) {
-    addresses = savedAddresses
+if (addresses.value.length + savedNotes.length > 0) {
+  if (confirm(`You have ${addresses.value.length} unsaved addresses and ${savedNotes.length} unsaved notes from the previous session, do you want to load them?`)) {
     notes = savedNotes
   } else {
-    saveAddresses([])
+    addresses.reset()
     saveNotes([])
   }
 }
@@ -513,7 +509,7 @@ for (const submit of document.querySelectorAll('.submit')) {
 
     const newPosition = move(currentPosition, bearing, distance.value)
 
-    addresses.push({
+    addresses.add({
       latitude: newPosition.latitude,
       longitude: newPosition.longitude,
       numberOrName,
@@ -522,12 +518,11 @@ for (const submit of document.querySelectorAll('.submit')) {
       skippedNumbers: lastSkippedNumbers,
       street: $street.value,
     })
-    saveAddresses(addresses)
 
     addAction(`+ ${direction} ${numberOrName}`)
 
     let guessedNextNumber;
-    [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(addresses, skipNumbers)
+    [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(addresses.value, skipNumbers)
 
     if (!guessedNextNumber) {
       $currentNumberOrName.value = ''
@@ -704,7 +699,7 @@ onClick($done, () => {
   const contents = getOsmFile(
     document.implementation,
     xml => new XMLSerializer().serializeToString(xml),
-    addresses,
+    addresses.value,
     notes,
     surveyStart,
   )
@@ -755,7 +750,6 @@ const $undo = document.querySelector('#undo')
 onTouch($undo, () => {
   const address = addresses.pop()
   if (address !== undefined) {
-    saveAddresses(addresses)
     addAction(`- ${address.direction} ${address.numberOrName}`)
   }
 })

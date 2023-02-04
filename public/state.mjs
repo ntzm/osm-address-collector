@@ -1,5 +1,6 @@
 export class State {
   constructor(storage) {
+    this.addresses = new Addresses(storage)
     this.surveyStatus = new SurveyStatus()
     this.overpassTimeout = new OverpassTimeout(storage)
     this.overpassEndpoint = new OverpassEndpoint(storage)
@@ -66,6 +67,34 @@ class SavedValue extends Value {
     if (value !== this.val) {
       this.#store()
     }
+  }
+}
+
+class JsonValue extends SavedValue {
+  get value() {
+    return JSON.parse(super.value)
+  }
+
+  set value(value) {
+    super.value = JSON.stringify(value)
+  }
+}
+
+class Addresses extends JsonValue {
+  storageKey = 'addresses'
+  defaultValue = []
+
+  add(address) {
+    this.value = [...this.value, address]
+  }
+
+  pop() {
+    const addresses = this.value
+    const popped = addresses[addresses.length - 1]
+
+    this.value = addresses.slice(0, -1)
+
+    return popped
   }
 }
 
