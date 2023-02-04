@@ -191,13 +191,12 @@ class Logs extends Value {
   }
 }
 
-class NumberValue extends SavedValue {
+class SavedNumberValue extends SavedValue {
   fromStored = Number
-
   toStored = Number
 }
 
-class OverpassTimeout extends NumberValue {
+class OverpassTimeout extends SavedNumberValue {
   storageKey = 'overpassTimeout'
   defaultValue = 10_000
 }
@@ -207,12 +206,12 @@ class OverpassEndpoint extends SavedValue {
   defaultValue = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 }
 
-class Distance extends NumberValue {
+class Distance extends SavedNumberValue {
   storageKey = 'distance'
   defaultValue = 10
 }
 
-class StreetSearchDistance extends NumberValue {
+class StreetSearchDistance extends SavedNumberValue {
   storageKey = 'streetSearchDistance'
   defaultValue = 10
 }
