@@ -1,6 +1,7 @@
 import findNearestStreets from './find-nearest-streets.mjs'
 import {compassHeading, move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
+import Logger from './logger.mjs'
 import {getOsmFile} from './osm-xml.mjs'
 import {State, SurveyStatus} from './state.mjs'
 import Storage from './storage.mjs'
@@ -10,6 +11,10 @@ const storage = new Storage(localStorage)
 const state = new State(storage)
 const surveyStatus = state.surveyStatus
 surveyStatus.value = SurveyStatus.UNSTARTED
+
+const logger = new Logger(state.logs)
+logger.log('Initialised')
+logger.log(`User agent: ${navigator.userAgent}`)
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
@@ -91,7 +96,7 @@ const overpassTimeout = state.overpassTimeout
 const $overpassTimeout = document.querySelector('#overpass-timeout')
 $overpassTimeout.value = overpassTimeout.value
 
-overpassTimeout.subscribe(value => {
+overpassTimeout.subscribe(({value}) => {
   $overpassTimeout.value = value
 })
 
@@ -103,15 +108,13 @@ const overpassEndpoint = state.overpassEndpoint
 const $overpassEndpoint = document.querySelector('#overpass-endpoint')
 $overpassEndpoint.value = overpassEndpoint.value
 
-overpassEndpoint.subscribe(value => {
+overpassEndpoint.subscribe(({value}) => {
   $overpassEndpoint.value = value
 })
 
 $overpassEndpoint.addEventListener('input', () => {
   overpassEndpoint.value = $overpassEndpoint.value
 })
-
-document.querySelector('#user-agent').textContent = navigator.userAgent
 
 /*
 SETTINGS - Info
@@ -136,7 +139,7 @@ const $distanceDisplay = document.querySelector('#distance-display')
 $distance.value = distance.value
 $distanceDisplay.textContent = distance.value
 
-distance.subscribe(value => {
+distance.subscribe(({value}) => {
   $distance.value = value
   $distanceDisplay.textContent = value
 })
@@ -169,7 +172,7 @@ const $streetSearchDistanceDisplay = document.querySelector('#street-search-dist
 $streetSearchDistance.value = streetSearchDistance.value
 $streetSearchDistanceDisplay.textContent = streetSearchDistance.value
 
-streetSearchDistance.subscribe(value => {
+streetSearchDistance.subscribe(({value}) => {
   $streetSearchDistance.value = value
   $streetSearchDistanceDisplay.textContent = value
 })
@@ -781,3 +784,49 @@ onClick($closeNoteWriter, () => {
   $noteContent.value = ''
   $noteWriter.style.display = 'none'
 })
+
+/*
+LOGS
+*/
+
+const $logs = document.querySelector('#logs')
+onClick(document.querySelector('#show-logs'), () => {
+  $logs.value = state.logs.value
+    .map(log => `${log.time.toISOString()}: ${log.message}${log.data ? `\n${JSON.stringify(log.data, undefined, 2)}` : ''}`)
+    .join('\n')
+})
+
+const statesToSubscribe = [
+  state.addresses,
+  state.notes,
+  state.surveyStatus,
+  state.overpassTimeout,
+  state.overpassEndpoint,
+  state.distance,
+  state.streetSearchDistance,
+]
+
+for (const stateValue of statesToSubscribe) {
+  stateValue.subscribe(({value, previous}) => {
+    const name = stateValue.constructor.name
+
+    if (Array.isArray(value)) {
+      if (value.length > previous.length) {
+        // At the moment array states can only be added to one at a time
+        logger.log(`${name} added`, value[value.length - 1])
+        return
+      }
+
+      if (previous.length > value.length) {
+        // At the moment array states can only be popped, one at a time
+        logger.log(`${name} removed`, previous[previous.length - 1])
+        return
+      }
+
+      logger.log(`${name} unknown update`)
+      return
+    }
+
+    logger.log(`${name} changed from ${previous} to ${value}`)
+  })
+}

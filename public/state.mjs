@@ -3,6 +3,7 @@ export class State {
     this.addresses = new Addresses(storage)
     this.notes = new Notes(storage)
     this.surveyStatus = new SurveyStatus()
+    this.logs = new Logs()
     this.overpassTimeout = new OverpassTimeout(storage)
     this.overpassEndpoint = new OverpassEndpoint(storage)
     this.distance = new Distance(storage)
@@ -14,9 +15,12 @@ class Value {
   #listeners = []
   val
 
-  #notify() {
+  #notify(previous) {
     for (const listener of this.#listeners) {
-      listener(this.val)
+      listener({
+        value: this.val,
+        previous,
+      })
     }
   }
 
@@ -29,12 +33,14 @@ class Value {
   }
 
   set value(value) {
-    if (value === this.val) {
+    const previous = this.val
+
+    if (value === previous) {
       return
     }
 
     this.val = value
-    this.#notify()
+    this.#notify(previous)
   }
 
   reset() {
@@ -75,10 +81,10 @@ class SavedValue extends Value {
   }
 
   set value(value) {
-    if (value !== this.val) {
-      this.val = value
-      this.#store()
-    }
+    super.value = value
+
+    // Todo only store if changed
+    this.#store()
   }
 }
 
@@ -174,6 +180,14 @@ export class SurveyStatus extends Value {
 
   error() {
     this.value = SurveyStatus.ERROR
+  }
+}
+
+class Logs extends Value {
+  val = []
+
+  add(log) {
+    this.value = [...this.value, log]
   }
 }
 
