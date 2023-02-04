@@ -8,22 +8,13 @@ export class State {
 }
 
 class Value {
-  #storage
   #listeners = []
-  #value
-
-  constructor(storage) {
-    this.#storage = storage
-  }
+  val
 
   #notify() {
     for (const listener of this.#listeners) {
-      listener(this.#value)
+      listener(this.val)
     }
-  }
-
-  #store() {
-    this.#storage.set(this.storageKey, this.#value)
   }
 
   subscribe(listener) {
@@ -31,21 +22,16 @@ class Value {
   }
 
   get value() {
-    if (this.#value === undefined) {
-      this.#value = this.#storage.get(this.storageKey, this.defaultValue)
-    }
-
-    return this.#value
+    return this.val
   }
 
   set value(value) {
-    if (value === this.#value) {
+    if (value === this.val) {
       return
     }
 
-    this.#value = value
+    this.val = value
     this.#notify()
-    this.#store()
   }
 
   reset() {
@@ -53,7 +39,36 @@ class Value {
   }
 }
 
-class NumberValue extends Value {
+class SavedValue extends Value {
+  #storage
+
+  constructor(storage) {
+    super()
+    this.#storage = storage
+  }
+
+  #store() {
+    this.#storage.set(this.storageKey, this.val)
+  }
+
+  get value() {
+    if (this.val === undefined) {
+      this.val = this.#storage.get(this.storageKey, this.defaultValue)
+    }
+
+    return this.val
+  }
+
+  set value(value) {
+    super.value = value
+
+    if (value !== this.val) {
+      this.#store()
+    }
+  }
+}
+
+class NumberValue extends SavedValue {
   get value() {
     return Number(super.value)
   }
@@ -68,7 +83,7 @@ class OverpassTimeout extends NumberValue {
   defaultValue = 10_000
 }
 
-class OverpassEndpoint extends Value {
+class OverpassEndpoint extends SavedValue {
   storageKey = 'overpassEndpoint'
   defaultValue = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 }
