@@ -540,6 +540,36 @@ onClick($startOrPause, async () => {
     }
   }
 
+  window.addEventListener('deviceorientationabsolute', event => {
+    updateOrientation(
+      invertBearing(event.alpha),
+      'Absolute device orientation',
+      true,
+    )
+  })
+
+  const maybeAbsoluteDeviceOrientationHandler = event => {
+    if (event.webkitCompassHeading) {
+      updateOrientation(event.webkitCompassHeading, 'Webkit compass heading', true)
+      return
+    }
+
+    if (event.absolute) {
+      updateOrientation(invertBearing(event.alpha), 'Device orientation', true)
+      return
+    }
+
+    window.removeEventListener(
+      'deviceorientation',
+      maybeAbsoluteDeviceOrientationHandler,
+    )
+  }
+
+  window.addEventListener(
+    'deviceorientation',
+    maybeAbsoluteDeviceOrientationHandler,
+  )
+
   $startOrPause.textContent = 'Starting'
   addAction('Started')
 
@@ -663,36 +693,6 @@ const updateOrientation = (orientation, provider, isExact) => {
   $orientationProvider.textContent = provider
   isOrientationExact = isExact
 }
-
-window.addEventListener('deviceorientationabsolute', event => {
-  updateOrientation(
-    invertBearing(event.alpha),
-    'Absolute device orientation',
-    true,
-  )
-})
-
-const maybeAbsoluteDeviceOrientationHandler = event => {
-  if (event.webkitCompassHeading) {
-    updateOrientation(event.webkitCompassHeading, 'Webkit compass heading', true)
-    return
-  }
-
-  if (event.absolute) {
-    updateOrientation(invertBearing(event.alpha), 'Device orientation', true)
-    return
-  }
-
-  window.removeEventListener(
-    'deviceorientation',
-    maybeAbsoluteDeviceOrientationHandler,
-  )
-}
-
-window.addEventListener(
-  'deviceorientation',
-  maybeAbsoluteDeviceOrientationHandler,
-)
 
 /*
 UNDO
