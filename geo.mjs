@@ -54,3 +54,28 @@ export function createBoundingBox(position, lengthMetres) {
     move(position, 90, lengthMetres / 2).longitude,
   ]
 }
+
+export function compassHeading(alpha, beta, gamma) {
+  const alphaRad = degreesToRadians(alpha)
+  const betaRad = degreesToRadians(beta)
+  const gammaRad = degreesToRadians(gamma)
+
+  const cA = Math.cos(alphaRad)
+  const sA = Math.sin(alphaRad)
+  const sB = Math.sin(betaRad)
+  const cG = Math.cos(gammaRad)
+  const sG = Math.sin(gammaRad)
+
+  const rA = -cA * sG - sA * sB * cG
+  const rB = -sA * sG + cA * sB * cG
+
+  let compassHeading = Math.atan(rA / rB)
+
+  if (rB < 0) {
+    compassHeading += Math.PI
+  } else if (rA < 0) {
+    compassHeading += 2 * Math.PI
+  }
+
+  return radiansToDegrees(compassHeading)
+}

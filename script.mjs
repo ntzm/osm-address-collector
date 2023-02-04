@@ -1,5 +1,5 @@
 import findNearestStreets from './find-nearest-streets.mjs'
-import {move} from './geo.mjs'
+import {compassHeading, move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import {getOsmFile} from './osm-xml.mjs'
 import Storage from './storage.mjs'
@@ -542,7 +542,7 @@ onClick($startOrPause, async () => {
 
   window.addEventListener('deviceorientationabsolute', event => {
     updateOrientation(
-      invertBearing(event.alpha),
+      compassHeading(event.alpha, event.beta, event.gamma),
       'Absolute device orientation',
       true,
     )
@@ -555,7 +555,7 @@ onClick($startOrPause, async () => {
     }
 
     if (event.absolute) {
-      updateOrientation(invertBearing(event.alpha), 'Device orientation', true)
+      updateOrientation(compassHeading(event.alpha, event.beta, event.gamma), 'Device orientation', true)
       return
     }
 
@@ -684,8 +684,6 @@ ORIENTATION
 
 const $orientation = document.querySelector('#orientation')
 let isOrientationExact = false
-
-const invertBearing = bearing => Math.abs(bearing - 360)
 
 const updateOrientation = (orientation, provider, isExact) => {
   currentOrientation = Math.round(orientation)
