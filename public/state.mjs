@@ -51,37 +51,48 @@ class SavedValue extends Value {
   }
 
   #store() {
-    this.#storage.set(this.storageKey, this.val)
+    let toStore = this.val
+
+    if (this.toStored) {
+      toStore = this.toStored(toStore)
+    }
+
+    this.#storage.set(this.storageKey, toStore)
   }
 
   get value() {
     if (this.val === undefined) {
-      this.val = this.#storage.get(this.storageKey, this.defaultValue)
+      const stored = this.#storage.get(this.storageKey)
+
+      if (stored === undefined) {
+        this.val = this.defaultValue
+      } else if (this.fromStored) {
+        this.val = this.fromStored(stored)
+      }
     }
 
     return this.val
   }
 
   set value(value) {
-    super.value = value
-
     if (value !== this.val) {
+      this.val = value
       this.#store()
     }
   }
 }
 
-class JsonValue extends SavedValue {
-  get value() {
-    return JSON.parse(super.value)
+class SavedJsonValue extends SavedValue {
+  fromStored(stored) {
+    return JSON.parse(stored)
   }
 
-  set value(value) {
-    super.value = JSON.stringify(value)
+  toStored(value) {
+    return JSON.stringify(value)
   }
 }
 
-class Addresses extends JsonValue {
+class Addresses extends SavedJsonValue {
   storageKey = 'addresses'
   defaultValue = []
 
@@ -99,7 +110,7 @@ class Addresses extends JsonValue {
   }
 }
 
-class Notes extends JsonValue {
+class Notes extends SavedJsonValue {
   storageKey = 'notes'
   defaultValue = []
 
@@ -167,13 +178,9 @@ export class SurveyStatus extends Value {
 }
 
 class NumberValue extends SavedValue {
-  get value() {
-    return Number(super.value)
-  }
+  fromStored = Number
 
-  set value(value) {
-    super.value = Number(value)
-  }
+  toStored = Number
 }
 
 class OverpassTimeout extends NumberValue {
