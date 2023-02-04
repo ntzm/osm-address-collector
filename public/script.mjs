@@ -45,14 +45,16 @@ const addAction = action => {
 }
 
 surveyStatus.subscribe(() => {
-  addAction({
+  const map = {
     [surveyStatus.isPaused]: 'Paused',
     [surveyStatus.isStarting]: 'Starting',
     [surveyStatus.isStarted]: 'Started',
     [surveyStatus.isError]: 'Error',
     [surveyStatus.isFinishing]: 'Finishing',
     [surveyStatus.isFinished]: 'Finished',
-  }.true)
+  }
+
+  addAction(map.true)
 })
 
 /*
@@ -708,7 +710,7 @@ onClick($done, () => {
   )
 
   saveAs(
-    new Blob([contents], { type: 'application/vnd.osm+xml' }),
+    new Blob([contents], {type: 'application/vnd.osm+xml'}),
     `${getFormattedDate()}.osm`,
   )
 
