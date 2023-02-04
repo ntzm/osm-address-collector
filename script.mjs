@@ -470,7 +470,7 @@ for (const submit of document.querySelectorAll('.submit')) {
       bearing += 360
     }
 
-    const newPosition = move(currentPosition, bearing, distance / 1000)
+    const newPosition = move(currentPosition, bearing, distance)
 
     addresses.push({
       latitude: newPosition.latitude,
