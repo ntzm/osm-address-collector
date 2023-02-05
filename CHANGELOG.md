@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.1
 
 - Cap street search distance inaccuracy modifier at 20m
 - Add debug logs
