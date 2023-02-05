@@ -1,3 +1,4 @@
+import {saveAs} from 'file-saver-es'
 import findNearestStreets from './find-nearest-streets.mjs'
 import {move} from './geo.mjs'
 import guessNextNumber from './guess-next-number'
@@ -5,7 +6,6 @@ import Logger from './logger.mjs'
 import {getOsmFile} from './osm-xml'
 import {State, SurveyStatus} from './state.mjs'
 import Storage from './storage.mjs'
-import {saveAs} from 'file-saver-es'
 
 const storage = new Storage(localStorage)
 const state = new State(storage)

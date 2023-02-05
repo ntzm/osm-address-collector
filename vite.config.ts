@@ -1,7 +1,9 @@
 import basicSsl from '@vitejs/plugin-basic-ssl'
 
-export default {
+const config = {
   plugins: [
-    basicSsl()
-  ]
+    basicSsl(),
+  ],
 }
+
+export default config
