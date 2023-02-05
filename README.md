@@ -27,6 +27,7 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 
 (video coming soon)
 
+1. **HOLD DEVICE FLAT** - this is important otherwise orientation might not work
 1. Press **Start**
 1. Navigate to a building that needs a number or name
 1. Enter the number using the keypad or the name device's keyboard
