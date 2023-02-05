@@ -1,12 +1,13 @@
 import {saveAs} from 'file-saver-es'
 import Feature from 'ol/Feature'
 import Map from 'ol/Map.js'
-import Point from 'ol/geom/Point.js'
+import {Point} from 'ol/geom'
+import {circular as circularPolygon} from 'ol/geom/Polygon'
 import View from 'ol/View.js'
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
 import {OSM, Vector as VectorSource} from 'ol/source.js'
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
-import {fromLonLat} from 'ol/proj'
+import {useGeographic} from 'ol/proj'
 import Storage from './storage.mjs'
 import {State, SurveyStatus} from './state.mjs'
 import {getOsmFile} from './osm-xml'
@@ -808,6 +809,8 @@ onClick($closeNoteWriter, () => {
 MAP
 */
 
+useGeographic()
+
 const $mapContainer = document.querySelector('#map-container')
 const map = new Map({
   target: 'map',
@@ -822,6 +825,7 @@ const map = new Map({
   }),
 })
 
+const accuracyFeature = new Feature()
 const positionFeature = new Feature()
 positionFeature.setStyle(
   new Style({
@@ -840,7 +844,7 @@ positionFeature.setStyle(
 
 const positionLayer = new VectorLayer({
   source: new VectorSource({
-    features: [positionFeature],
+    features: [accuracyFeature, positionFeature],
   }),
 })
 
@@ -872,7 +876,7 @@ addresses.subscribe(({value}) => {
 
   addressSource.addFeatures(value.map(address => {
     const feature = new Feature({
-      geometry: new Point(fromLonLat([address.longitude, address.latitude])),
+      geometry: new Point([address.longitude, address.latitude]),
     })
 
     feature.setStyle(addressMarkerStyle)
@@ -907,7 +911,7 @@ notes.subscribe(({value}) => {
 
   noteSource.addFeatures(value.map(note => {
     const feature = new Feature({
-      geometry: new Point(fromLonLat([note.longitude, note.latitude])),
+      geometry: new Point([note.longitude, note.latitude]),
     })
 
     feature.setStyle(noteMarkerStyle)
@@ -917,9 +921,9 @@ notes.subscribe(({value}) => {
 })
 
 currentPosition.subscribe(({value}) => {
-  const coords = fromLonLat([value.longitude, value.latitude])
-  positionFeature.setGeometry(new Point(coords))
-  map.getView().setCenter(coords)
+  positionFeature.setGeometry(new Point([value.longitude, value.latitude]))
+  accuracyFeature.setGeometry(circularPolygon([value.longitude, value.latitude], value.accuracy))
+  map.getView().setCenter([value.longitude, value.latitude])
 })
 
 onClick(document.querySelector('#show-map'), () => {
