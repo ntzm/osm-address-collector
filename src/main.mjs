@@ -858,7 +858,7 @@ const addressMarkerStyle = new Style({
   image: new CircleStyle({
     radius: 6,
     fill: new Fill({
-      color: '#ff0000',
+      color: '#0000ff',
     }),
     stroke: new Stroke({
       color: '#000',
@@ -870,10 +870,50 @@ const addressMarkerStyle = new Style({
 addresses.subscribe(({value}) => {
   addressSource.clear()
 
-  addressSource.addFeatures(value.map(address => new Feature({
-    geometry: new Point(fromLonLat([address.longitude, address.latitude])),
-    style: addressMarkerStyle,
-  })))
+  addressSource.addFeatures(value.map(address => {
+    const feature = new Feature({
+      geometry: new Point(fromLonLat([address.longitude, address.latitude])),
+    })
+
+    feature.setStyle(addressMarkerStyle)
+
+    return feature
+  }))
+})
+
+const noteSource = new VectorSource({features: []})
+
+const noteLayer = new VectorLayer({
+  source: noteSource,
+})
+
+map.addLayer(noteLayer)
+
+const noteMarkerStyle = new Style({
+  image: new CircleStyle({
+    radius: 6,
+    fill: new Fill({
+      color: '#ff0000',
+    }),
+    stroke: new Stroke({
+      color: '#000',
+      width: 2,
+    }),
+  }),
+})
+
+notes.subscribe(({value}) => {
+  noteSource.clear()
+
+  noteSource.addFeatures(value.map(note => {
+    const feature = new Feature({
+      geometry: new Point(fromLonLat([note.longitude, note.latitude])),
+    })
+
+    feature.setStyle(noteMarkerStyle)
+
+    return feature
+  }))
 })
 
 currentPosition.subscribe(({value}) => {
