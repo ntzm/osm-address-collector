@@ -9,6 +9,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
 import {useGeographic} from 'ol/proj'
 import {Attribution, Rotate} from 'ol/control'
 import {type State} from './state'
+import { Note } from './types'
 
 export function makeMap(state: State): Map {
   useGeographic()
@@ -107,10 +108,10 @@ export function makeMap(state: State): Map {
     }),
   })
 
-  state.notes.subscribe(({value}) => {
+  const updateNotes = (notes: Note[]) => {
     noteSource.clear()
 
-    noteSource.addFeatures(value.map(note => {
+    noteSource.addFeatures(notes.map(note => {
       const feature = new Feature({
         geometry: new Point([note.longitude, note.latitude]),
       })
@@ -119,16 +120,28 @@ export function makeMap(state: State): Map {
 
       return feature
     }))
+  }
+
+  state.notes.subscribe(({value}) => {
+    updateNotes(value)
   })
 
-  state.position.subscribe(({value}) => {
-    if (value === undefined) {
+  updateNotes(state.notes.value)
+
+  const updatePosition = (position: GeolocationCoordinates | undefined) => {
+    if (position === undefined) {
       return
     }
 
-    positionFeature.setGeometry(new Point([value.longitude, value.latitude]))
-    accuracyFeature.setGeometry(circularPolygon([value.longitude, value.latitude], value.accuracy))
+    positionFeature.setGeometry(new Point([position.longitude, position.latitude]))
+    accuracyFeature.setGeometry(circularPolygon([position.longitude, position.latitude], position.accuracy))
+  }
+
+  state.position.subscribe(({value}) => {
+    updatePosition(value)
   })
+
+  updatePosition(state.position.value)
 
   return map
 }
