@@ -425,31 +425,21 @@ $currentNumberOrName.addEventListener('focus', () => {
   }
 })
 
-surveyStatus.subscribe(() => {
-  const elements = [
-    ...document.querySelectorAll('.append'),
-    ...document.querySelectorAll('.submit'),
-    $undo,
-    $done,
-    $addNote,
-    $clear,
-  ]
+const elementsToDisable = document.querySelectorAll('.disabled')
 
+surveyStatus.subscribe(({ value, previous }) => {
   if (surveyStatus.isStarted) {
-    for (const element of elements) {
+    for (const element of elementsToDisable) {
       element.classList.remove('disabled')
     }
 
     return
   }
 
-  // Todo only if previous
-  for (const element of elements) {
-    element.classList.add('disabled')
-  }
-
-  if (surveyStatus.isFinished) {
-    $done.classList.remove('disabled')
+  if (previous === SurveyStatus.STARTED) {
+    for (const element of elementsToDisable) {
+      element.classList.add('disabled')
+    }
   }
 })
 
