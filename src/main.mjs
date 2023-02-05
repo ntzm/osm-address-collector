@@ -70,7 +70,7 @@ SETTINGS
 
 const $settings = document.querySelector('#settings')
 
-onClick(document.querySelector('#info-row'), () => {
+onClick(document.querySelector('#open-settings'), () => {
   $settings.style.display = 'block'
 })
 
@@ -805,11 +805,11 @@ makeMap(state)
 
 const $mapContainer = document.querySelector('#map-container')
 
-onClick(document.querySelector('#show-map'), () => {
+onClick(document.querySelector('#open-map'), () => {
   $mapContainer.style.display = 'block'
 })
 
-onClick(document.querySelector('#hide-map'), () => {
+onClick(document.querySelector('#close-map'), () => {
   $mapContainer.style.display = 'none'
 })
 

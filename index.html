@@ -47,11 +47,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   </head>
   <body>
     <div id="map-container">
-      <button id="hide-map">Hide map</button>
+      <button id="close-map">Close map</button>
       <div id="map"></div>
     </div>
-
-    <button id="show-map">Show map</button>
 
     <div id="settings">
       <button id="close-settings">x</button>
@@ -197,103 +195,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     </div>
 
     <div class="container">
-      <div class="row" id="info-row">
-        <div class="info">
-          <svg
-            class="info-icon"
-            style="transform: rotate(135deg)"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M32 46H48V62H32V46Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M32 49H8V59H32"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M48 49H72V59H48"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M38 62V64C38 65.1046 38.8954 66 40 66V66C41.1046 66 42 65.1046 42 64V62"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M47.5971 36C50.178 36 52.0737 38.4742 50.569 40.571C48.2099 43.8585 44.355 46 40 46C35.6449 46 31.79 43.8585 29.4309 40.571C27.9262 38.4742 29.8219 36 32.4028 36H47.5971Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M46.9282 28C46.226 26.7838 45.2161 25.7739 44 25.0718C42.7838 24.3696 41.4043 24 40 24C38.5957 24 37.2161 24.3697 36 25.0718C34.7838 25.7739 33.7739 26.7838 33.0718 28"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M55.5885 23C54.0086 20.2637 51.7364 17.9914 49 16.4115C46.2637 14.8317 43.1597 14 40 14C36.8404 14 33.7364 14.8317 31 16.4115C28.2637 17.9914 25.9914 20.2637 24.4116 23"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+      <div class="row">
+        <div class="info" id="open-map">
+          <img class="info-icon" src="public/assets/icons/map_black_24dp.svg" />
           <span id="accuracy">N/A</span>
         </div>
         <div class="info">
-          <svg
-            class="info-icon"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M23.8906 19.3455C25.7809 17.8305 27.8908 16.5754 30.169 15.6317C36.5076 13.0062 43.6295 13.0062 49.968 15.6317C56.3066 18.2572 61.3425 23.2932 63.968 29.6317C66.5935 35.9703 66.5935 43.0922 63.968 49.4307C61.3425 55.7693 56.3066 60.8052 49.968 63.4307C43.6295 66.0562 36.5076 66.0562 30.169 63.4307L29.2715 63.0589C28.8849 62.8988 28.5037 62.7288 28.128 62.5493"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M30.3364 25.7911L18.4517 13.9063C17.2523 12.7069 15.2017 13.5564 15.2017 15.2525L15.2017 27.0411C15.2017 28.1456 16.0971 29.0411 17.2017 29.0411L28.9902 29.0411C30.6864 29.0411 31.5358 26.9904 30.3364 25.7911Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M36 39C36 37.3431 37.3431 36 39 36C40.6569 36 42 37.3431 42 39C42 40.6569 40.6569 42 39 42C37.3431 42 36 40.6569 36 39Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M41.5967 40.5064L52.8496 47.0161"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M40.7306 36.5531L45.5317 29.7695"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="info-icon" src="public/assets/icons/history_black_24dp.svg" />
           <ul id="history"></ul>
+        </div>
+        <div class="info" id="open-settings">
+          <img class="info-icon" src="public/assets/icons/settings_black_24dp.svg" />
         </div>
       </div>
 
@@ -303,75 +215,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
       <div class="row">
         <button class="submit disabled" data-direction="L">
-          <svg
-            class="button-icon"
-            style="transform: rotate(-90deg)"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="button-icon" src="public/assets/icons/arrow_upward_black_24dp.svg" style="transform: rotate(-90deg)" />
         </button>
         <button class="submit disabled" data-direction="F">
-          <svg
-            class="button-icon"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="button-icon" src="public/assets/icons/arrow_upward_black_24dp.svg" />
         </button>
         <button class="submit disabled" data-direction="R">
-          <svg
-            class="button-icon"
-            style="transform: rotate(90deg)"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M40.0388 13.1699L40.0427 38.963M40.0427 39.0001L40.0427 67.0001"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 39.0002L36.2877 14.7125C38.3379 12.6622 41.6621 12.6622 43.7123 14.7125L68 39.0002"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="button-icon" src="public/assets/icons/arrow_upward_black_24dp.svg" style="transform: rotate(90deg)" />
         </button>
       </div>
 
@@ -397,102 +247,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         <button id="start-or-pause">Start</button>
         <button class="append disabled" data-number="0">0</button>
         <button id="clear" class="disabled">
-          <svg
-            class="button-icon"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M55.5564 55.6693L24.4437 24.5566"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M24.4436 55.6693L55.5563 24.5566"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img src="public/assets/icons/clear_black_24dp.svg" />
         </button>
       </div>
 
       <div class="row">
         <button id="add-note" class="disabled">
-          <svg
-            class="button-icon"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 16C18 13.7909 19.7909 12 22 12H58C60.2091 12 62 13.7909 62 16V64C62 66.2091 60.2091 68 58 68H22C19.7909 68 18 66.2091 18 64V16Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M28 24H52"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M28 32H44"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M28 40H52"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M28 48H44"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M28 56H52"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="button-icon" src="public/assets/icons/note_black_24dp.svg" />
         </button>
         <button id="done" class="disabled">Done</a>
         <button id="undo" class="disabled">
-          <svg
-            class="button-icon"
-            transform="scale(-1, 1)"
-            width="80"
-            height="80"
-            viewBox="0 0 80 80"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M36.9629 14.3008C34.5917 14.5721 32.2491 15.1726 30.0048 16.1022C23.6662 18.7277 18.6303 23.7637 16.0048 30.1022C13.3793 36.4407 13.3793 43.5626 16.0048 49.9012C18.6303 56.2397 23.6662 61.2757 30.0048 63.9012C36.3433 66.5267 43.4652 66.5267 49.8038 63.9012C56.1423 61.2757 61.1783 56.2397 63.8038 49.9012L64.1755 49.0037C64.3357 48.6171 64.4851 48.2273 64.6237 47.8347"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M36.98 14.2984C37.01 14.2949 37.0401 14.2916 37.0702 14.2883M37.0703 6.5961V23.4037C37.0703 25.0998 39.1209 25.9492 40.3202 24.7499L47.9489 17.1212C49.1205 15.9497 49.1205 14.0502 47.9489 12.8786L40.3203 5.24991C39.1209 4.05057 37.0703 4.89999 37.0703 6.5961Z"
-              stroke="#333"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+          <img class="button-icon" src="public/assets/icons/undo_black_24dp.svg" />
         </button>
       </div>
     </div>
