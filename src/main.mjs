@@ -806,24 +806,22 @@ onClick(document.querySelector('#show-logs'), () => {
     .join('\n')
 })
 
-const statesToSubscribe = [
-  state.addresses,
-  state.notes,
-  state.surveyStatus,
-  state.overpassTimeout,
-  state.overpassEndpoint,
-  state.distance,
-  state.streetSearchDistance,
-  state.streets,
-]
+const statesToSubscribe = {
+  addresses: state.addresses,
+  notes: state.notes,
+  surveyStatus: state.surveyStatus,
+  overpassTimeout: state.overpassTimeout,
+  overpassEndpoint: state.overpassEndpoint,
+  distance: state.distance,
+  streetSearchDistance: state.streetSearchDistance,
+  streets: state.streets,
+}
 
-for (const stateValue of statesToSubscribe) {
+for (const [name, stateValue] of Object.entries(statesToSubscribe)) {
   stateValue.subscribe(({value, previous}) => {
-    const name = stateValue.constructor.name
-
     if (Array.isArray(value)) {
       // Bad hack
-      if (name === 'Streets') {
+      if (name === 'streets') {
         logger.log(`${name} added`, value)
         return
       }
