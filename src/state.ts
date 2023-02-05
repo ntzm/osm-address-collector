@@ -203,7 +203,7 @@ export class SurveyStatus extends Value<string> {
   }
 }
 
-class Logs extends Value<any> {
+export class Logs extends Value<any> {
   val = []
 
   add(log) {

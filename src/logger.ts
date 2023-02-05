@@ -1,9 +1,13 @@
+import { Logs } from "./state"
+
 export default class Logger {
-  constructor(logs) {
+  private logs
+
+  constructor(logs: Logs) {
     this.logs = logs
   }
 
-  log(message, data) {
+  log(message: string, data?: any) {
     const toConsole = [message]
     if (data) {
       if (typeof GeolocationCoordinates === 'function' && data instanceof GeolocationCoordinates) {
