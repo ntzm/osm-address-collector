@@ -1,5 +1,5 @@
 import findNearestStreets from './find-nearest-streets.mjs'
-import {compassHeading, move} from './geo.mjs'
+import {move} from './geo.mjs'
 import guessNextNumber from './guess-next-number.mjs'
 import Logger from './logger.mjs'
 import {getOsmFile} from './osm-xml.mjs'
@@ -582,32 +582,28 @@ onClick($startOrPause, async () => {
 
     // Fix for chrome on non-mobile - for testing
     if (event.alpha !== null) {
-      heading = compassHeading(event.alpha, event.beta, event.gamma)
+      heading = invertBearing(event.alpha)
     }
 
-    orientation.value = {
-      degrees: Math.round(heading),
-      provider: 'Absolute device orientation',
-      isExact: true,
-    }
+    updateOrientation(
+      heading,
+      'Absolute device orientation',
+      true,
+    )
   })
 
   const maybeAbsoluteDeviceOrientationHandler = event => {
     if (typeof event.webkitCompassHeading !== 'undefined') {
-      orientation.value = {
-        degrees: Math.round(event.webkitCompassHeading),
-        provider: 'Webkit compass heading',
-        isExact: true,
-      }
+      updateOrientation(
+        event.webkitCompassHeading,
+        'Webkit compass heading',
+        true,
+      )
       return
     }
 
     if (event.absolute) {
-      orientation.value = {
-        degrees: compassHeading(event.alpha, event.beta, event.gamma),
-        provider: 'Device orientation',
-        isExact: true,
-      }
+      updateOrientation(invertBearing(event.alpha), 'Device orientation', true)
       return
     }
 
@@ -745,10 +741,20 @@ const $orientation = document.querySelector('#orientation')
 let isOrientationExact = false
 
 orientation.subscribe(({value: {degrees, provider, isExact}}) => {
-  $orientation.textContent = `${degrees}°`
+  $orientation.textContent = `${Math.round(degrees)}°`
   $orientationProvider.textContent = provider
   isOrientationExact = isExact
 })
+
+const invertBearing = bearing => Math.abs(bearing - 360)
+
+const updateOrientation = (degrees, provider, isExact) => {
+  orientation.value = {
+    degrees,
+    provider,
+    isExact,
+  }
+}
 
 /*
 UNDO
