@@ -12,6 +12,7 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 - Supports text notes
 - Works offline
 - Customisable tags for address nodes
+- Map to show your survey so far
 
 ## Device Compatibility
 
@@ -54,7 +55,7 @@ Press the note icon to add a text note.
 
 ## Settings
 
-Click the top row with the icons on to open the settings.
+Click the settings icon on to open the settings.
 
 Settings are saved in browser local storage so they will be the same when you come back to the site.
 
@@ -79,13 +80,7 @@ You can see the orientation provider as well, this describes the way we get your
 
 You can also see your current orientation according to the orientation provider.
 
-### iOS Compatibility Notes
+## iOS Compatibility Notes
 
 - Ensure that precise location services are enabled for the browser
 - When the site asks for orientation and motion permissions, ALLOW! Otherwise you will have to clear your Safari cache
-
-### Absolute orientation is not supported sometimes
-
-Some browsers (Firefox) don't have a way of accessing absolution orientation of the device so GPS heading will be used instead.
-This isn't ideal as it's much less accurate.
-Please consider using a different browser for this application.
