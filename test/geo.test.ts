@@ -1,6 +1,6 @@
 import {it} from 'node:test'
 import assert from 'node:assert/strict'
-import {createBoundingBox, move} from '../src/geo.mjs'
+import {createBoundingBox, move} from '../src/geo'
 
 it('moves position', () => {
   assert.deepEqual(

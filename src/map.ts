@@ -9,7 +9,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
 import {useGeographic} from 'ol/proj'
 import {Attribution, Rotate} from 'ol/control'
 import {type State} from './state'
-import { Note } from './types'
+import {type Note} from './types'
 
 export function makeMap(state: State): Map {
   useGeographic()
@@ -77,10 +77,10 @@ export function makeMap(state: State): Map {
           text: new Text({
             text: address.numberOrName,
             scale: 1.2,
-            fill: new Fill({ color: '#fff' }),
-            stroke: new Stroke({ color: '0', width: 3}),
+            fill: new Fill({color: '#fff'}),
+            stroke: new Stroke({color: '0', width: 3}),
           }),
-        })
+        }),
       )
 
       return feature

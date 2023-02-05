@@ -1,14 +1,20 @@
+import {type Position} from './types'
+
 const EARTH_RADIUS_METRES = 6_378_137
 
-function degreesToRadians(degrees) {
+function degreesToRadians(degrees: number) {
   return (degrees * Math.PI) / 180
 }
 
-function radiansToDegrees(radians) {
+function radiansToDegrees(radians: number) {
   return (radians * 180) / Math.PI
 }
 
-export function move(position, bearing, distanceMetres) {
+export function move(
+  position: Position,
+  bearing: number,
+  distanceMetres: number,
+): Position {
   const bearingRadians = degreesToRadians(bearing)
 
   const latitudeRadians = degreesToRadians(position.latitude)
@@ -36,17 +42,10 @@ export function move(position, bearing, distanceMetres) {
   }
 }
 
-/**
- * @param {import("./types").Position} position
- * @param {Number} lengthMetres
- *
- * @returns {[Number, Number, Number, Number]} In the order of:
- *          - southern-most latitude
- *          - western-most longitude
- *          - northern-most latitude
- *          - eastern-most longitude
- */
-export function createBoundingBox(position, lengthMetres) {
+export function createBoundingBox(
+  position: Position,
+  lengthMetres: number,
+): [number, number, number, number] {
   return [
     move(position, 180, lengthMetres / 2).latitude,
     move(position, 270, lengthMetres / 2).longitude,
