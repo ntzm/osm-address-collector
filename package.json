@@ -22,7 +22,8 @@
       "browser"
     ],
     "globals": [
-      "workbox"
+      "workbox",
+      "GeolocationCoordinates"
     ],
     "ignore": [
       "public/vendor"

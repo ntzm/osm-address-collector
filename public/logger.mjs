@@ -6,7 +6,7 @@ export default class Logger {
   log(message, data) {
     const toConsole = [message]
     if (data) {
-      if (data instanceof GeolocationCoordinates) {
+      if (typeof GeolocationCoordinates === 'function' && data instanceof GeolocationCoordinates) {
         data = {
           latitude: data.latitude,
           longitude: data.longitude,
