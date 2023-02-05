@@ -4,6 +4,7 @@
 
 - Cap street search distance inaccuracy modifier at 20m
 - Add debug logs
+- Fix orientation
 
 ## 1.1.0
 
