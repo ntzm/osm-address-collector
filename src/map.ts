@@ -126,6 +126,10 @@ export function makeMap(state: State) {
   })
 
   state.position.subscribe(({value}) => {
+    if (value === undefined) {
+      return
+    }
+
     positionFeature.setGeometry(new Point([value.longitude, value.latitude]))
     accuracyFeature.setGeometry(circularPolygon([value.longitude, value.latitude], value.accuracy))
     map.getView().setCenter([value.longitude, value.latitude])
