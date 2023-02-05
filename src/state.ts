@@ -1,5 +1,20 @@
+import type Store from './storage'
+import {type Address, type Note} from './types'
+
 export class State {
-  constructor(storage) {
+  addresses
+  notes
+  surveyStatus
+  logs
+  overpassTimeout
+  overpassEndpoint
+  distance
+  streetSearchDistance
+  streets
+  orientation
+  position
+
+  constructor(storage: Store) {
     this.addresses = new Addresses(storage)
     this.notes = new Notes(storage)
     this.surveyStatus = new SurveyStatus()
@@ -14,11 +29,11 @@ export class State {
   }
 }
 
-class Value {
-  #listeners = []
+abstract class Value<T> {
+  #listeners: Array<(n: {value: T; previous: T}) => void> = []
   val
 
-  #notify(previous) {
+  #notify(previous: T) {
     for (const listener of this.#listeners) {
       listener({
         value: this.val,
@@ -27,11 +42,11 @@ class Value {
     }
   }
 
-  subscribe(listener) {
+  subscribe(listener: (n: {value: T; previous: T}) => void) {
     this.#listeners.push(listener)
   }
 
-  get value() {
+  get value(): T {
     return this.val
   }
 
@@ -51,7 +66,7 @@ class Value {
   }
 }
 
-class SavedValue extends Value {
+abstract class SavedValue<T> extends Value<T> {
   #storage
 
   constructor(storage) {
@@ -69,7 +84,7 @@ class SavedValue extends Value {
     this.#storage.set(this.storageKey, toStore)
   }
 
-  get value() {
+  get value(): T {
     if (this.val === undefined) {
       const stored = this.#storage.get(this.storageKey)
 
@@ -93,7 +108,7 @@ class SavedValue extends Value {
   }
 }
 
-class SavedJsonValue extends SavedValue {
+abstract class SavedJsonValue<T> extends SavedValue<T> {
   fromStored(stored) {
     return JSON.parse(stored)
   }
@@ -103,7 +118,7 @@ class SavedJsonValue extends SavedValue {
   }
 }
 
-class Addresses extends SavedJsonValue {
+class Addresses extends SavedJsonValue<Address[]> {
   storageKey = 'addresses'
   defaultValue = []
 
@@ -121,7 +136,7 @@ class Addresses extends SavedJsonValue {
   }
 }
 
-class Notes extends SavedJsonValue {
+class Notes extends SavedJsonValue<Note[]> {
   storageKey = 'notes'
   defaultValue = []
 
@@ -130,7 +145,7 @@ class Notes extends SavedJsonValue {
   }
 }
 
-export class SurveyStatus extends Value {
+export class SurveyStatus extends Value<string> {
   static UNSTARTED = 'unstarted'
   static STARTING = 'starting'
   static STARTED = 'started'
@@ -188,7 +203,7 @@ export class SurveyStatus extends Value {
   }
 }
 
-class Logs extends Value {
+class Logs extends Value<any> {
   val = []
 
   add(log) {
@@ -196,7 +211,7 @@ class Logs extends Value {
   }
 }
 
-class SavedNumberValue extends SavedValue {
+class SavedNumberValue extends SavedValue<number> {
   fromStored = Number
   toStored = Number
 }
@@ -206,7 +221,7 @@ class OverpassTimeout extends SavedNumberValue {
   defaultValue = 10_000
 }
 
-class OverpassEndpoint extends SavedValue {
+class OverpassEndpoint extends SavedValue<string> {
   storageKey = 'overpassEndpoint'
   defaultValue = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 }
@@ -221,6 +236,6 @@ class StreetSearchDistance extends SavedNumberValue {
   defaultValue = 10
 }
 
-class Streets extends Value {}
-class Orientation extends Value {}
-class Position extends Value {}
+class Streets extends Value<any> {}
+class Orientation extends Value<any> {}
+class Position extends Value<any> {}

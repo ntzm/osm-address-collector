@@ -1,13 +1,15 @@
-export default class Storage {
-  constructor(engine) {
+export default class Store {
+  engine
+
+  constructor(engine: Storage) {
     this.engine = engine
   }
 
-  get(key, def) {
+  get(key: string, def?: any) {
     return this.engine.getItem(key) ?? def
   }
 
-  getJson(key, def) {
+  getJson(key: string, def: any) {
     const value = this.get(key)
 
     if (value === undefined) {
@@ -17,7 +19,7 @@ export default class Storage {
     return JSON.parse(value)
   }
 
-  set(key, value) {
+  set(key: string, value: string) {
     try {
       this.engine.setItem(key, value)
     } catch {
@@ -25,7 +27,7 @@ export default class Storage {
     }
   }
 
-  setJson(key, value) {
+  setJson(key: string, value: any) {
     this.set(key, JSON.stringify(value))
   }
 }
