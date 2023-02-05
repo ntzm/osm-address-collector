@@ -1,7 +1,7 @@
-import { Logs } from "./state"
+import {type Logs} from './state'
 
 export default class Logger {
-  private logs
+  private readonly logs
 
   constructor(logs: Logs) {
     this.logs = logs

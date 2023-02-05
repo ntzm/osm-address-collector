@@ -16,13 +16,3 @@ npm run dev
 ```
 npm test
 ```
-
-## Linting
-
-```
-npm run lint
-```
-
-```
-npm run lint-fix
-```

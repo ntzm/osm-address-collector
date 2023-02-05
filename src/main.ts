@@ -308,7 +308,9 @@ for (const [key, value] of Object.entries(customTags)) {
   addCustomTag(key, value)
 }
 
-onClick($addCustomTag, () => addCustomTag('', ''))
+onClick($addCustomTag, () => {
+  addCustomTag('', '')
+})
 
 /*
 SETTINGS - SKIP NUMBERS
@@ -367,7 +369,9 @@ for (const skipNumber of skipNumbers) {
   addSkipNumber(skipNumber)
 }
 
-onClick($addSkipNumber, () => addSkipNumber(''))
+onClick($addSkipNumber, () => {
+  addSkipNumber('')
+})
 
 /*
 SETTINGS - Reset
