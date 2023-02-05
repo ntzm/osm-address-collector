@@ -801,11 +801,15 @@ onClick($closeNoteWriter, () => {
 MAP
 */
 
-makeMap(state)
+let map
 
 const $mapContainer = document.querySelector('#map-container')
 
 onClick(document.querySelector('#open-map'), () => {
+  if (!map) {
+    map = makeMap(state)
+  }
+
   $mapContainer.style.display = 'block'
 })
 
