@@ -5,7 +5,7 @@ import Logger from './logger.mjs'
 import {getOsmFile} from './osm-xml'
 import {State, SurveyStatus} from './state.mjs'
 import Storage from './storage.mjs'
-import {saveAs} from './vendor/FileSaver.js'
+import {saveAs} from 'file-saver-es'
 
 const storage = new Storage(localStorage)
 const state = new State(storage)
