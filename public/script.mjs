@@ -815,7 +815,6 @@ const statesToSubscribe = [
   state.distance,
   state.streetSearchDistance,
   state.streets,
-  state.position,
 ]
 
 for (const stateValue of statesToSubscribe) {
