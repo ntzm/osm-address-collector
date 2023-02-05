@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add basic map
+- Updated icons
+
 ## 1.1.1
 
 - Cap street search distance inaccuracy modifier at 20m
