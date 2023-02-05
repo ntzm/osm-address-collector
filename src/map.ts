@@ -8,6 +8,7 @@ import {OSM, Vector as VectorSource} from 'ol/source.js'
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
 import {useGeographic} from 'ol/proj'
 import {type State} from './state'
+import {Attribution, Rotate} from 'ol/control'
 
 export function makeMap(state: State) {
   useGeographic()
@@ -23,6 +24,10 @@ export function makeMap(state: State) {
       center: [0, 0],
       zoom: 19,
     }),
+    controls: [
+      new Attribution(),
+      new Rotate(),
+    ]
   })
 
   const accuracyFeature = new Feature()
