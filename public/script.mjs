@@ -427,7 +427,7 @@ $currentNumberOrName.addEventListener('focus', () => {
 
 const elementsToDisable = document.querySelectorAll('.disabled')
 
-surveyStatus.subscribe(({ value, previous }) => {
+surveyStatus.subscribe(({previous}) => {
   if (surveyStatus.isStarted) {
     for (const element of elementsToDisable) {
       element.classList.remove('disabled')
