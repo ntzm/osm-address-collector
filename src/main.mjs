@@ -810,6 +810,9 @@ onClick(document.querySelector('#open-map'), () => {
     map = makeMap(state)
   }
 
+  map.getView().setCenter([currentPosition.value.longitude, currentPosition.value.latitude])
+  map.getView().setZoom(19)
+
   $mapContainer.style.display = 'block'
 })
 

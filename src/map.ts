@@ -10,7 +10,7 @@ import {useGeographic} from 'ol/proj'
 import {Attribution, Rotate} from 'ol/control'
 import {type State} from './state'
 
-export function makeMap(state: State) {
+export function makeMap(state: State): Map {
   useGeographic()
 
   const map = new Map({
@@ -128,6 +128,7 @@ export function makeMap(state: State) {
 
     positionFeature.setGeometry(new Point([value.longitude, value.latitude]))
     accuracyFeature.setGeometry(circularPolygon([value.longitude, value.latitude], value.accuracy))
-    map.getView().setCenter([value.longitude, value.latitude])
   })
+
+  return map
 }
