@@ -3,7 +3,7 @@ import Map from 'ol/Map.js'
 import {Point} from 'ol/geom'
 import {circular as circularPolygon} from 'ol/geom/Polygon'
 import View from 'ol/View.js'
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js'
 import {OSM, Vector as VectorSource} from 'ol/source.js'
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
 import {useGeographic} from 'ol/proj'
@@ -63,19 +63,6 @@ export function makeMap(state: State) {
 
   map.addLayer(addressLayer)
 
-  const addressMarkerStyle = new Style({
-    image: new CircleStyle({
-      radius: 6,
-      fill: new Fill({
-        color: '#0000ff',
-      }),
-      stroke: new Stroke({
-        color: '#000',
-        width: 2,
-      }),
-    }),
-  })
-
   state.addresses.subscribe(({value}) => {
     addressSource.clear()
 
@@ -84,7 +71,16 @@ export function makeMap(state: State) {
         geometry: new Point([address.longitude, address.latitude]),
       })
 
-      feature.setStyle(addressMarkerStyle)
+      feature.setStyle(
+        new Style({
+          text: new Text({
+            text: address.numberOrName,
+            scale: 1.2,
+            fill: new Fill({ color: '#fff' }),
+            stroke: new Stroke({ color: '0', width: 3}),
+          }),
+        })
+      )
 
       return feature
     }))
