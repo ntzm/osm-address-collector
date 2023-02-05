@@ -210,3 +210,9 @@ p {
 .disclaimer {
   font-size: 10pt;
 }
+
+#logs {
+  font-size: 10pt;
+  margin-top: 5px;
+  height: 150px;
+}
