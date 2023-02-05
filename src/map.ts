@@ -7,8 +7,8 @@ import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
 import {OSM, Vector as VectorSource} from 'ol/source.js'
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
 import {useGeographic} from 'ol/proj'
-import {type State} from './state'
 import {Attribution, Rotate} from 'ol/control'
+import {type State} from './state'
 
 export function makeMap(state: State) {
   useGeographic()
@@ -27,7 +27,7 @@ export function makeMap(state: State) {
     controls: [
       new Attribution(),
       new Rotate(),
-    ]
+    ],
   })
 
   const accuracyFeature = new Feature()
