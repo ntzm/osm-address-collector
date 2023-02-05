@@ -2,11 +2,12 @@ import {it} from 'node:test'
 import assert from 'node:assert/strict'
 import {JSDOM} from 'jsdom'
 import serialize from 'w3c-xmlserializer'
-import {getOsmFile} from '../public/osm-xml.mjs'
+import {getOsmFile} from '../src/osm-xml'
+import {type Note, type Address} from '../src/types'
 
-const implementation = new JSDOM().window.document.implementation
+const implementation: DOMImplementation = new JSDOM().window.document.implementation
 
-function collapse(string) {
+function collapse(string: string): string {
   return string
     .split('\n')
     .map(line => line.trim())
@@ -15,7 +16,7 @@ function collapse(string) {
 }
 
 it('creates an OSM XML file', () => {
-  const addresses = [
+  const addresses: Address[] = [
     {
       latitude: 1,
       longitude: 2,
@@ -50,7 +51,7 @@ it('creates an OSM XML file', () => {
     },
   ]
 
-  const notes = [
+  const notes: Note[] = [
     {
       latitude: 1,
       longitude: 2,

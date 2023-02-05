@@ -37,7 +37,7 @@ export function move(position, bearing, distanceMetres) {
 }
 
 /**
- * @param {GeolocationCoordinates} position
+ * @param {import("./types").Position} position
  * @param {Number} lengthMetres
  *
  * @returns {[Number, Number, Number, Number]} In the order of:
