@@ -806,6 +806,10 @@ let map
 const $mapContainer = document.querySelector('#map-container')
 
 onClick(document.querySelector('#open-map'), () => {
+  if (currentPosition.value === undefined) {
+    return
+  }
+
   if (!map) {
     map = makeMap(state)
   }
