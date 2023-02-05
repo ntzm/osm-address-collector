@@ -1,11 +1,20 @@
 import {saveAs} from 'file-saver-es'
-import findNearestStreets from './find-nearest-streets.mjs'
-import {move} from './geo.mjs'
-import guessNextNumber from './guess-next-number'
-import Logger from './logger.mjs'
-import {getOsmFile} from './osm-xml'
-import {State, SurveyStatus} from './state.mjs'
+import Feature from 'ol/Feature'
+import Map from 'ol/Map.js'
+import Point from 'ol/geom/Point.js'
+import View from 'ol/View.js'
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
+import {OSM, Vector as VectorSource} from 'ol/source.js'
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer'
+import {fromLonLat} from 'ol/proj'
 import Storage from './storage.mjs'
+import {State, SurveyStatus} from './state.mjs'
+import {getOsmFile} from './osm-xml'
+import Logger from './logger.mjs'
+import guessNextNumber from './guess-next-number'
+import {move} from './geo.mjs'
+import findNearestStreets from './find-nearest-streets.mjs'
+import 'ol/ol.css'
 
 const storage = new Storage(localStorage)
 const state = new State(storage)
@@ -793,6 +802,92 @@ onClick($saveNote, () => {
 onClick($closeNoteWriter, () => {
   $noteContent.value = ''
   $noteWriter.style.display = 'none'
+})
+
+/*
+MAP
+*/
+
+const $mapContainer = document.querySelector('#map-container')
+const map = new Map({
+  target: 'map',
+  layers: [
+    new TileLayer({
+      source: new OSM(),
+    }),
+  ],
+  view: new View({
+    center: [0, 0],
+    zoom: 19,
+  }),
+})
+
+const positionFeature = new Feature()
+positionFeature.setStyle(
+  new Style({
+    image: new CircleStyle({
+      radius: 6,
+      fill: new Fill({
+        color: '#3399CC',
+      }),
+      stroke: new Stroke({
+        color: '#fff',
+        width: 2,
+      }),
+    }),
+  }),
+)
+
+const positionLayer = new VectorLayer({
+  source: new VectorSource({
+    features: [positionFeature],
+  }),
+})
+
+map.addLayer(positionLayer)
+
+const addressSource = new VectorSource({features: []})
+
+const addressLayer = new VectorLayer({
+  source: addressSource,
+})
+
+map.addLayer(addressLayer)
+
+const addressMarkerStyle = new Style({
+  image: new CircleStyle({
+    radius: 6,
+    fill: new Fill({
+      color: '#ff0000',
+    }),
+    stroke: new Stroke({
+      color: '#000',
+      width: 2,
+    }),
+  }),
+})
+
+addresses.subscribe(({value}) => {
+  addressSource.clear()
+
+  addressSource.addFeatures(value.map(address => new Feature({
+    geometry: new Point(fromLonLat([address.longitude, address.latitude])),
+    style: addressMarkerStyle,
+  })))
+})
+
+currentPosition.subscribe(({value}) => {
+  const coords = fromLonLat([value.longitude, value.latitude])
+  positionFeature.setGeometry(new Point(coords))
+  map.getView().setCenter(coords)
+})
+
+onClick(document.querySelector('#show-map'), () => {
+  $mapContainer.style.display = 'block'
+})
+
+onClick(document.querySelector('#hide-map'), () => {
+  $mapContainer.style.display = 'none'
 })
 
 /*

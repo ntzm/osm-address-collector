@@ -4,6 +4,7 @@
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "file-saver-es": "^2.0.5",
+    "ol": "^7.2.2",
     "typescript": "^4.9.5",
     "vite": "^4.1.1"
   },
