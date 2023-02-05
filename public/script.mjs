@@ -815,7 +815,6 @@ const statesToSubscribe = [
   state.distance,
   state.streetSearchDistance,
   state.streets,
-  state.orientation,
   state.position,
 ]
 
