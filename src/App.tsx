@@ -1,10 +1,12 @@
 import { useState } from "react"
+import { move } from "./geo"
 import IconButton from "./IconButton"
 import KeypadNumber from "./KeypadNumber"
 import Map from "./Map"
+import Settings from "./Settings"
 import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
-import { Address, Direction, Note } from "./types"
+import { Address, CustomTag, Direction, Note } from "./types"
 
 const notes: Note[] = [
   {
@@ -26,16 +28,17 @@ const history = [
 ]
 
 const skippedNumbers: number[] = []
-const street = ''
-const customTags = {}
+const orientation = 0
 
 function App() {
   const [mapOpen, setMapOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
-  const appendNumber = (number: number) => {
-    setCurrentNumberOrName(currentNumberOrName + String(number))
-  }
+  const [street, setStreet] = useState('')
+  const [streetSearchDistance, setStreetSearchDistance] = useState(10)
+  const [customTags, setCustomTags] = useState<CustomTag[]>([])
+  const [throwDistance, setThrowDistance] = useState(10)
+  const [skipNumbers, setSkipNumbers] = useState<number[]>([])
   const [addresses, setAddresses] = useState<Address[]>([
     {
       latitude: 51.505,
@@ -43,27 +46,64 @@ function App() {
       numberOrName: '5',
       skippedNumbers: [],
       street: 'Foo',
-      customTags: {},
+      customTags: [],
       direction: 'L',
     },
   ])
+  const appendNumber = (number: number) => {
+    setCurrentNumberOrName(currentNumberOrName + String(number))
+  }
   const submit = (direction: Direction) => {
-    setAddresses([
-      ...addresses,
-      {
-        latitude: currentPosition.latitude,
-        longitude: currentPosition.longitude,
-        numberOrName: currentNumberOrName,
-        skippedNumbers,
-        street,
-        customTags,
-        direction,
-      }
-    ])
+    let bearing = orientation
+
+    if (direction === 'L') {
+      bearing -= 90
+    }
+
+    if (direction === 'R') {
+      bearing += 90
+    }
+
+    bearing %= 360
+
+    if (bearing < 0) {
+      bearing += 360
+    }
+
+    const movedPosition = move(currentPosition, bearing, throwDistance)
+
+    const newAddress = {
+      latitude: movedPosition.latitude,
+      longitude: movedPosition.longitude,
+      numberOrName: currentNumberOrName,
+      skippedNumbers,
+      street,
+      customTags,
+      direction,
+    }
+
+    setAddresses([...addresses, newAddress])
   }
 
   return <>
     {mapOpen ? <Map addresses={addresses} notes={notes} onClose={() => setMapOpen(false)} /> : ''}
+    {
+      settingsOpen
+      ? <Settings
+        onClose={() => setSettingsOpen(false)}
+        street={street}
+        onStreetChange={setStreet}
+        streetSearchDistance={streetSearchDistance}
+        onStreetSearchDistanceChange={setStreetSearchDistance}
+        customTags={customTags}
+        onCustomTagsChange={setCustomTags}
+        throwDistance={throwDistance}
+        onThrowDistanceChange={setThrowDistance}
+        skipNumbers={skipNumbers}
+        onSkipNumbersChange={setSkipNumbers}
+      />
+      : ''
+    }
 
     <div className="container">
       <TopBar

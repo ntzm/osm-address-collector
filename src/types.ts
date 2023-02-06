@@ -6,7 +6,7 @@ export type Address = {
   numberOrName: string;
   skippedNumbers: number[];
   street: string | undefined;
-  customTags: Record<string, string>;
+  customTags: CustomTag[];
   direction: Direction;
 }
 
@@ -19,4 +19,9 @@ export type Note = {
 export type Position = {
   latitude: number;
   longitude: number;
+}
+
+export type CustomTag = {
+  key: string;
+  value: string;
 }
