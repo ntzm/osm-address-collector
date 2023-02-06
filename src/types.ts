@@ -1,3 +1,5 @@
+export type Direction = 'L' | 'F' | 'R'
+
 export type Address = {
   latitude: number;
   longitude: number;
@@ -5,7 +7,7 @@ export type Address = {
   skippedNumbers: number[];
   street: string | undefined;
   customTags: Record<string, string>;
-  direction: 'L' | 'F' | 'R';
+  direction: Direction;
 }
 
 export type Note = {
