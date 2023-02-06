@@ -35,17 +35,7 @@ function App() {
       lastActions[0],
     ])
   }
-  const [addresses, setAddresses] = useState<Address[]>([
-    {
-      latitude: 51.505,
-      longitude: -0.09,
-      numberOrName: '5',
-      skippedNumbers: [],
-      street: 'Foo',
-      customTags: [],
-      direction: 'L',
-    },
-  ])
+  const [addresses, setAddresses] = useState<Address[]>([])
   const addNote = (content: string) => {
     if (position === undefined) {
       // todo type checking
