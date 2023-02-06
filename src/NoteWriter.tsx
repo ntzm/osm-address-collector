@@ -21,14 +21,18 @@ export default function NoteWriter(props: {
 }) {
   const [content, setContent] = useState('')
 
-  const save = () => {
-    props.onAdd(content)
+  const close = () => {
     setContent('')
     props.onClose()
   }
 
+  const save = () => {
+    props.onAdd(content)
+    close()
+  }
+
   return <NoteWriterPopup>
-    <button onClick={props.onClose} style={{ width: '100%', height: 40 }}>x</button>
+    <button onClick={close} style={{ width: '100%', height: 40 }}>x</button>
     <p>Add a note</p>
     <textarea style={{ height: '100%' }} value={content} onChange={(e) => setContent(e.target.value)}></textarea>
     <button onClick={save}>Add</button>
