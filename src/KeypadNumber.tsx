@@ -10,6 +10,7 @@ export default function KeypadNumber(props: {
     className={props.className}
     disabled={props.disabled}
     colour="#c1e1c1"
+    touchStart
     onClick={() => props.onClick(props.number)}
   >
     {props.number}

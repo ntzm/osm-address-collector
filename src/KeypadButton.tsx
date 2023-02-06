@@ -5,6 +5,7 @@ type Props = PropsWithChildren<{
   className?: string,
   disabled?: boolean,
   colour?: string,
+  touchStart?: boolean
   onClick: () => void,
 }>
 
@@ -29,6 +30,10 @@ export default function KeypadButton(props: Props) {
     disabled={props.disabled}
     colour={props.colour}
     onClick={() => props.onClick()}
+    {...(props.touchStart ? {
+      onTouchStart: () => props.onClick(),
+      onTouchEnd: e => e.preventDefault(),
+    } : {} )}
   >
     {props.children}
   </StyledButton>
