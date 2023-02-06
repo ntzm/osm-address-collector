@@ -25,6 +25,7 @@ function App() {
   const [skipNumbers, setSkipNumbers] = useState<number[]>([])
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
   const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
+  const [positionWatchId, setPositionWatchId] = useState<number | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
   const [headingProvider, setHeadingProvider] = useState<'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined>(undefined)
   const [notes, setNotes] = useState<Note[]>([])
@@ -121,8 +122,36 @@ function App() {
 
   const invertBearing = (bearing: number) => Math.abs(bearing - 360)
 
+  const handleHeading = (event: Event) => {
+    if (!isOrientationEvent(event)) {
+      // todo what do
+      return
+    }
+
+    if (isWebkitOrientationEvent(event)) {
+      setHeading(event.webkitCompassHeading)
+      setHeadingProvider('Webkit compass heading')
+      return
+    }
+
+    if (!event.absolute) {
+      // todo fall back to gps heading
+      return
+    }
+
+    let heading = 0
+
+    // Fix for chrome on non-mobile - for testing
+    if (event.alpha !== null) {
+      heading = invertBearing(event.alpha)
+    }
+
+    setHeading(heading)
+    setHeadingProvider('Device orientation')
+  }
+
   const startOrPause = async () => {
-    if (surveyState === 'not started') {
+    if (surveyState === 'not started' || surveyState == 'paused') {
       setSurveyState('starting')
 
       if (canRequestOrientationPermission(DeviceOrientationEvent)) {
@@ -133,38 +162,10 @@ function App() {
         }
       }
 
-      const handleHeading = (event: Event) => {
-        if (!isOrientationEvent(event)) {
-          // todo what do
-          return
-        }
-
-        if (isWebkitOrientationEvent(event)) {
-          setHeading(event.webkitCompassHeading)
-          setHeadingProvider('Webkit compass heading')
-          return
-        }
-
-        if (!event.absolute) {
-          // todo fall back to gps heading
-          return
-        }
-
-        let heading = 0
-    
-        // Fix for chrome on non-mobile - for testing
-        if (event.alpha !== null) {
-          heading = invertBearing(event.alpha)
-        }
-
-        setHeading(heading)
-        setHeadingProvider('Device orientation')
-      }
-
       window.addEventListener('deviceorientationabsolute', handleHeading)
       window.addEventListener('deviceorientation', handleHeading)
 
-      navigator.geolocation.watchPosition(
+      const watchId = navigator.geolocation.watchPosition(
         position => {
           setPosition(position.coords)
           setSurveyState('started')
@@ -210,16 +211,22 @@ function App() {
         },
       )
 
+      setPositionWatchId(watchId)
+
       return
     }
 
     if (surveyState === 'started') {
       setSurveyState('paused')
-      return
-    }
-
-    if (surveyState === 'paused') {
-      setSurveyState('started')
+      if (positionWatchId !== undefined) {
+        navigator.geolocation.clearWatch(positionWatchId)
+        setPositionWatchId(undefined)
+      }
+      window.removeEventListener('deviceorientationabsolute', handleHeading)
+      window.removeEventListener('deviceorientation', handleHeading)
+      setPosition(undefined)
+      setHeading(undefined)
+      setHeadingProvider(undefined)
       return
     }
 
