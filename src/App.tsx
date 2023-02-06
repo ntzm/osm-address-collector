@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { move } from "./geo"
 import IconButton from "./IconButton"
+import KeypadButton from "./KeypadButton"
 import KeypadNumber from "./KeypadNumber"
 import Map from "./Map"
 import Settings from "./Settings"
 import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
-import { Address, CustomTag, Direction, Note } from "./types"
+import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyState, WebkitDeviceOrientationEvent } from "./types"
 
 const notes: Note[] = [
   {
@@ -15,12 +16,6 @@ const notes: Note[] = [
     content: 'Hello',
   },
 ]
-
-const currentPosition = {
-  latitude: 51.515,
-  longitude: -0.09,
-  accuracy: 5,
-}
 
 const history = [
   '+ 5 R',
@@ -39,6 +34,9 @@ function App() {
   const [customTags, setCustomTags] = useState<CustomTag[]>([])
   const [throwDistance, setThrowDistance] = useState(10)
   const [skipNumbers, setSkipNumbers] = useState<number[]>([])
+  const [surveyState, setSurveyState] = useState<SurveyState>('not started')
+  const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
+  const [heading, setHeading] = useState<number | undefined>(undefined)
   const [addresses, setAddresses] = useState<Address[]>([
     {
       latitude: 51.505,
@@ -54,6 +52,11 @@ function App() {
     setCurrentNumberOrName(currentNumberOrName + String(number))
   }
   const submit = (direction: Direction) => {
+    if (position === undefined) {
+      // todo: type check
+      return
+    }
+
     let bearing = orientation
 
     if (direction === 'L') {
@@ -70,7 +73,7 @@ function App() {
       bearing += 360
     }
 
-    const movedPosition = move(currentPosition, bearing, throwDistance)
+    const movedPosition = move(position, bearing, throwDistance)
 
     const newAddress = {
       latitude: movedPosition.latitude,
@@ -84,6 +87,109 @@ function App() {
 
     setAddresses([...addresses, newAddress])
   }
+
+  const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
+    return 'requestPermission' in event
+  }
+
+  const isOrientationEvent = (event: Event): event is DeviceOrientationEvent => {
+    return 'alpha' in event && 'beta' in event && 'gamma' in event
+  }
+
+  const isWebkitOrientationEvent = (event: DeviceOrientationEvent): event is WebkitDeviceOrientationEvent => {
+    return 'webkitCompassHeading' in event
+  }
+
+  const invertBearing = (bearing: number) => Math.abs(bearing - 360)
+
+  const startOrPause = async () => {
+    if (surveyState === 'not started') {
+      setSurveyState('starting')
+
+      if (canRequestOrientationPermission(DeviceOrientationEvent)) {
+        const permissionState = await DeviceOrientationEvent.requestPermission()
+    
+        if (permissionState !== 'granted') {
+          alert('Device orientation permission is required, please allow!')
+        }
+      }
+
+      const handleHeading = (event: Event) => {
+        if (!isOrientationEvent(event)) {
+          // todo what do
+          return
+        }
+
+        if (isWebkitOrientationEvent(event)) {
+          setHeading(event.webkitCompassHeading)
+          return
+        }
+
+        if (!event.absolute) {
+          // todo fall back to gps heading
+          return
+        }
+
+        let heading = 0
+    
+        // Fix for chrome on non-mobile - for testing
+        if (event.alpha !== null) {
+          heading = invertBearing(event.alpha)
+        }
+
+        setHeading(heading)
+      }
+
+      window.addEventListener('deviceorientationabsolute', handleHeading)
+      window.addEventListener('deviceorientation', handleHeading)
+
+      navigator.geolocation.watchPosition(
+        position => {
+          setPosition(position.coords)
+          setSurveyState('started')
+        },
+        errorEvent => {
+          setSurveyState('error')
+
+          if (errorEvent.code === errorEvent.PERMISSION_DENIED) {
+            alert(`GPS permission denied: ${errorEvent.message}`)
+            return
+          }
+    
+          if (errorEvent.code === errorEvent.POSITION_UNAVAILABLE) {
+            alert(`GPS position unavailable: ${errorEvent.message}`)
+            return
+          }
+    
+          if (errorEvent.code === errorEvent.TIMEOUT) {
+            alert(`GPS position timeout: ${errorEvent.message}`)
+          }
+
+          alert('GPS position unknown error')
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+        },
+      )
+
+      return
+    }
+
+    if (surveyState === 'started') {
+      setSurveyState('paused')
+      return
+    }
+
+    if (surveyState === 'paused') {
+      setSurveyState('started')
+      return
+    }
+
+    // todo what do
+  }
+
+  const surveyDisabled = surveyState !== 'started'
 
   return <>
     {mapOpen ? <Map addresses={addresses} notes={notes} onClose={() => setMapOpen(false)} /> : ''}
@@ -109,7 +215,7 @@ function App() {
       <TopBar
         onOpenMap={() => setMapOpen(true)}
         onOpenSettings={() => setSettingsOpen(true)}
-        accuracy={currentPosition.accuracy}
+        accuracy={position?.accuracy}
         history={history}
       />
 
@@ -118,33 +224,33 @@ function App() {
       </div>
 
       <div className="row">
-        <SubmitButton direction="L" onClick={submit} />
-        <SubmitButton direction="F" onClick={submit} />
-        <SubmitButton direction="R" onClick={submit} />
+        <SubmitButton disabled={surveyDisabled} direction="L" onClick={submit} />
+        <SubmitButton disabled={surveyDisabled} direction="F" onClick={submit} />
+        <SubmitButton disabled={surveyDisabled} direction="R" onClick={submit} />
       </div>
 
       <div className="row">
-        <KeypadNumber number={1} onClick={appendNumber} />
-        <KeypadNumber number={2} onClick={appendNumber} />
-        <KeypadNumber number={3} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={1} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={2} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={3} onClick={appendNumber} />
       </div>
 
       <div className="row">
-        <KeypadNumber number={4} onClick={appendNumber} />
-        <KeypadNumber number={5} onClick={appendNumber} />
-        <KeypadNumber number={6} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={4} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={5} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={6} onClick={appendNumber} />
       </div>
 
       <div className="row">
-        <KeypadNumber number={7} onClick={appendNumber} />
-        <KeypadNumber number={8} onClick={appendNumber} />
-        <KeypadNumber number={9} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={7} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={8} onClick={appendNumber} />
+        <KeypadNumber disabled={surveyDisabled} number={9} onClick={appendNumber} />
       </div>
 
       <div className="row">
-        <button id="start-or-pause">Start</button>
-        <KeypadNumber number={0} onClick={appendNumber} />
-        <IconButton src="icons/clear_black_24dp.svg" onClick={() => setCurrentNumberOrName('')} />
+        <KeypadButton disabled={['starting', 'finishing'].includes(surveyState)} onClick={startOrPause}>{surveyState === 'started' ? 'Pause' : 'Start'}</KeypadButton>
+        <KeypadNumber disabled={surveyDisabled} number={0} onClick={appendNumber} />
+        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={() => setCurrentNumberOrName('')} />
       </div>
 
       <div className="row">

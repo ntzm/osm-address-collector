@@ -1,4 +1,5 @@
 export type Direction = 'L' | 'F' | 'R'
+export type SurveyState = 'not started' | 'starting' | 'started' | 'paused' | 'finishing' | 'finished' | 'error'
 
 export type Address = {
   latitude: number;
@@ -24,4 +25,12 @@ export type Position = {
 export type CustomTag = {
   key: string;
   value: string;
+}
+
+export interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
+  requestPermission: () => Promise<'granted' | 'denied'>;
+}
+
+export interface WebkitDeviceOrientationEvent extends DeviceOrientationEvent {
+  readonly webkitCompassHeading: number
 }

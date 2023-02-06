@@ -1,7 +1,7 @@
 interface TopBarProps {
   onOpenMap: () => void
   onOpenSettings: () => void
-  accuracy: number
+  accuracy: number | undefined
   history: string[]
 }
 
@@ -11,7 +11,7 @@ export default function TopBar(props: TopBarProps) {
       <div className="info" onClick={() => props.onOpenMap()}>
         <img className="info-icon" src="icons/map_black_24dp.svg" />
         {/* todo colours */}
-        <span id="accuracy">{props.accuracy}m</span>
+        <span id="accuracy">{props.accuracy === undefined ? 'N/A' : `${props.accuracy}m`}</span>
       </div>
       <div className="info">
         <img className="info-icon" src="icons/history_black_24dp.svg" />

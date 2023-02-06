@@ -3,6 +3,7 @@ import { Direction } from "./types";
 
 export default function SubmitButton(props: {
   className?: string,
+  disabled: boolean,
   onClick: (direction: Direction) => void,
   direction: Direction,
 }) {
@@ -14,6 +15,7 @@ export default function SubmitButton(props: {
 
   return <IconButton
     className={props.className}
+    disabled={props.disabled}
     rotate={rotate[props.direction]}
     onClick={() => props.onClick(props.direction)}
     src="icons/arrow_upward_black_24dp.svg"
