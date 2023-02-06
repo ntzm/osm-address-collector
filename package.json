@@ -2,6 +2,7 @@
   "name": "osm-address-collector",
   "type": "module",
   "dependencies": {
+    "@types/file-saver-es": "^2.0.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/styled-components": "^5.1.26",

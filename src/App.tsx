@@ -4,10 +4,12 @@ import IconButton from "./IconButton"
 import KeypadButton from "./KeypadButton"
 import KeypadNumber from "./KeypadNumber"
 import Map from "./Map"
+import { getOsmFile } from "./osm-xml"
 import Settings from "./Settings"
 import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
 import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyState, WebkitDeviceOrientationEvent } from "./types"
+import {saveAs} from 'file-saver-es'
 
 const notes: Note[] = [
   {
@@ -189,6 +191,28 @@ function App() {
     // todo what do
   }
 
+  const getFormattedDate = (date: Date) =>
+    date.toISOString().slice(0, 19).replace('T', '-').replace(/:/g, '')
+
+  const done = () => {
+    setSurveyState('finishing')
+
+    const date = new Date()
+
+    const contents = getOsmFile(
+      document.implementation,
+      xml => new XMLSerializer().serializeToString(xml),
+      addresses,
+      notes,
+      date,
+    )
+  
+    saveAs(
+      new Blob([contents], {type: 'application/vnd.osm+xml'}),
+      `${getFormattedDate(date)}.osm`,
+    )
+  }
+
   const surveyDisabled = surveyState !== 'started'
 
   return <>
@@ -257,7 +281,7 @@ function App() {
         <button id="add-note" className="disabled">
           <img className="button-icon" src="icons/note_black_24dp.svg" />
         </button>
-        <button id="done" className="disabled">Done</button>
+        <button disabled={!['started', 'paused'].includes(surveyState)} onClick={done}>Done</button>
         <button id="undo" className="disabled">
           <img className="button-icon" src="icons/undo_black_24dp.svg" />
         </button>

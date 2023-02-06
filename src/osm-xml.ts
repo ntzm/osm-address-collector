@@ -5,7 +5,7 @@ export function getOsmFile(
   serialize: (xml: XMLDocument) => string,
   addresses: Address[],
   notes: Note[],
-  surveyStart: Date,
+  date: Date,
 ) {
   const xml = domImplementation.createDocument('', '', null)
   const osm = xml.createElement('osm')
@@ -14,7 +14,7 @@ export function getOsmFile(
 
   for (const [i, address] of addresses.entries()) {
     const node = xml.createElement('node')
-    node.setAttribute('id', String(-surveyStart.getTime() - i))
+    node.setAttribute('id', String(-date.getTime() - i))
     node.setAttribute('version', '1')
     node.setAttribute('lat', String(address.latitude))
     node.setAttribute('lon', String(address.longitude))
@@ -56,7 +56,7 @@ export function getOsmFile(
 
   for (const [i, note] of notes.entries()) {
     const node = xml.createElement('node')
-    node.setAttribute('id', String(-surveyStart.getTime() - addresses.length - i))
+    node.setAttribute('id', String(-date.getTime() - addresses.length - i))
     node.setAttribute('version', '1')
     node.setAttribute('lat', String(note.latitude))
     node.setAttribute('lon', String(note.longitude))
