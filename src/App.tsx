@@ -26,7 +26,7 @@ function App() {
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
   const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
-  const [headingProvider, setHeadingProvider] = useState<string | undefined>(undefined)
+  const [headingProvider, setHeadingProvider] = useState<'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined>(undefined)
   const [notes, setNotes] = useState<Note[]>([])
   const [lastActions, setLastActions] = useState<string[]>([])
   const addAction = (action: string) => {
@@ -168,6 +168,22 @@ function App() {
         position => {
           setPosition(position.coords)
           setSurveyState('started')
+
+          if (headingProvider === undefined || headingProvider === 'GPS heading') {
+            const gpsHeading = position.coords.heading
+
+            if (gpsHeading === null) {
+              return
+            }
+
+            // if we haven't moved, it's NaN
+            if (Number.isNaN(gpsHeading)) {
+              return
+            }
+
+            setHeading(gpsHeading)
+            setHeadingProvider('GPS heading')
+          }
         },
         errorEvent => {
           setSurveyState('error')
@@ -241,6 +257,7 @@ function App() {
       ? <Settings
         position={position}
         heading={heading}
+        headingProvider={headingProvider}
         onClose={() => setSettingsOpen(false)}
         street={street}
         onStreetChange={setStreet}
