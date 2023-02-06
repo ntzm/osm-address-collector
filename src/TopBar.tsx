@@ -1,17 +1,36 @@
-interface TopBarProps {
+import styled from "styled-components"
+
+interface Props {
   onOpenMap: () => void
   onOpenSettings: () => void
   accuracy: number | undefined
   history: string[]
 }
 
-export default function TopBar(props: TopBarProps) {
+const StyledAccuracy = styled.span<Pick<Props, 'accuracy'>>`
+  color: ${({accuracy}) => {
+    if (accuracy === undefined) {
+      return '#333'
+    }
+
+    if (accuracy < 10) {
+      return '#c1e1c1'
+    }
+
+    if (accuracy < 20) {
+      return '#ffb347'
+    }
+
+    return '#ff6961'
+  }};
+`
+
+export default function TopBar(props: Props) {
   return (
     <div className="row">
       <div className="info" onClick={() => props.onOpenMap()}>
         <img className="info-icon" src="icons/map_black_24dp.svg" />
-        {/* todo colours */}
-        <span id="accuracy">{props.accuracy === undefined ? 'N/A' : `${props.accuracy}m`}</span>
+        <StyledAccuracy accuracy={props.accuracy}>{props.accuracy === undefined ? 'N/A' : `${Math.round(props.accuracy)}m`}</StyledAccuracy>
       </div>
       <div className="info">
         <img className="info-icon" src="icons/history_black_24dp.svg" />

@@ -88,6 +88,7 @@ function App() {
     }
 
     setAddresses([...addresses, newAddress])
+    setCurrentNumberOrName('')
   }
 
   const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
