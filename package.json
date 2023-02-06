@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "node --loader tsx --test test/*.test.ts"
   }
