@@ -17,6 +17,8 @@ const SettingsPopup = styled.div`
 
 export default function Settings(props: {
   position: GeolocationCoordinates | undefined,
+  heading: number | undefined,
+  headingProvider: string | undefined,
   onClose: () => void,
   street: string,
   onStreetChange: (street: string) => void,
@@ -262,11 +264,7 @@ export default function Settings(props: {
       </h2>
 
       <div className="setting">
-        Orientation provider: <span id="orientation-provider">None</span>
-      </div>
-
-      <div className="setting">
-        Orientation: <span id="orientation">N/A</span>
+        Heading provider {props.headingProvider ?? 'N/A'}: {props.heading ?? 'N/A'}
       </div>
 
       <div className="setting">

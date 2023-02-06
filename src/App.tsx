@@ -26,6 +26,7 @@ function App() {
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
   const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
+  const [headingProvider, setHeadingProvider] = useState<string | undefined>(undefined)
   const [notes, setNotes] = useState<Note[]>([])
   const [lastActions, setLastActions] = useState<string[]>([])
   const addAction = (action: string) => {
@@ -140,6 +141,7 @@ function App() {
 
         if (isWebkitOrientationEvent(event)) {
           setHeading(event.webkitCompassHeading)
+          setHeadingProvider('Webkit compass heading')
           return
         }
 
@@ -156,6 +158,7 @@ function App() {
         }
 
         setHeading(heading)
+        setHeadingProvider('Device orientation')
       }
 
       window.addEventListener('deviceorientationabsolute', handleHeading)
@@ -237,6 +240,7 @@ function App() {
       settingsOpen
       ? <Settings
         position={position}
+        heading={heading}
         onClose={() => setSettingsOpen(false)}
         street={street}
         onStreetChange={setStreet}
