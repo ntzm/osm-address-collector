@@ -21,7 +21,7 @@ it('creates an OSM XML file', () => {
       latitude: 1,
       longitude: 2,
       numberOrName: '52',
-      customTags: {},
+      customTags: [],
       direction: 'L',
       skippedNumbers: [],
       street: 'Foo Road',
@@ -30,9 +30,12 @@ it('creates an OSM XML file', () => {
       latitude: 2,
       longitude: 3,
       numberOrName: '52a',
-      customTags: {
-        'addr:village': 'Minton',
-      },
+      customTags: [
+        {
+          key: 'addr:village',
+          value: 'Minton',
+        },
+      ],
       direction: 'R',
       skippedNumbers: [],
       street: 'Foo Street',
@@ -41,10 +44,16 @@ it('creates an OSM XML file', () => {
       latitude: 3,
       longitude: 4,
       numberOrName: 'Apple Cottage',
-      customTags: {
-        'addr:village': 'Minton',
-        'addr:city': 'Bimbom',
-      },
+      customTags: [
+        {
+          key: 'addr:village',
+          value: 'Minton',
+        },
+        {
+          key: 'addr:city',
+          value: 'Bimbom',
+        },
+      ],
       direction: 'F',
       skippedNumbers: [],
       street: 'Bar Road',

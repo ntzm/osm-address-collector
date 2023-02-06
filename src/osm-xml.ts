@@ -39,17 +39,18 @@ export function getOsmFile(
       node.append(streetTag)
     }
 
-    for (const [key, value] of Object.entries(address.customTags)) {
-      if (value === '') {
-        continue
-      }
+    node.append(
+      ...address.customTags.map(({ key, value }) => {
+        if (value === '') {
+          return ''
+        }
 
-      const customTag = xml.createElement('tag')
-      customTag.setAttribute('k', key)
-      customTag.setAttribute('v', value)
-
-      node.append(customTag)
-    }
+        const customTag = xml.createElement('tag')
+        customTag.setAttribute('k', key)
+        customTag.setAttribute('v', value)
+        return customTag
+      })
+    )
 
     osm.append(node)
   }
