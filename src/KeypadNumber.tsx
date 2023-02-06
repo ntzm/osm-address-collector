@@ -1,13 +1,4 @@
-import styled from "styled-components"
 import KeypadButton from "./KeypadButton"
-
-const StyledKeypadButton = styled(KeypadButton)`
-  background: #c1e1c1;
-
-  ${({disabled}) => disabled && `
-    background: #999;
-  `}
-`
 
 export default function KeypadNumber(props: {
   className?: string,
@@ -15,11 +6,12 @@ export default function KeypadNumber(props: {
   number: number,
   onClick: (number: number) => void,
 }) {
-  return <StyledKeypadButton
+  return <KeypadButton
     className={props.className}
     disabled={props.disabled}
+    colour="#c1e1c1"
     onClick={() => props.onClick(props.number)}
   >
     {props.number}
-  </StyledKeypadButton>
+  </KeypadButton>
 }

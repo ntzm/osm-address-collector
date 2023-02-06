@@ -3,7 +3,8 @@
 }
 
 body,
-html {
+html,
+#root {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -31,21 +32,6 @@ input {
 
 #current-number-or-name.guessed {
   color: #999;
-}
-
-#done {
-  background: #aec6cf;
-  pointer-events: unset;
-}
-
-#clear {
-  background: #faa0a0;
-  pointer-events: unset;
-}
-
-.disabled {
-  background: #999 !important;
-  pointer-events: none !important;
 }
 
 .container {
@@ -89,20 +75,6 @@ input {
   stroke-width: 5px;
 }
 
-#settings,
-#note-writer,
-#map-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100%;
-  height: 100%;
-  background: #fff;
-  z-index: 5;
-  display: none;
-}
-
 #note-writer {
   padding: 5px;
 }
@@ -123,18 +95,6 @@ p {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-#note-content {
-  height: 100%;
-}
-
-#note-writer {
-  flex-direction: column;
-}
-
-#settings {
-  font-size: 14pt;
 }
 
 .setting-category {

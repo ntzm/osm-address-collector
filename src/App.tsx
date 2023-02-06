@@ -10,14 +10,7 @@ import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
 import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyState, WebkitDeviceOrientationEvent } from "./types"
 import {saveAs} from 'file-saver-es'
-
-const notes: Note[] = [
-  {
-    latitude: 51.515,
-    longitude: -0.09,
-    content: 'Hello',
-  },
-]
+import NoteWriter from "./NoteWriter"
 
 const history = [
   '+ 5 R',
@@ -25,11 +18,11 @@ const history = [
 ]
 
 const skippedNumbers: number[] = []
-const orientation = 0
 
 function App() {
   const [mapOpen, setMapOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [noteWriterOpen, setNoteWriterOpen] = useState(false)
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
   const [street, setStreet] = useState('')
   const [streetSearchDistance, setStreetSearchDistance] = useState(10)
@@ -39,6 +32,7 @@ function App() {
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
   const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
+  const [notes, setNotes] = useState<Note[]>([])
   const [addresses, setAddresses] = useState<Address[]>([
     {
       latitude: 51.505,
@@ -50,16 +44,31 @@ function App() {
       direction: 'L',
     },
   ])
+  const addNote = (content: string) => {
+    if (position === undefined) {
+      // todo type checking
+      return
+    }
+
+    setNotes([
+      ...notes,
+      {
+        latitude: position.latitude,
+        longitude: position.longitude,
+        content,
+      },
+    ])
+  }
   const appendNumber = (number: number) => {
     setCurrentNumberOrName(currentNumberOrName + String(number))
   }
   const submit = (direction: Direction) => {
-    if (position === undefined) {
+    if (position === undefined || heading === undefined) {
       // todo: type check
       return
     }
 
-    let bearing = orientation
+    let bearing = heading
 
     if (direction === 'L') {
       bearing -= 90
@@ -235,6 +244,7 @@ function App() {
       />
       : ''
     }
+    {noteWriterOpen ? <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} /> : ''}
 
     <div className="container">
       <TopBar
@@ -275,17 +285,13 @@ function App() {
       <div className="row">
         <KeypadButton disabled={['starting', 'finishing'].includes(surveyState)} onClick={startOrPause}>{surveyState === 'started' ? 'Pause' : 'Start'}</KeypadButton>
         <KeypadNumber disabled={surveyDisabled} number={0} onClick={appendNumber} />
-        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={() => setCurrentNumberOrName('')} />
+        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={() => setCurrentNumberOrName('')} colour="#faa0a0" />
       </div>
 
       <div className="row">
-        <button id="add-note" className="disabled">
-          <img className="button-icon" src="icons/note_black_24dp.svg" />
-        </button>
-        <button disabled={!['started', 'paused'].includes(surveyState)} onClick={done}>Done</button>
-        <button id="undo" className="disabled">
-          <img className="button-icon" src="icons/undo_black_24dp.svg" />
-        </button>
+        <IconButton src="icons/note_black_24dp.svg" disabled={surveyDisabled} onClick={() => setNoteWriterOpen(true)} />
+        <KeypadButton disabled={!['started', 'paused'].includes(surveyState)} onClick={done} colour="#aec6cf">Done</KeypadButton>
+        <IconButton src="icons/undo_black_24dp.svg" disabled={surveyDisabled} onClick={() => undefined /* todo */} />
       </div>
     </div>
   </>

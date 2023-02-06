@@ -4,15 +4,16 @@ import styled from "styled-components"
 type Props = PropsWithChildren<{
   className?: string,
   disabled?: boolean,
+  colour?: string,
   onClick: () => void,
 }>
 
-const StyledButton = styled.button<Props>`
+const StyledButton = styled.button<Pick<Props, 'colour' | 'disabled'>>`
   font-size: 24pt;
   width: 100%;
   height: 100%;
   border: 1px #999 solid;
-  background: #eee;
+  background: ${({colour}) => colour ?? '#eee'};
   color: #333;
   font-weight: bold;
   padding: 0;
@@ -26,6 +27,7 @@ export default function KeypadButton(props: Props) {
   return <StyledButton
     className={props.className}
     disabled={props.disabled}
+    colour={props.colour}
     onClick={() => props.onClick()}
   >
     {props.children}
