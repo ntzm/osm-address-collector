@@ -12,11 +12,6 @@ import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyS
 import {saveAs} from 'file-saver-es'
 import NoteWriter from "./NoteWriter"
 
-const history = [
-  '+ 5 R',
-  '+ 23 L',
-]
-
 const skippedNumbers: number[] = []
 
 function App() {
@@ -33,6 +28,13 @@ function App() {
   const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
   const [notes, setNotes] = useState<Note[]>([])
+  const [lastActions, setLastActions] = useState<string[]>([])
+  const addAction = (action: string) => {
+    setLastActions([
+      action,
+      lastActions[0],
+    ])
+  }
   const [addresses, setAddresses] = useState<Address[]>([
     {
       latitude: 51.505,
@@ -58,6 +60,8 @@ function App() {
         content,
       },
     ])
+
+    addAction('+ note')
   }
   const appendNumber = (number: number) => {
     setCurrentNumberOrName(currentNumberOrName + String(number))
@@ -98,6 +102,7 @@ function App() {
 
     setAddresses([...addresses, newAddress])
     setCurrentNumberOrName('')
+    addAction(`+ ${direction} ${currentNumberOrName}`)
   }
 
   const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
@@ -251,7 +256,7 @@ function App() {
         onOpenMap={() => setMapOpen(true)}
         onOpenSettings={() => setSettingsOpen(true)}
         accuracy={position?.accuracy}
-        history={history}
+        lastActions={lastActions}
       />
 
       <div className="row">

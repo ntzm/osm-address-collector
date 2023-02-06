@@ -4,7 +4,7 @@ interface Props {
   onOpenMap: () => void
   onOpenSettings: () => void
   accuracy: number | undefined
-  history: string[]
+  lastActions: string[]
 }
 
 const StyledAccuracy = styled.span<Pick<Props, 'accuracy'>>`
@@ -36,7 +36,7 @@ export default function TopBar(props: Props) {
         <img className="info-icon" src="icons/history_black_24dp.svg" />
         <ul id="history">
           {/* todo use id */}
-          {props.history.map((item, i) => <li key={i}>{item}</li>)}
+          {props.lastActions.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       </div>
       <div className="info" onClick={() => props.onOpenSettings()}>
