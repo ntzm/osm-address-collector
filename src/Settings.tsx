@@ -1,4 +1,6 @@
+import { useState } from "react";
 import styled from "styled-components";
+import findNearestStreets from "./find-nearest-streets";
 import { CustomTag } from "./types";
 
 const SettingsPopup = styled.div`
@@ -10,14 +12,14 @@ const SettingsPopup = styled.div`
   height: 100%;
   background: #fff;
   z-index: 5;
+  font-size: 14pt;
 `
 
 export default function Settings(props: {
+  position: GeolocationCoordinates | undefined,
   onClose: () => void,
   street: string,
   onStreetChange: (street: string) => void,
-  streetSearchDistance: number,
-  onStreetSearchDistanceChange: (streetSearchDistance: number) => void,
   customTags: CustomTag[],
   onCustomTagsChange: (customTags: CustomTag[]) => void,
   throwDistance: number,
@@ -87,6 +89,39 @@ export default function Settings(props: {
     )
   }
 
+  const [streetSearchDistance, setStreetSearchDistance] = useState(10)
+  const [overpassEndpoint, setOverpassEndpoint] = useState('https://maps.mail.ru/osm/tools/overpass/api/interpreter')
+  const [overpassTimeout, setOverpassTimeout] = useState(10_000)
+  const [streets, setStreets] = useState<string[]>([])
+  const [streetsStatus, setStreetsStatus] = useState<'none' | 'getting' | 'complete' | 'error'>('none')
+  const [streetsError, setStreetsError] = useState<string | undefined>(undefined)
+
+  const getStreets = async () => {
+    if (props.position === undefined) {
+      // todo type check
+      return
+    }
+
+    setStreetsStatus('getting')
+
+    let newStreets: string[]
+
+    try {
+      newStreets = await findNearestStreets(props.position, streetSearchDistance, overpassEndpoint, overpassTimeout)
+    } catch (error) {
+      if (error instanceof Error) {
+        setStreetsError(error.message)
+      } else {
+        setStreetsError('Unknown error')
+      }
+      setStreetsStatus('error')
+      return
+    }
+
+    setStreetsStatus('complete')
+    setStreets(newStreets)
+  }
+
   return <SettingsPopup>
     <button onClick={() => props.onClose()}>x</button>
 
@@ -97,6 +132,7 @@ export default function Settings(props: {
       </h2>
 
       <datalist id="streets">
+        {streets.map(street => <option key={street} value={street} />)}
       </datalist>
 
       <div className="setting">
@@ -113,13 +149,16 @@ export default function Settings(props: {
       </div>
 
       <div className="setting">
-        <button className="setting-button" id="update-streets">Get streets</button>
-        <span className="status" id="update-streets-status">No streets</span>
+        <button className="setting-button" disabled={streetsStatus === 'getting' || props.position === undefined} onClick={getStreets}>Get streets</button>
+        {streetsStatus === 'none' && 'Click "Get streets" to get streets'}
+        {streetsStatus === 'getting' && 'Getting streets...'}
+        {streetsStatus === 'complete' && <span style={{color: 'green'}}>Got {streets.length} street{streets.length === 1 ? '' : 's'}</span>}
+        {streetsStatus === 'error' && <span style={{color: 'red'}}>Error: {streetsError}</span>}
         <p className="disclaimer">Street data from <a href="https://openstreetmap.org/copyright" target="_blank">OpenStreetMap</a></p>
       </div>
 
       <div className="setting">
-        <label htmlFor="street-search-distance">Street search distance: {props.streetSearchDistance}m</label>
+        <label htmlFor="street-search-distance">Street search distance: {streetSearchDistance}m</label>
         <br />
         <input
           className="setting-input"
@@ -127,8 +166,8 @@ export default function Settings(props: {
           id="street-search-distance"
           min="0"
           max="50"
-          value={props.streetSearchDistance}
-          onChange={(e) => props.onStreetSearchDistanceChange(Number(e.target.value))}
+          value={streetSearchDistance}
+          onChange={(e) => setStreetSearchDistance(Number(e.target.value))}
         />
       </div>
     </div>
@@ -232,12 +271,12 @@ export default function Settings(props: {
 
       <div className="setting">
         <label htmlFor="overpass-timeout">Overpass timeout (milliseconds)</label>
-        <input className="setting-input" type="number" id="overpass-timeout" />
+        <input className="setting-input" type="number" id="overpass-timeout" value={overpassTimeout} onChange={(e) => setOverpassTimeout(Number(e.target.value))} />
       </div>
 
       <div className="setting">
         <label htmlFor="overpass-endpoint">Overpass endpoint</label>
-        <input className="setting-input" type="text" id="overpass-endpoint" />
+        <input className="setting-input" type="text" id="overpass-endpoint" value={overpassEndpoint} onChange={(e) => setOverpassEndpoint(e.target.value)} />
       </div>
 
       <div className="setting">

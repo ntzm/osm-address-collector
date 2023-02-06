@@ -20,7 +20,6 @@ function App() {
   const [noteWriterOpen, setNoteWriterOpen] = useState(false)
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
   const [street, setStreet] = useState('')
-  const [streetSearchDistance, setStreetSearchDistance] = useState(10)
   const [customTags, setCustomTags] = useState<CustomTag[]>([])
   const [throwDistance, setThrowDistance] = useState(10)
   const [skipNumbers, setSkipNumbers] = useState<number[]>([])
@@ -237,11 +236,10 @@ function App() {
     {
       settingsOpen
       ? <Settings
+        position={position}
         onClose={() => setSettingsOpen(false)}
         street={street}
         onStreetChange={setStreet}
-        streetSearchDistance={streetSearchDistance}
-        onStreetSearchDistanceChange={setStreetSearchDistance}
         customTags={customTags}
         onCustomTagsChange={setCustomTags}
         throwDistance={throwDistance}
