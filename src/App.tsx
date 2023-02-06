@@ -94,6 +94,18 @@ function App() {
     setCurrentNumberOrName('')
     addAction(`+ ${direction} ${currentNumberOrName}`)
   }
+  const undo = () => {
+    if (addresses.length === 0) {
+      return
+    }
+
+    const lastIndex = addresses.length - 1
+    const last = addresses[lastIndex]
+
+    addAction(`- ${last.direction} ${last.numberOrName}`)
+
+    setAddresses(addresses.slice(0, -1))
+  }
 
   const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
     return 'requestPermission' in event
@@ -286,7 +298,7 @@ function App() {
       <div className="row">
         <IconButton src="icons/note_black_24dp.svg" disabled={surveyDisabled} onClick={() => setNoteWriterOpen(true)} />
         <KeypadButton disabled={!['started', 'paused'].includes(surveyState)} onClick={done} colour="#aec6cf">Done</KeypadButton>
-        <IconButton src="icons/undo_black_24dp.svg" disabled={surveyDisabled} onClick={() => undefined /* todo */} />
+        <IconButton src="icons/undo_black_24dp.svg" disabled={surveyDisabled} onClick={undo} />
       </div>
     </div>
   </>
