@@ -8,6 +8,15 @@ import {move} from './geo'
 import findNearestStreets from './find-nearest-streets'
 import {makeMap} from './map'
 import 'ol/ol.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
 
 const storage = new Storage(localStorage)
 const state = new State(storage)
