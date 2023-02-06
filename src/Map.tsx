@@ -5,7 +5,7 @@ import { Address, Note } from "./types";
 import AddressMarker from "./AddressMarker";
 import NoteMarker from "./NoteMarker";
 
-const position = [51.505, -0.09]
+const position: [number, number] = [51.505, -0.09]
 
 const MapPopup = styled.div`
   position: absolute;
