@@ -11,8 +11,7 @@ import TopBar from "./TopBar"
 import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyState, WebkitDeviceOrientationEvent } from "./types"
 import {saveAs} from 'file-saver-es'
 import NoteWriter from "./NoteWriter"
-
-const skippedNumbers: number[] = []
+import guessNextNumber from "./guess-next-number"
 
 function App() {
   const [mapOpen, setMapOpen] = useState(false)
@@ -30,6 +29,18 @@ function App() {
   const [headingProvider, setHeadingProvider] = useState<'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined>(undefined)
   const [notes, setNotes] = useState<Note[]>([])
   const [lastActions, setLastActions] = useState<string[]>([])
+  const [skippedNumbers, setSkippedNumbers] = useState<number[]>([])
+  const [numberIsGuessed, setNumberIsGuessed] = useState(false)
+  const clearGuess = () => {
+    if (numberIsGuessed) {
+      setNumberIsGuessed(false)
+      setCurrentNumberOrName('')
+    }
+  }
+  const clearNumberOrName = () => {
+    setCurrentNumberOrName('')
+    clearGuess()
+  }
   const addAction = (action: string) => {
     setLastActions([
       action,
@@ -55,6 +66,7 @@ function App() {
     addAction('+ note')
   }
   const appendNumber = (number: number) => {
+    clearGuess()
     setCurrentNumberOrName(currentNumberOrName + String(number))
   }
   const submit = (direction: Direction) => {
@@ -91,9 +103,20 @@ function App() {
       direction,
     }
 
-    setAddresses([...addresses, newAddress])
-    setCurrentNumberOrName('')
+    const newAddresses = [...addresses, newAddress]
+    setAddresses(newAddresses)
     addAction(`+ ${direction} ${currentNumberOrName}`)
+
+    const [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(newAddresses, skipNumbers)
+
+    if (guessedNextNumber === undefined) {
+      setCurrentNumberOrName('')
+      return
+    }
+
+    setSkippedNumbers(lastSkippedNumbers)
+    setCurrentNumberOrName(String(guessedNextNumber))
+    setNumberIsGuessed(true)
   }
   const undo = () => {
     if (addresses.length === 0) {
@@ -288,7 +311,15 @@ function App() {
       />
 
       <div className="row">
-        <input type="text" id="current-number-or-name" autoCapitalize="words" value={currentNumberOrName} onChange={(e) => setCurrentNumberOrName(e.target.value)} />
+        <input
+          type="text"
+          id="current-number-or-name"
+          autoCapitalize="words"
+          value={currentNumberOrName}
+          onChange={(e) => setCurrentNumberOrName(e.target.value)}
+          onFocus={clearGuess}
+          style={numberIsGuessed ? { color: '#999' } : {}}
+        />
       </div>
 
       <div className="row">
@@ -318,7 +349,7 @@ function App() {
       <div className="row">
         <KeypadButton disabled={['starting', 'finishing'].includes(surveyState)} onClick={startOrPause}>{surveyState === 'started' ? 'Pause' : 'Start'}</KeypadButton>
         <KeypadNumber disabled={surveyDisabled} number={0} onClick={appendNumber} />
-        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={() => setCurrentNumberOrName('')} colour="#faa0a0" />
+        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={clearNumberOrName} colour="#faa0a0" />
       </div>
 
       <div className="row">
