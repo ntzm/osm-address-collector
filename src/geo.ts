@@ -7,7 +7,7 @@ function positionToLonLat(position: Position): number[] {
   return [position.longitude, position.latitude]
 }
 
-function lonLatToPosition(lonLat: number[]): Position {
+function lonLatToPosition(lonLat: [number, number]): Position {
   return { longitude: lonLat[0], latitude: lonLat[1] }
 }
 
@@ -23,7 +23,7 @@ export function move(
     { units: 'meters' }
   )
 
-  return lonLatToPosition(dest.geometry.coordinates)
+  return lonLatToPosition(dest.geometry.coordinates as [number, number])
 }
 
 export function createBoundingBox(

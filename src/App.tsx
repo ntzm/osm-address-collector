@@ -44,7 +44,7 @@ function App() {
   const addAction = (action: string) => {
     setLastActions([
       action,
-      lastActions[0],
+      ...(lastActions[0] === undefined ? [] : [lastActions[0]]),
     ])
   }
   const [addresses, setAddresses] = useState<Address[]>([])
@@ -119,12 +119,12 @@ function App() {
     setNumberIsGuessed(true)
   }
   const undo = () => {
-    if (addresses.length === 0) {
-      return
-    }
-
     const lastIndex = addresses.length - 1
     const last = addresses[lastIndex]
+
+    if (last === undefined) {
+      return
+    }
 
     addAction(`- ${last.direction} ${last.numberOrName}`)
 

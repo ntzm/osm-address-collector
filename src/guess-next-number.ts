@@ -16,9 +16,10 @@ export default function guessNextNumber(addresses: Address[], skipNumbers: numbe
   let pNumber = Number(previous.numberOrName)
 
   const justSkipped = lastAddress.skippedNumbers
+  const lastJustSkipped = justSkipped[justSkipped.length - 1]
 
-  if (justSkipped.length > 0) {
-    pNumber = justSkipped[justSkipped.length - 1]
+  if (lastJustSkipped !== undefined) {
+    pNumber = lastJustSkipped
   }
 
   if (isNaN(lNumber) || isNaN(pNumber)) {
