@@ -29,6 +29,18 @@ export default function AddressMarker(props: {
     >
       <Popup>
         <strong>{props.address.numberOrName}</strong> {props.address.street}
+        {props.address.customTags.length > 0 && (
+          <table border={1}>
+            <tbody>
+              {props.address.customTags.map(({ key, value }) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <button onClick={props.onDelete}>Delete</button>
       </Popup>
     </Marker>
