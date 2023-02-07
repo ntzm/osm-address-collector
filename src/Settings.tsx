@@ -26,18 +26,21 @@ export default function Settings(props: {
   const addSkipNumber = useBoundStore((s) => s.addSkipNumber)
   const updateSkipNumber = useBoundStore((s) => s.updateSkipNumber)
   const removeSkipNumber = useBoundStore((s) => s.removeSkipNumber)
+  const resetSkipNumbers = useBoundStore((s) => s.resetSkipNumbers)
 
   const customTags = useBoundStore((s) => s.customTags)
   const addCustomTag = useBoundStore((s) => s.addCustomTag)
   const updateCustomTagKey = useBoundStore((s) => s.updateCustomTagKey)
   const updateCustomTagValue = useBoundStore((s) => s.updateCustomTagValue)
   const removeCustomTag = useBoundStore((s) => s.removeCustomTag)
+  const resetCustomTags = useBoundStore((s) => s.resetCustomTags)
 
   const street = useBoundStore((s) => s.street)
   const updateStreet = useBoundStore((s) => s.updateStreet)
 
   const throwDistance = useBoundStore((s) => s.throwDistance)
   const updateThrowDistance = useBoundStore((s) => s.updateThrowDistance)
+  const resetThrowDistance = useBoundStore((s) => s.resetThrowDistance)
 
   const [streetSearchDistance, setStreetSearchDistance] = useState(10)
   const [overpassEndpoint, setOverpassEndpoint] = useState(
@@ -122,6 +125,26 @@ Do not change the endpoint unless you know what you are doing!`,
       `Choose some numbers to skip when the app tries to guess the next number in the sequence.
 For example, in the UK the number 13 is often skipped.`,
     )
+  }
+
+  const reset = () => {
+    if (
+      !confirm(
+        'Are you sure you want to reset the settings to the default values?',
+      )
+    ) {
+      return
+    }
+
+    setOverpassTimeout(10_000)
+    setOverpassEndpoint(
+      'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+    )
+    setStreetSearchDistance(10)
+
+    resetThrowDistance()
+    resetCustomTags()
+    resetSkipNumbers()
   }
 
   return (
@@ -381,7 +404,7 @@ For example, in the UK the number 13 is often skipped.`,
         </div>
 
         <div className="setting">
-          <button className="setting-button" id="reset-settings">
+          <button className="setting-button" onClick={reset}>
             Reset settings
           </button>
         </div>

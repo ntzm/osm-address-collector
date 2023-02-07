@@ -7,6 +7,7 @@ export interface CustomTagsSlice {
   updateCustomTagKey: (index: number, key: string) => void
   updateCustomTagValue: (index: number, value: string) => void
   removeCustomTag: (index: number) => void
+  resetCustomTags: () => void
 }
 
 export const createCustomTagsSlice: SliceStateCreator<CustomTagsSlice> = (
@@ -38,5 +39,9 @@ export const createCustomTagsSlice: SliceStateCreator<CustomTagsSlice> = (
   removeCustomTag: (index: number) =>
     set((state) => {
       state.customTags.splice(index, 1)
+    }),
+  resetCustomTags: () =>
+    set((state) => {
+      state.customTags = []
     }),
 })

@@ -5,6 +5,7 @@ export interface SkipNumbersSlice {
   addSkipNumber: () => void
   updateSkipNumber: (index: number, skipNumber: string) => void
   removeSkipNumber: (index: number) => void
+  resetSkipNumbers: () => void
 }
 
 export const createSkipNumbersSlice: SliceStateCreator<SkipNumbersSlice> = (
@@ -22,5 +23,9 @@ export const createSkipNumbersSlice: SliceStateCreator<SkipNumbersSlice> = (
   removeSkipNumber: (index: number) =>
     set((state) => {
       state.skipNumbers.splice(index, 1)
+    }),
+  resetSkipNumbers: () =>
+    set((state) => {
+      state.skipNumbers = []
     }),
 })
