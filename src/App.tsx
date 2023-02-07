@@ -46,9 +46,10 @@ function App() {
   const updateHeadingProvider = useBoundStore((s) => s.updateHeadingProvider)
   const clearHeadingProvider = useBoundStore((s) => s.clearHeadingProvider)
 
-  const [mapOpen, setMapOpen] = useState(false)
-  const [settingsOpen, setSettingsOpen] = useState(false)
-  const [noteWriterOpen, setNoteWriterOpen] = useState(false)
+  const [page, setPage] = useState<
+    'keypad' | 'map' | 'note-writer' | 'settings'
+  >('keypad')
+
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
   const [positionWatchId, setPositionWatchId] = useState<number | undefined>(
@@ -350,150 +351,151 @@ function App() {
 
   return (
     <>
-      {mapOpen && <Map onClose={() => setMapOpen(false)} />}
-      {settingsOpen && (
+      {page === 'map' && <Map onClose={() => setPage('keypad')} />}
+      {page === 'settings' && (
         <Settings
           heading={heading}
           headingProvider={headingProvider}
-          onClose={() => setSettingsOpen(false)}
+          onClose={() => setPage('keypad')}
         />
       )}
-      {noteWriterOpen && (
-        <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} />
+      {page === 'note-writer' && (
+        <NoteWriter onClose={() => setPage('keypad')} onAdd={addNote} />
       )}
-
-      <div className="container">
-        <TopBar
-          onOpenMap={() => setMapOpen(true)}
-          onOpenSettings={() => setSettingsOpen(true)}
-          accuracy={position?.accuracy}
-          lastActions={lastActions}
-        />
-
-        <div className="row">
-          <input
-            type="text"
-            id="current-number-or-name"
-            autoCapitalize="words"
-            value={currentNumberOrName}
-            onChange={(e) => setCurrentNumberOrName(e.target.value)}
-            onFocus={clearGuess}
-            style={numberIsGuessed ? { color: '#999' } : {}}
+      {page === 'keypad' && (
+        <div className="container">
+          <TopBar
+            onOpenMap={() => setPage('map')}
+            onOpenSettings={() => setPage('settings')}
+            accuracy={position?.accuracy}
+            lastActions={lastActions}
           />
+
+          <div className="row">
+            <input
+              type="text"
+              id="current-number-or-name"
+              autoCapitalize="words"
+              value={currentNumberOrName}
+              onChange={(e) => setCurrentNumberOrName(e.target.value)}
+              onFocus={clearGuess}
+              style={numberIsGuessed ? { color: '#999' } : {}}
+            />
+          </div>
+
+          <div className="row">
+            <SubmitButton
+              disabled={surveyDisabled}
+              direction="L"
+              onClick={submit}
+            />
+            <SubmitButton
+              disabled={surveyDisabled}
+              direction="F"
+              onClick={submit}
+            />
+            <SubmitButton
+              disabled={surveyDisabled}
+              direction="R"
+              onClick={submit}
+            />
+          </div>
+
+          <div className="row">
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={1}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={2}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={3}
+              onClick={appendNumber}
+            />
+          </div>
+
+          <div className="row">
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={4}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={5}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={6}
+              onClick={appendNumber}
+            />
+          </div>
+
+          <div className="row">
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={7}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={8}
+              onClick={appendNumber}
+            />
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={9}
+              onClick={appendNumber}
+            />
+          </div>
+
+          <div className="row">
+            <KeypadButton
+              disabled={['starting', 'finishing'].includes(surveyState)}
+              onClick={startOrPause}
+            >
+              {surveyState === 'started' ? 'Pause' : 'Start'}
+            </KeypadButton>
+            <KeypadNumber
+              disabled={surveyDisabled}
+              number={0}
+              onClick={appendNumber}
+            />
+            <IconButton
+              disabled={surveyDisabled}
+              src="icons/clear_black_24dp.svg"
+              onClick={clearNumberOrName}
+              colour="#faa0a0"
+            />
+          </div>
+
+          <div className="row">
+            <IconButton
+              src="icons/note_black_24dp.svg"
+              disabled={surveyDisabled}
+              onClick={() => setPage('note-writer')}
+            />
+            <KeypadButton
+              disabled={!['started', 'paused'].includes(surveyState)}
+              onClick={done}
+              colour="#aec6cf"
+            >
+              Done
+            </KeypadButton>
+            <IconButton
+              src="icons/undo_black_24dp.svg"
+              disabled={surveyDisabled}
+              onClick={undo}
+            />
+          </div>
         </div>
-
-        <div className="row">
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="L"
-            onClick={submit}
-          />
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="F"
-            onClick={submit}
-          />
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="R"
-            onClick={submit}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={1}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={2}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={3}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={4}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={5}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={6}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={7}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={8}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={9}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadButton
-            disabled={['starting', 'finishing'].includes(surveyState)}
-            onClick={startOrPause}
-          >
-            {surveyState === 'started' ? 'Pause' : 'Start'}
-          </KeypadButton>
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={0}
-            onClick={appendNumber}
-          />
-          <IconButton
-            disabled={surveyDisabled}
-            src="icons/clear_black_24dp.svg"
-            onClick={clearNumberOrName}
-            colour="#faa0a0"
-          />
-        </div>
-
-        <div className="row">
-          <IconButton
-            src="icons/note_black_24dp.svg"
-            disabled={surveyDisabled}
-            onClick={() => setNoteWriterOpen(true)}
-          />
-          <KeypadButton
-            disabled={!['started', 'paused'].includes(surveyState)}
-            onClick={done}
-            colour="#aec6cf"
-          >
-            Done
-          </KeypadButton>
-          <IconButton
-            src="icons/undo_black_24dp.svg"
-            disabled={surveyDisabled}
-            onClick={undo}
-          />
-        </div>
-      </div>
+      )}
     </>
   )
 }
