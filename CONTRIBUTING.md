@@ -11,8 +11,34 @@
 npm run dev
 ```
 
+## Run all checks
+
+```
+npm run check
+```
+
 ## Tests
 
 ```
 npm test
+```
+
+## Code style
+
+```
+npm run style
+npm run style-fix
+```
+
+## Linting
+
+```
+npm run lint
+npm run lint-fix
+```
+
+## Type checking
+
+```
+npm run types
 ```

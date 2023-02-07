@@ -38,6 +38,12 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "node --loader tsx --test test/*.test.ts"
+    "test": "node --loader tsx --test test/*.test.ts",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix",
+    "style": "prettier --check .",
+    "style-fix": "prettier --write .",
+    "types": "tsc",
+    "check": "npm run lint && npm run style && npm run types && npm test"
   }
 }
