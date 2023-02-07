@@ -1,5 +1,5 @@
-import { createBoundingBox } from '../geo'
-import overpassQuery from '../overpass/overpass'
+import { createBoundingBox } from '../../geo'
+import overpassQuery from '../../overpass/overpass'
 
 export default async function findNearestStreets(
   position: GeolocationCoordinates,

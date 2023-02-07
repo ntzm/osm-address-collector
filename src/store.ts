@@ -6,19 +6,22 @@ import { createNotesSlice, NotesSlice } from './notes/notes-slice'
 import {
   createSkipNumbersSlice,
   SkipNumbersSlice,
-} from './settings/skip-numbers-slice'
+} from './settings/skip-numbers/skip-numbers-slice'
 import {
   createCustomTagsSlice,
   CustomTagsSlice,
-} from './settings/custom-tags-slice'
+} from './settings/custom-tags/custom-tags-slice'
 import { createPositionSlice, PositionSlice } from './position-slice'
 import { UnionToIntersection } from 'type-fest'
-import { createStreetSlice, StreetSlice } from './settings/street-slice'
+import { createStreetSlice, StreetSlice } from './settings/street/street-slice'
 import {
   createThrowDistanceSlice,
   ThrowDistanceSlice,
-} from './settings/throw-distance-slice'
-import { createOverpassSlice, OverpassSlice } from './overpass/overpass-slice'
+} from './settings/general/throw-distance-slice'
+import {
+  createOverpassSlice,
+  OverpassSlice,
+} from './settings/advanced/overpass-slice'
 
 type Slice =
   | AddressSlice

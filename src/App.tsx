@@ -38,6 +38,14 @@ function App() {
   const street = useBoundStore((s) => s.street)
   const throwDistance = useBoundStore((s) => s.throwDistance)
 
+  const heading = useBoundStore((s) => s.heading)
+  const updateHeading = useBoundStore((s) => s.updateHeading)
+  const clearHeading = useBoundStore((s) => s.clearHeading)
+
+  const headingProvider = useBoundStore((s) => s.headingProvider)
+  const updateHeadingProvider = useBoundStore((s) => s.updateHeadingProvider)
+  const clearHeadingProvider = useBoundStore((s) => s.clearHeadingProvider)
+
   const [mapOpen, setMapOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [noteWriterOpen, setNoteWriterOpen] = useState(false)
@@ -46,10 +54,6 @@ function App() {
   const [positionWatchId, setPositionWatchId] = useState<number | undefined>(
     undefined,
   )
-  const [heading, setHeading] = useState<number | undefined>(undefined)
-  const [headingProvider, setHeadingProvider] = useState<
-    'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined
-  >(undefined)
   const [lastActions, setLastActions] = useState<string[]>([])
   const [skippedNumbers, setSkippedNumbers] = useState<number[]>([])
   const [numberIsGuessed, setNumberIsGuessed] = useState(false)
@@ -179,8 +183,8 @@ function App() {
     }
 
     if (isWebkitOrientationEvent(event)) {
-      setHeading(event.webkitCompassHeading)
-      setHeadingProvider('Webkit compass heading')
+      updateHeading(event.webkitCompassHeading)
+      updateHeadingProvider('Webkit compass heading')
       return
     }
 
@@ -196,8 +200,8 @@ function App() {
       heading = invertBearing(event.alpha)
     }
 
-    setHeading(heading)
-    setHeadingProvider('Device orientation')
+    updateHeading(heading)
+    updateHeadingProvider('Device orientation')
   }
 
   const startOrPause = async () => {
@@ -250,8 +254,8 @@ function App() {
               return
             }
 
-            setHeading(gpsHeading)
-            setHeadingProvider('GPS heading')
+            updateHeading(gpsHeading)
+            updateHeadingProvider('GPS heading')
           }
         },
         (errorEvent) => {
@@ -293,8 +297,8 @@ function App() {
       window.removeEventListener('deviceorientationabsolute', handleHeading)
       window.removeEventListener('deviceorientation', handleHeading)
       clearPosition()
-      setHeading(undefined)
-      setHeadingProvider(undefined)
+      clearHeading()
+      clearHeadingProvider()
       return
     }
 
@@ -331,8 +335,8 @@ function App() {
     window.removeEventListener('deviceorientationabsolute', handleHeading)
     window.removeEventListener('deviceorientation', handleHeading)
     clearPosition()
-    setHeading(undefined)
-    setHeadingProvider(undefined)
+    clearHeading()
+    clearHeadingProvider()
     setCurrentNumberOrName('')
     setLastActions([])
     setSkippedNumbers([])

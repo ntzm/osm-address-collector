@@ -7,6 +7,12 @@ export type SurveyState =
   | 'finishing'
   | 'error'
 
+export type HeadingProvider =
+  | 'Webkit compass heading'
+  | 'Device orientation'
+  | 'GPS heading'
+  | undefined
+
 export type Address = {
   latitude: number
   longitude: number
