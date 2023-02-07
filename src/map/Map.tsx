@@ -1,4 +1,9 @@
-import { MapContainer, TileLayer } from 'react-leaflet'
+import {
+  LayerGroup,
+  LayersControl,
+  MapContainer,
+  TileLayer,
+} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
 import AddressMarker from './AddressMarker'
@@ -54,23 +59,37 @@ export default function Map(props: { onClose: () => void }) {
           maxNativeZoom={18}
           maxZoom={20}
         />
-        {/* todo generate and use ids */}
-        {addresses.map((address, i) => (
-          <AddressMarker
-            onUpdatePosition={(position) => updateAddressPosition(i, position)}
-            onDelete={() => removeAddress(i)}
-            key={i}
-            address={address}
-          />
-        ))}
-        {notes.map((note, i) => (
-          <NoteMarker
-            onUpdatePosition={(position) => updateNotePosition(i, position)}
-            onDelete={() => removeNote(i)}
-            key={i}
-            note={note}
-          />
-        ))}
+        <LayersControl position="topright">
+          {/* todo generate and use ids */}
+          <LayersControl.Overlay checked name="Addresses">
+            <LayerGroup>
+              {addresses.map((address, i) => (
+                <AddressMarker
+                  onUpdatePosition={(position) =>
+                    updateAddressPosition(i, position)
+                  }
+                  onDelete={() => removeAddress(i)}
+                  key={i}
+                  address={address}
+                />
+              ))}
+            </LayerGroup>
+          </LayersControl.Overlay>
+          <LayersControl.Overlay checked name="Notes">
+            <LayerGroup>
+              {notes.map((note, i) => (
+                <NoteMarker
+                  onUpdatePosition={(position) =>
+                    updateNotePosition(i, position)
+                  }
+                  onDelete={() => removeNote(i)}
+                  key={i}
+                  note={note}
+                />
+              ))}
+            </LayerGroup>
+          </LayersControl.Overlay>
+        </LayersControl>
       </StyledMapContainer>
     </MapPopup>
   )
