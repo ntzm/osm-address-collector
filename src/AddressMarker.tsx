@@ -12,6 +12,7 @@ const icon = new Icon({
 export default function AddressMarker(props: {
   address: Address,
   onUpdatePosition: (position: Position) => void,
+  onDelete: () => void,
 }) {
   return (
     <Marker
@@ -22,6 +23,7 @@ export default function AddressMarker(props: {
     >
       <Popup>
         <strong>{props.address.numberOrName}</strong> {props.address.street}
+        <button onClick={props.onDelete}>Delete</button>
       </Popup>
     </Marker>
   )

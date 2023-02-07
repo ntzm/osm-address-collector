@@ -293,6 +293,12 @@ function App() {
     )
   }
 
+  const deleteAddress = (i: number) => {
+    setAddresses(
+      addresses.filter((_, index) => index !== i)
+    )
+  }
+
   const surveyDisabled = surveyState !== 'started'
 
   return <>
@@ -302,6 +308,7 @@ function App() {
         position={position}
         addresses={addresses}
         onUpdateAddressPosition={updateAddressPosition}
+        onDeleteAddress={deleteAddress}
         notes={notes}
         onClose={() => setMapOpen(false)}
       />
