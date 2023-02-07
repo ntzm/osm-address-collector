@@ -38,6 +38,7 @@ export default function NoteWriter(props: {
       </button>
       <p>Add a note</p>
       <textarea
+        maxLength={255}
         style={{ height: '100%' }}
         value={content}
         onChange={(e) => setContent(e.target.value)}
