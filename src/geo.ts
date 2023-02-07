@@ -1,13 +1,14 @@
+import bbox from '@turf/bbox'
+import buffer from '@turf/buffer'
+import destination from '@turf/destination'
 import {type Position} from './types'
 
-const EARTH_RADIUS_METRES = 6_378_137
-
-function degreesToRadians(degrees: number) {
-  return (degrees * Math.PI) / 180
+function positionToLonLat(position: Position): number[] {
+  return [position.longitude, position.latitude]
 }
 
-function radiansToDegrees(radians: number) {
-  return (radians * 180) / Math.PI
+function lonLatToPosition(lonLat: number[]): Position {
+  return { longitude: lonLat[0], latitude: lonLat[1] }
 }
 
 export function move(
@@ -15,41 +16,27 @@ export function move(
   bearing: number,
   distanceMetres: number,
 ): Position {
-  const bearingRadians = degreesToRadians(bearing)
-
-  const latitudeRadians = degreesToRadians(position.latitude)
-  const longitudeRadians = degreesToRadians(position.longitude)
-
-  const movedLatitudeRadians = Math.asin(
-    Math.sin(latitudeRadians) * Math.cos(distanceMetres / EARTH_RADIUS_METRES)
-      + Math.cos(latitudeRadians)
-        * Math.sin(distanceMetres / EARTH_RADIUS_METRES)
-        * Math.cos(bearingRadians),
+  const dest = destination(
+    positionToLonLat(position),
+    distanceMetres,
+    bearing,
+    { units: 'meters' }
   )
-  const movedLongitudeRadians
-    = longitudeRadians
-    + Math.atan2(
-      Math.sin(bearingRadians)
-        * Math.sin(distanceMetres / EARTH_RADIUS_METRES)
-        * Math.cos(latitudeRadians),
-      Math.cos(distanceMetres / EARTH_RADIUS_METRES)
-        - Math.sin(latitudeRadians) * Math.sin(movedLatitudeRadians),
-    )
 
-  return {
-    latitude: radiansToDegrees(movedLatitudeRadians),
-    longitude: radiansToDegrees(movedLongitudeRadians),
-  }
+  return lonLatToPosition(dest.geometry.coordinates)
 }
 
 export function createBoundingBox(
   position: Position,
   lengthMetres: number,
-): [number, number, number, number] {
-  return [
-    move(position, 180, lengthMetres / 2).latitude,
-    move(position, 270, lengthMetres / 2).longitude,
-    move(position, 0, lengthMetres / 2).latitude,
-    move(position, 90, lengthMetres / 2).longitude,
-  ]
+) {
+  const [minX, minY, maxX, maxY] = bbox(
+    buffer(
+      { type: 'Point', coordinates: positionToLonLat(position) },
+      lengthMetres,
+      { units: 'meters' },
+    )
+  )
+
+  return [minY, minX, maxY, maxX]
 }
