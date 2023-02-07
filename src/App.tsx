@@ -26,7 +26,6 @@ function App() {
   const clearAddresses = useBoundStore((s) => s.clearAddresses)
 
   const notes = useBoundStore((s) => s.notes)
-  const dispatchAddNote = useBoundStore((s) => s.addNote)
   const clearNotes = useBoundStore((s) => s.clearNotes)
 
   const position = useBoundStore((s) => s.position)
@@ -73,20 +72,6 @@ function App() {
       action,
       ...(lastActions[0] === undefined ? [] : [lastActions[0]]),
     ])
-  }
-  const addNote = (content: string) => {
-    if (position === undefined) {
-      // todo type checking
-      return
-    }
-
-    dispatchAddNote({
-      latitude: position.latitude,
-      longitude: position.longitude,
-      content,
-    })
-
-    addAction('+ note')
   }
   const appendNumber = (number: number) => {
     clearGuess()
@@ -352,15 +337,9 @@ function App() {
   return (
     <>
       {page === 'map' && <Map onClose={() => setPage('keypad')} />}
-      {page === 'settings' && (
-        <Settings
-          heading={heading}
-          headingProvider={headingProvider}
-          onClose={() => setPage('keypad')}
-        />
-      )}
+      {page === 'settings' && <Settings onClose={() => setPage('keypad')} />}
       {page === 'note-writer' && (
-        <NoteWriter onClose={() => setPage('keypad')} onAdd={addNote} />
+        <NoteWriter onClose={() => setPage('keypad')} />
       )}
       {page === 'keypad' && (
         <div className="container">

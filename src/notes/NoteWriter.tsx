@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+import { useBoundStore } from '../store'
 
 const NoteWriterPopup = styled.div`
   position: absolute;
@@ -15,20 +16,32 @@ const NoteWriterPopup = styled.div`
   display: flex;
 `
 
-export default function NoteWriter(props: {
-  onClose: () => void
-  onAdd: (content: string) => void
-}) {
+export default function NoteWriter(props: { onClose: () => void }) {
+  const position = useBoundStore((s) => s.position)
   const [content, setContent] = useState('')
+  const dispatchAddNote = useBoundStore((s) => s.addNote)
+
+  const addNote = () => {
+    if (position === undefined) {
+      // todo type checking
+      return
+    }
+
+    dispatchAddNote({
+      latitude: position.latitude,
+      longitude: position.longitude,
+      content,
+    })
+
+    close()
+
+    // todo
+    // addAction('+ note')
+  }
 
   const close = () => {
     setContent('')
     props.onClose()
-  }
-
-  const save = () => {
-    props.onAdd(content)
-    close()
   }
 
   return (
@@ -43,7 +56,7 @@ export default function NoteWriter(props: {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       ></textarea>
-      <button onClick={save}>Add</button>
+      <button onClick={addNote}>Add</button>
     </NoteWriterPopup>
   )
 }

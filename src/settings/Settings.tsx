@@ -18,11 +18,7 @@ const SettingsPopup = styled.div`
   font-size: 14pt;
 `
 
-export default function Settings(props: {
-  heading: number | undefined
-  headingProvider: string | undefined
-  onClose: () => void
-}) {
+export default function Settings(props: { onClose: () => void }) {
   return (
     <SettingsPopup>
       <button onClick={() => props.onClose()}>x</button>
