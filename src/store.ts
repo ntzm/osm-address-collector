@@ -12,6 +12,7 @@ import {
   createThrowDistanceSlice,
   ThrowDistanceSlice,
 } from './throw-distance-slice'
+import { createOverpassSlice, OverpassSlice } from './overpass-slice'
 
 type Slice =
   | AddressSlice
@@ -21,6 +22,7 @@ type Slice =
   | PositionSlice
   | StreetSlice
   | ThrowDistanceSlice
+  | OverpassSlice
 export type State = UnionToIntersection<Slice>
 export type SliceStateCreator<T extends Slice> = StateCreator<
   State,
@@ -37,6 +39,7 @@ const immerMiddleware = immer<State>((...a) => ({
   ...createPositionSlice(...a),
   ...createStreetSlice(...a),
   ...createThrowDistanceSlice(...a),
+  ...createOverpassSlice(...a),
 }))
 
 const persistMiddleware = persist(immerMiddleware, {
@@ -47,6 +50,9 @@ const persistMiddleware = persist(immerMiddleware, {
     skipNumbers: state.skipNumbers,
     customTags: state.customTags,
     throwDistance: state.throwDistance,
+    overpassEndpoint: state.overpassEndpoint,
+    overpassTimeout: state.overpassTimeout,
+    streetSearchDistance: state.streetSearchDistance,
   }),
 })
 

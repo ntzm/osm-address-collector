@@ -42,11 +42,22 @@ export default function Settings(props: {
   const updateThrowDistance = useBoundStore((s) => s.updateThrowDistance)
   const resetThrowDistance = useBoundStore((s) => s.resetThrowDistance)
 
-  const [streetSearchDistance, setStreetSearchDistance] = useState(10)
-  const [overpassEndpoint, setOverpassEndpoint] = useState(
-    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+  const overpassEndpoint = useBoundStore((s) => s.overpassEndpoint)
+  const updateOverpassEndpoint = useBoundStore((s) => s.updateOverpassEndpoint)
+  const resetOverpassEndpoint = useBoundStore((s) => s.resetOverpassEndpoint)
+
+  const overpassTimeout = useBoundStore((s) => s.overpassTimeout)
+  const updateOverpassTimeout = useBoundStore((s) => s.updateOverpassTimeout)
+  const resetOverpassTimeout = useBoundStore((s) => s.resetOverpassTimeout)
+
+  const streetSearchDistance = useBoundStore((s) => s.streetSearchDistance)
+  const updateStreetSearchDistance = useBoundStore(
+    (s) => s.updateStreetSearchDistance,
   )
-  const [overpassTimeout, setOverpassTimeout] = useState(10_000)
+  const resetStreetSearchDistance = useBoundStore(
+    (s) => s.resetStreetSearchDistance,
+  )
+
   const [streets, setStreets] = useState<string[]>([])
   const [streetsStatus, setStreetsStatus] = useState<
     'none' | 'getting' | 'complete' | 'error'
@@ -70,7 +81,7 @@ export default function Settings(props: {
         position,
         streetSearchDistance,
         overpassEndpoint,
-        overpassTimeout,
+        Number(overpassTimeout), // todo nan
       )
     } catch (error) {
       if (error instanceof Error) {
@@ -136,12 +147,9 @@ For example, in the UK the number 13 is often skipped.`,
       return
     }
 
-    setOverpassTimeout(10_000)
-    setOverpassEndpoint(
-      'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
-    )
-    setStreetSearchDistance(10)
-
+    resetOverpassTimeout()
+    resetOverpassEndpoint()
+    resetStreetSearchDistance()
     resetThrowDistance()
     resetCustomTags()
     resetSkipNumbers()
@@ -218,7 +226,7 @@ For example, in the UK the number 13 is often skipped.`,
             min="0"
             max="50"
             value={streetSearchDistance}
-            onChange={(e) => setStreetSearchDistance(Number(e.target.value))}
+            onChange={(e) => updateStreetSearchDistance(Number(e.target.value))}
           />
         </div>
       </div>
@@ -388,7 +396,7 @@ For example, in the UK the number 13 is often skipped.`,
             type="number"
             id="overpass-timeout"
             value={overpassTimeout}
-            onChange={(e) => setOverpassTimeout(Number(e.target.value))}
+            onChange={(e) => updateOverpassTimeout(e.target.value)}
           />
         </div>
 
@@ -399,7 +407,7 @@ For example, in the UK the number 13 is often skipped.`,
             type="text"
             id="overpass-endpoint"
             value={overpassEndpoint}
-            onChange={(e) => setOverpassEndpoint(e.target.value)}
+            onChange={(e) => updateOverpassEndpoint(e.target.value)}
           />
         </div>
 
