@@ -346,13 +346,6 @@ export default function Settings(props: {
             Reset settings
           </button>
         </div>
-
-        <div className="setting">
-          <button className="setting-button" id="show-logs">
-            Update logs
-          </button>
-          <textarea className="setting-input" id="logs" readOnly></textarea>
-        </div>
       </div>
     </SettingsPopup>
   )
