@@ -1,4 +1,4 @@
-import { SliceStateCreator } from './store'
+import { SliceStateCreator } from '../store'
 
 export interface StreetSlice {
   street: string

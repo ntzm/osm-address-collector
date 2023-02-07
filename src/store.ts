@@ -2,17 +2,23 @@ import { create, StateCreator } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { persist, devtools } from 'zustand/middleware'
 import { AddressSlice, createAddressSlice } from './address-slice'
-import { createNotesSlice, NotesSlice } from './notes-slice'
-import { createSkipNumbersSlice, SkipNumbersSlice } from './skip-numbers-slice'
-import { createCustomTagsSlice, CustomTagsSlice } from './custom-tags-slice'
+import { createNotesSlice, NotesSlice } from './notes/notes-slice'
+import {
+  createSkipNumbersSlice,
+  SkipNumbersSlice,
+} from './settings/skip-numbers-slice'
+import {
+  createCustomTagsSlice,
+  CustomTagsSlice,
+} from './settings/custom-tags-slice'
 import { createPositionSlice, PositionSlice } from './position-slice'
 import { UnionToIntersection } from 'type-fest'
-import { createStreetSlice, StreetSlice } from './street-slice'
+import { createStreetSlice, StreetSlice } from './settings/street-slice'
 import {
   createThrowDistanceSlice,
   ThrowDistanceSlice,
-} from './throw-distance-slice'
-import { createOverpassSlice, OverpassSlice } from './overpass-slice'
+} from './settings/throw-distance-slice'
+import { createOverpassSlice, OverpassSlice } from './overpass/overpass-slice'
 
 type Slice =
   | AddressSlice

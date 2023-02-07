@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import findNearestStreets from './find-nearest-streets'
-import { useBoundStore } from './store'
+import { useBoundStore } from '../store'
 
 const SettingsPopup = styled.div`
   position: absolute;

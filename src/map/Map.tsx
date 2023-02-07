@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
 import AddressMarker from './AddressMarker'
 import NoteMarker from './NoteMarker'
-import { useBoundStore } from './store'
+import { useBoundStore } from '../store'
 
 const MapPopup = styled.div`
   position: absolute;

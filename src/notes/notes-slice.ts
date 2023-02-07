@@ -1,5 +1,5 @@
-import { SliceStateCreator } from './store'
-import { Note } from './types'
+import { SliceStateCreator } from '../store'
+import { Note } from '../types'
 
 export interface NotesSlice {
   notes: Note[]

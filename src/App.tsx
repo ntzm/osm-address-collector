@@ -3,9 +3,9 @@ import { move } from './geo'
 import IconButton from './IconButton'
 import KeypadButton from './KeypadButton'
 import KeypadNumber from './KeypadNumber'
-import Map from './Map'
+import Map from './map/Map'
 import { getOsmFile } from './osm-xml'
-import Settings from './Settings'
+import Settings from './settings/Settings'
 import SubmitButton from './SubmitButton'
 import TopBar from './TopBar'
 import {
@@ -15,7 +15,7 @@ import {
   WebkitDeviceOrientationEvent,
 } from './types'
 import { saveAs } from 'file-saver-es'
-import NoteWriter from './NoteWriter'
+import NoteWriter from './notes/NoteWriter'
 import guessNextNumber from './guess-next-number'
 import { useBoundStore } from './store'
 

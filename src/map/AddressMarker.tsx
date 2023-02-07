@@ -1,7 +1,7 @@
 import { Icon } from 'leaflet'
 import { Marker, Popup } from 'react-leaflet'
-import { Address, Position } from './types'
-import iconUrl from '../icons/home_pin.svg'
+import { Address, Position } from '../types'
+import iconUrl from '../../icons/home_pin.svg'
 
 const icon = new Icon({
   iconUrl,

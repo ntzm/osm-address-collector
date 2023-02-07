@@ -1,5 +1,5 @@
-import { SliceStateCreator } from './store'
-import { CustomTag } from './types'
+import { SliceStateCreator } from '../store'
+import { CustomTag } from '../types'
 
 export interface CustomTagsSlice {
   customTags: CustomTag[]
