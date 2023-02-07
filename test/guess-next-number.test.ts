@@ -14,7 +14,7 @@ function makeAddress(address: Partial<Address>): Address {
     numberOrName: '1',
     skippedNumbers: [],
     street: undefined,
-    customTags: {},
+    customTags: [],
     direction: 'L',
     ...address,
   }
