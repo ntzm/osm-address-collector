@@ -1,7 +1,4 @@
-import { useState } from 'react'
 import styled from 'styled-components'
-import findNearestStreets from './street/find-nearest-streets'
-import { useBoundStore } from '../store'
 import SkipNumbers from './skip-numbers/SkipNumbers'
 import CustomTags from './custom-tags/CustomTags'
 import Street from './street/Street'
