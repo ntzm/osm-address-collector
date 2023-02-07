@@ -13,8 +13,6 @@ export default function guessNextNumber(
     return defaultReturn
   }
 
-  console.log(lastAddress, previous)
-
   const lNumber = Number(lastAddress.numberOrName)
   let pNumber = Number(previous.numberOrName)
 

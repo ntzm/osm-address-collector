@@ -23,9 +23,11 @@ function App() {
   const addresses = useBoundStore((s) => s.addresses)
   const addAddress = useBoundStore((s) => s.addAddress)
   const removeLastAddress = useBoundStore((s) => s.removeLastAddress)
+  const clearAddresses = useBoundStore((s) => s.clearAddresses)
 
   const notes = useBoundStore((s) => s.notes)
   const dispatchAddNote = useBoundStore((s) => s.addNote)
+  const clearNotes = useBoundStore((s) => s.clearNotes)
 
   const position = useBoundStore((s) => s.position)
   const updatePosition = useBoundStore((s) => s.updatePosition)
@@ -304,6 +306,25 @@ function App() {
       new Blob([contents], { type: 'application/vnd.osm+xml' }),
       `${getFormattedDate(date)}.osm`,
     )
+
+    clearAddresses()
+    clearNotes()
+    if (positionWatchId !== undefined) {
+      navigator.geolocation.clearWatch(positionWatchId)
+      setPositionWatchId(undefined)
+    }
+    window.removeEventListener('deviceorientationabsolute', handleHeading)
+    window.removeEventListener('deviceorientation', handleHeading)
+    clearPosition()
+    setHeading(undefined)
+    setHeadingProvider(undefined)
+    setCurrentNumberOrName('')
+    setLastActions([])
+    setSkippedNumbers([])
+    setNumberIsGuessed(false)
+    // should we clear street as well?
+
+    setSurveyState('not started')
   }
 
   const surveyDisabled = surveyState !== 'started'

@@ -7,6 +7,7 @@ export interface AddressSlice {
   updateAddressPosition: (index: number, position: Position) => void
   removeAddress: (index: number) => void
   removeLastAddress: () => void
+  clearAddresses: () => void
 }
 
 export const createAddressSlice: SliceStateCreator<AddressSlice> = (set) => ({
@@ -35,5 +36,9 @@ export const createAddressSlice: SliceStateCreator<AddressSlice> = (set) => ({
   removeLastAddress: () =>
     set((state) => {
       state.addresses.pop()
+    }),
+  clearAddresses: () =>
+    set((state) => {
+      state.addresses = []
     }),
 })

@@ -5,7 +5,6 @@ export type SurveyState =
   | 'started'
   | 'paused'
   | 'finishing'
-  | 'finished'
   | 'error'
 
 export type Address = {
