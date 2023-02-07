@@ -254,9 +254,7 @@ export default function Settings(props: {
                     type="number"
                     placeholder="Number"
                     value={skip}
-                    onChange={(e) =>
-                      updateSkipNumber(i, Number(e.target.value))
-                    }
+                    onChange={(e) => updateSkipNumber(i, e.target.value)}
                   />
                 </div>
               ))}
@@ -264,7 +262,7 @@ export default function Settings(props: {
             <button
               className="setting-list__add"
               id="add-skip-number"
-              onClick={() => addSkipNumber(0)}
+              onClick={() => addSkipNumber()}
             >
               +
             </button>

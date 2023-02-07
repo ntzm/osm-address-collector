@@ -127,7 +127,7 @@ function App() {
 
     const [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(
       newAddresses,
-      skipNumbers,
+      skipNumbers.map(Number).filter((n) => Number.isNaN(n)),
     )
 
     if (guessedNextNumber === undefined) {

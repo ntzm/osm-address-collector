@@ -1,9 +1,9 @@
 import { SliceStateCreator } from './store'
 
 export interface SkipNumbersSlice {
-  skipNumbers: number[]
-  addSkipNumber: (n: number) => void
-  updateSkipNumber: (index: number, skipNumber: number) => void
+  skipNumbers: string[]
+  addSkipNumber: () => void
+  updateSkipNumber: (index: number, skipNumber: string) => void
   removeSkipNumber: (index: number) => void
 }
 
@@ -11,11 +11,11 @@ export const createSkipNumbersSlice: SliceStateCreator<SkipNumbersSlice> = (
   set,
 ) => ({
   skipNumbers: [],
-  addSkipNumber: (skipNumber: number) =>
+  addSkipNumber: () =>
     set((state) => {
-      state.skipNumbers.push(skipNumber)
+      state.skipNumbers.push('')
     }),
-  updateSkipNumber: (index: number, skipNumber: number) =>
+  updateSkipNumber: (index: number, skipNumber: string) =>
     set((state) => {
       state.skipNumbers[index] = skipNumber
     }),
