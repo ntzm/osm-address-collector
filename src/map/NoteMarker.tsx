@@ -1,6 +1,6 @@
 import { Icon } from 'leaflet'
 import { Marker, Popup } from 'react-leaflet'
-import { Note } from '../types'
+import { Note, Position } from '../types'
 import iconUrl from '../../icons/edit_location.svg'
 
 const icon = new Icon({
@@ -9,10 +9,28 @@ const icon = new Icon({
   iconAnchor: [18, 36],
 })
 
-export default function NoteMarker(props: { note: Note }) {
+export default function NoteMarker(props: {
+  note: Note
+  onUpdatePosition: (position: Position) => void
+  onDelete: () => void
+}) {
   return (
-    <Marker icon={icon} position={[props.note.latitude, props.note.longitude]}>
-      <Popup>{props.note.content}</Popup>
+    <Marker
+      eventHandlers={{
+        dragend: (e) =>
+          props.onUpdatePosition({
+            latitude: e.target.getLatLng().lat,
+            longitude: e.target.getLatLng().lng,
+          }),
+      }}
+      draggable
+      icon={icon}
+      position={[props.note.latitude, props.note.longitude]}
+    >
+      <Popup>
+        {props.note.content}
+        <button onClick={props.onDelete}>Delete</button>
+      </Popup>
     </Marker>
   )
 }

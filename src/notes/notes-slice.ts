@@ -1,10 +1,12 @@
 import { SliceStateCreator } from '../store'
-import { Note } from '../types'
+import { Note, Position } from '../types'
 
 export interface NotesSlice {
   notes: Note[]
   addNote: (note: Note) => void
   clearNotes: () => void
+  updateNotePosition: (index: number, position: Position) => void
+  removeNote: (index: number) => void
 }
 
 export const createNotesSlice: SliceStateCreator<NotesSlice> = (set) => ({
@@ -16,5 +18,22 @@ export const createNotesSlice: SliceStateCreator<NotesSlice> = (set) => ({
   clearNotes: () =>
     set((state) => {
       state.notes = []
+    }),
+  updateNotePosition: (index: number, position: Position) =>
+    set((state) => {
+      const note = state.notes[index]
+
+      if (note === undefined) {
+        return
+      }
+
+      state.notes[index] = {
+        ...note,
+        ...position,
+      }
+    }),
+  removeNote: (index: number) =>
+    set((state) => {
+      state.notes.splice(index, 1)
     }),
 })

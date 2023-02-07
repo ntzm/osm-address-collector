@@ -35,6 +35,9 @@ export default function Map(props: { onClose: () => void }) {
   const removeAddress = useBoundStore((s) => s.removeAddress)
 
   const notes = useBoundStore((s) => s.notes)
+  const updateNotePosition = useBoundStore((s) => s.updateNotePosition)
+  const removeNote = useBoundStore((s) => s.removeNote)
+
   const position = useBoundStore((s) => s.position)
 
   return (
@@ -61,7 +64,12 @@ export default function Map(props: { onClose: () => void }) {
           />
         ))}
         {notes.map((note, i) => (
-          <NoteMarker key={i} note={note} />
+          <NoteMarker
+            onUpdatePosition={(position) => updateNotePosition(i, position)}
+            onDelete={() => removeNote(i)}
+            key={i}
+            note={note}
+          />
         ))}
       </StyledMapContainer>
     </MapPopup>
