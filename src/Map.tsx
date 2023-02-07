@@ -1,7 +1,7 @@
 import { Circle, CircleMarker, MapContainer, TileLayer } from "react-leaflet";
 import 'leaflet/dist/leaflet.css'
 import styled from "styled-components";
-import { Address, Note } from "./types";
+import { Address, Note, Position } from "./types";
 import AddressMarker from "./AddressMarker";
 import NoteMarker from "./NoteMarker";
 
@@ -33,6 +33,7 @@ export default function Map(props: {
   position: GeolocationCoordinates | undefined
   onClose: () => void
   addresses: Address[]
+  onUpdateAddressPosition: (i: number, position: Position) => void
   notes: Note[]
 }) {
   return (
@@ -50,7 +51,7 @@ export default function Map(props: {
           maxZoom={20}
         />
         {/* todo generate and use ids */}
-        {props.addresses.map((address, i) => <AddressMarker key={i} address={address} />)}
+        {props.addresses.map((address, i) => <AddressMarker onUpdatePosition={(position) => props.onUpdateAddressPosition(i, position)} key={i} address={address} />)}
         {props.notes.map((note, i) => <NoteMarker key={i} note={note} />)}
       </StyledMapContainer>
     </MapPopup>

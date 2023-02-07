@@ -8,7 +8,7 @@ import { getOsmFile } from "./osm-xml"
 import Settings from "./Settings"
 import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
-import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, SurveyState, WebkitDeviceOrientationEvent } from "./types"
+import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, Position, SurveyState, WebkitDeviceOrientationEvent } from "./types"
 import {saveAs} from 'file-saver-es'
 import NoteWriter from "./NoteWriter"
 import guessNextNumber from "./guess-next-number"
@@ -278,10 +278,34 @@ function App() {
     )
   }
 
+  const updateAddressPosition = (i: number, position: Position) => {
+    setAddresses(
+      addresses.map((address, index) => {
+        if (index === i) {
+          return {
+            ...address,
+            ...position,
+          }
+        }
+
+        return address
+      })
+    )
+  }
+
   const surveyDisabled = surveyState !== 'started'
 
   return <>
-    {mapOpen ? <Map position={position} addresses={addresses} notes={notes} onClose={() => setMapOpen(false)} /> : ''}
+    {
+      mapOpen &&
+      <Map
+        position={position}
+        addresses={addresses}
+        onUpdateAddressPosition={updateAddressPosition}
+        notes={notes}
+        onClose={() => setMapOpen(false)}
+      />
+    }
     {
       settingsOpen
       ? <Settings
