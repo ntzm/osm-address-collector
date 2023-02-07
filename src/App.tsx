@@ -201,6 +201,21 @@ function App() {
   }
 
   const startOrPause = async () => {
+    if (
+      surveyState === 'not started' &&
+      (addresses.length > 0 || notes.length > 0) &&
+      !confirm(
+        `You have ${addresses.length} unsaved address${
+          addresses.length === 1 ? '' : 'es'
+        } and ${notes.length} unsaved note${
+          notes.length === 1 ? '' : 's'
+        } from the previous session, do you want to load them?`,
+      )
+    ) {
+      clearAddresses()
+      clearNotes()
+    }
+
     if (surveyState === 'not started' || surveyState == 'paused') {
       setSurveyState('starting')
 
