@@ -1,11 +1,9 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { Circle, CircleMarker, MapContainer, TileLayer } from "react-leaflet";
 import 'leaflet/dist/leaflet.css'
 import styled from "styled-components";
 import { Address, Note } from "./types";
 import AddressMarker from "./AddressMarker";
 import NoteMarker from "./NoteMarker";
-
-const position: [number, number] = [51.505, -0.09]
 
 const MapPopup = styled.div`
   position: absolute;
@@ -31,24 +29,25 @@ const StyledMapContainer = styled(MapContainer)`
   width: 100%;
 `
 
-interface MapProps {
+export default function Map(props: {
+  position: GeolocationCoordinates | undefined
   onClose: () => void
   addresses: Address[]
   notes: Note[]
-}
-
-function Map(props: MapProps) {
+}) {
   return (
     <MapPopup>
       <CloseButton onClick={() => props.onClose()}>Close</CloseButton>
       <StyledMapContainer
-        center={position}
-        zoom={13}
+        center={props.position ? [props.position.latitude, props.position.longitude] : [0, 0]}
+        zoom={18}
         zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxNativeZoom={18}
+          maxZoom={20}
         />
         {/* todo generate and use ids */}
         {props.addresses.map((address, i) => <AddressMarker key={i} address={address} />)}
@@ -57,5 +56,3 @@ function Map(props: MapProps) {
     </MapPopup>
   )
 }
-
-export default Map

@@ -281,7 +281,7 @@ function App() {
   const surveyDisabled = surveyState !== 'started'
 
   return <>
-    {mapOpen ? <Map addresses={addresses} notes={notes} onClose={() => setMapOpen(false)} /> : ''}
+    {mapOpen ? <Map position={position} addresses={addresses} notes={notes} onClose={() => setMapOpen(false)} /> : ''}
     {
       settingsOpen
       ? <Settings

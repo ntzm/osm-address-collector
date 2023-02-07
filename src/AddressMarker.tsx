@@ -1,14 +1,22 @@
+import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import { Address } from "./types";
+import iconUrl from '../icons/home_pin.svg'
 
-interface AddressMarkerProps {
+const icon = new Icon({
+  iconUrl,
+  iconSize: [36, 36],
+  iconAnchor: [18, 36],
+})
+
+export default function AddressMarker(props: {
   address: Address
-}
-
-export default function AddressMarker(props: AddressMarkerProps) {
+}) {
   return (
-    <Marker position={[props.address.latitude, props.address.longitude]}>
-      <Popup>{props.address.numberOrName} {props.address.street}</Popup>
+    <Marker icon={icon} position={[props.address.latitude, props.address.longitude]}>
+      <Popup>
+        <strong>{props.address.numberOrName}</strong> {props.address.street}
+      </Popup>
     </Marker>
   )
 }
