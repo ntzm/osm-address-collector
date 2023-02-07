@@ -1,7 +1,6 @@
-import { Circle, CircleMarker, MapContainer, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
-import { Address, Note, Position } from './types'
 import AddressMarker from './AddressMarker'
 import NoteMarker from './NoteMarker'
 import { useBoundStore } from './store'

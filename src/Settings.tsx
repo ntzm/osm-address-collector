@@ -132,7 +132,11 @@ export default function Settings(props: {
           )}
           <p className="disclaimer">
             Street data from{' '}
-            <a href="https://openstreetmap.org/copyright" target="_blank">
+            <a
+              href="https://openstreetmap.org/copyright"
+              target="_blank"
+              rel="noreferrer"
+            >
               OpenStreetMap
             </a>
           </p>
@@ -275,6 +279,7 @@ export default function Settings(props: {
           <a
             href="https://github.com/ntzm/osm-address-collector/blob/main/CHANGELOG.md"
             target="_blank"
+            rel="noreferrer"
           >
             Latest changes
           </a>
@@ -284,6 +289,7 @@ export default function Settings(props: {
           <a
             href="https://github.com/ntzm/osm-address-collector"
             target="_blank"
+            rel="noreferrer"
           >
             GitHub
           </a>
@@ -293,6 +299,7 @@ export default function Settings(props: {
           <a
             href="https://github.com/ntzm/osm-address-collector/issues/new"
             target="_blank"
+            rel="noreferrer"
           >
             Report a bug or request a feature
           </a>
