@@ -1,10 +1,10 @@
-import {it} from 'node:test'
+import { it } from 'node:test'
 import assert from 'node:assert/strict'
 import guessNextNumber from '../src/guess-next-number'
-import {type Address} from '../src/types'
+import { type Address } from '../src/types'
 
 function makeAddresses(...numbers: number[]): Address[] {
-  return numbers.map(number => makeAddress({numberOrName: String(number)}))
+  return numbers.map((number) => makeAddress({ numberOrName: String(number) }))
 }
 
 function makeAddress(address: Partial<Address>): Address {
@@ -53,27 +53,39 @@ it('skips given number, -2 step', () => {
 })
 
 it('skips multiple, 2 step', () => {
-  assert.deepEqual([17, [13, 15]], guessNextNumber(makeAddresses(9, 11), [13, 15]))
+  assert.deepEqual(
+    [17, [13, 15]],
+    guessNextNumber(makeAddresses(9, 11), [13, 15]),
+  )
 })
 
 it('skips multiple, 1 step', () => {
-  assert.deepEqual([16, [14, 15]], guessNextNumber(makeAddresses(12, 13), [14, 15]))
+  assert.deepEqual(
+    [16, [14, 15]],
+    guessNextNumber(makeAddresses(12, 13), [14, 15]),
+  )
 })
 
 it('skips multiple, -1 step', () => {
-  assert.deepEqual([13, [15, 14]], guessNextNumber(makeAddresses(17, 16), [14, 15]))
+  assert.deepEqual(
+    [13, [15, 14]],
+    guessNextNumber(makeAddresses(17, 16), [14, 15]),
+  )
 })
 
 it('skips multiple, -2 step', () => {
-  assert.deepEqual([12, [16, 14]], guessNextNumber(makeAddresses(20, 18), [14, 16]))
+  assert.deepEqual(
+    [12, [16, 14]],
+    guessNextNumber(makeAddresses(20, 18), [14, 16]),
+  )
 })
 
 it('handles one skipped number, 2 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '11', skippedNumbers: []}),
-        makeAddress({numberOrName: '15', skippedNumbers: [13]}),
+        makeAddress({ numberOrName: '11', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '15', skippedNumbers: [13] }),
       ],
       [],
     ),
@@ -85,8 +97,8 @@ it('handles one skipped number, 1 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '12', skippedNumbers: []}),
-        makeAddress({numberOrName: '14', skippedNumbers: [13]}),
+        makeAddress({ numberOrName: '12', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '14', skippedNumbers: [13] }),
       ],
       [],
     ),
@@ -98,8 +110,8 @@ it('handles one skipped number, -1 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '14', skippedNumbers: []}),
-        makeAddress({numberOrName: '12', skippedNumbers: [13]}),
+        makeAddress({ numberOrName: '14', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '12', skippedNumbers: [13] }),
       ],
       [],
     ),
@@ -111,8 +123,8 @@ it('handles one skipped number, -2 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '15', skippedNumbers: []}),
-        makeAddress({numberOrName: '11', skippedNumbers: [13]}),
+        makeAddress({ numberOrName: '15', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '11', skippedNumbers: [13] }),
       ],
       [],
     ),
@@ -124,8 +136,8 @@ it('handles multiple skipped numbers, 2 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '11', skippedNumbers: []}),
-        makeAddress({numberOrName: '17', skippedNumbers: [13, 15]}),
+        makeAddress({ numberOrName: '11', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '17', skippedNumbers: [13, 15] }),
       ],
       [],
     ),
@@ -137,8 +149,8 @@ it('handles multiple skipped numbers, 1 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '12', skippedNumbers: []}),
-        makeAddress({numberOrName: '15', skippedNumbers: [13, 14]}),
+        makeAddress({ numberOrName: '12', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '15', skippedNumbers: [13, 14] }),
       ],
       [],
     ),
@@ -150,8 +162,8 @@ it('handles multiple skipped numbers, -1 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '15', skippedNumbers: []}),
-        makeAddress({numberOrName: '12', skippedNumbers: [14, 13]}),
+        makeAddress({ numberOrName: '15', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '12', skippedNumbers: [14, 13] }),
       ],
       [],
     ),
@@ -163,8 +175,8 @@ it('handles multiple skipped numbers, -2 step', () => {
   assert.deepEqual(
     guessNextNumber(
       [
-        makeAddress({numberOrName: '16', skippedNumbers: []}),
-        makeAddress({numberOrName: '10', skippedNumbers: [14, 12]}),
+        makeAddress({ numberOrName: '16', skippedNumbers: [] }),
+        makeAddress({ numberOrName: '10', skippedNumbers: [14, 12] }),
       ],
       [],
     ),

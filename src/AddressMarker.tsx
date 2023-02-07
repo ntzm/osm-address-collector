@@ -1,6 +1,6 @@
-import { Icon } from "leaflet";
-import { Marker, Popup } from "react-leaflet";
-import { Address, Position } from "./types";
+import { Icon } from 'leaflet'
+import { Marker, Popup } from 'react-leaflet'
+import { Address, Position } from './types'
 import iconUrl from '../icons/home_pin.svg'
 
 const icon = new Icon({
@@ -10,13 +10,19 @@ const icon = new Icon({
 })
 
 export default function AddressMarker(props: {
-  address: Address,
-  onUpdatePosition: (position: Position) => void,
-  onDelete: () => void,
+  address: Address
+  onUpdatePosition: (position: Position) => void
+  onDelete: () => void
 }) {
   return (
     <Marker
-      eventHandlers={{ dragend: (e) => props.onUpdatePosition({ latitude: e.target.getLatLng().lat, longitude: e.target.getLatLng().lng }) }}
+      eventHandlers={{
+        dragend: (e) =>
+          props.onUpdatePosition({
+            latitude: e.target.getLatLng().lat,
+            longitude: e.target.getLatLng().lng,
+          }),
+      }}
       draggable
       icon={icon}
       position={[props.address.latitude, props.address.longitude]}

@@ -1,4 +1,4 @@
-import { SliceStateCreator } from "./store"
+import { SliceStateCreator } from './store'
 
 export interface StreetSlice {
   street: string
@@ -7,7 +7,8 @@ export interface StreetSlice {
 
 export const createStreetSlice: SliceStateCreator<StreetSlice> = (set) => ({
   street: '',
-  updateStreet: (street: string) => set((state) => {
-    state.street = street
-  }),
+  updateStreet: (street: string) =>
+    set((state) => {
+      state.street = street
+    }),
 })

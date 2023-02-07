@@ -4,8 +4,5 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   base: '/osm-address-collector',
-  plugins: [
-    basicSsl(),
-    react(),
-  ],
+  plugins: [basicSsl(), react()],
 })

@@ -17,7 +17,7 @@ An easy way to survey addresses for [OSM](https://www.openstreetmap.org/), inspi
 ## Device Compatibility
 
 | Device + Browser      | Compatible? | GPS        | Orientation          | File download | Notes                                               |
-|-----------------------|-------------|------------|----------------------|---------------|-----------------------------------------------------|
+| --------------------- | ----------- | ---------- | -------------------- | ------------- | --------------------------------------------------- |
 | **Chrome Android**    | Yes         | Yes        | Yes - Absolute       | Yes           |                                                     |
 | **Safari iOS**        | Yes         | Yes        | Yes - Webkit Heading | Yes           | [iOS compatibility notes](#ios-compatibility-notes) |
 | **Chrome iOS**        | Yes         | Yes        | Yes - Webkit Heading | Yes           | [iOS compatibility notes](#ios-compatibility-notes) |

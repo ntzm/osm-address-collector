@@ -4,6 +4,6 @@ importScripts(
 
 workbox.routing.registerRoute(
   new workbox.routing.NavigationRoute(
-    new workbox.strategies.NetworkFirst({networkTimeoutSeconds: 5}),
+    new workbox.strategies.NetworkFirst({ networkTimeoutSeconds: 5 }),
   ),
 )

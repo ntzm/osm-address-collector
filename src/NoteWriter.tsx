@@ -1,5 +1,5 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState } from 'react'
+import styled from 'styled-components'
 
 const NoteWriterPopup = styled.div`
   position: absolute;
@@ -16,8 +16,8 @@ const NoteWriterPopup = styled.div`
 `
 
 export default function NoteWriter(props: {
-  onClose: () => void,
-  onAdd: (content: string) => void,
+  onClose: () => void
+  onAdd: (content: string) => void
 }) {
   const [content, setContent] = useState('')
 
@@ -31,10 +31,18 @@ export default function NoteWriter(props: {
     close()
   }
 
-  return <NoteWriterPopup>
-    <button onClick={close} style={{ width: '100%', height: 40 }}>x</button>
-    <p>Add a note</p>
-    <textarea style={{ height: '100%' }} value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-    <button onClick={save}>Add</button>
-  </NoteWriterPopup>
+  return (
+    <NoteWriterPopup>
+      <button onClick={close} style={{ width: '100%', height: 40 }}>
+        x
+      </button>
+      <p>Add a note</p>
+      <textarea
+        style={{ height: '100%' }}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      ></textarea>
+      <button onClick={save}>Add</button>
+    </NoteWriterPopup>
+  )
 }

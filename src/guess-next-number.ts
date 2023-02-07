@@ -1,6 +1,9 @@
-import {type Address} from './types'
+import { type Address } from './types'
 
-export default function guessNextNumber(addresses: Address[], skipNumbers: number[]): [undefined, []] | [number, number[]] {
+export default function guessNextNumber(
+  addresses: Address[],
+  skipNumbers: number[],
+): [undefined, []] | [number, number[]] {
   const defaultReturn = [undefined, []] as [undefined, []]
 
   const lastAddress = addresses[addresses.length - 1]

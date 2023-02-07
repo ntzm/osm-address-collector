@@ -1,7 +1,7 @@
 import bbox from '@turf/bbox'
 import buffer from '@turf/buffer'
 import destination from '@turf/destination'
-import {type Position} from './types'
+import { type Position } from './types'
 
 function positionToLonLat(position: Position): number[] {
   return [position.longitude, position.latitude]
@@ -20,22 +20,19 @@ export function move(
     positionToLonLat(position),
     distanceMetres,
     bearing,
-    { units: 'meters' }
+    { units: 'meters' },
   )
 
   return lonLatToPosition(dest.geometry.coordinates as [number, number])
 }
 
-export function createBoundingBox(
-  position: Position,
-  lengthMetres: number,
-) {
+export function createBoundingBox(position: Position, lengthMetres: number) {
   const [minX, minY, maxX, maxY] = bbox(
     buffer(
       { type: 'Point', coordinates: positionToLonLat(position) },
       lengthMetres,
       { units: 'meters' },
-    )
+    ),
   )
 
   return [minY, minX, maxY, maxX]

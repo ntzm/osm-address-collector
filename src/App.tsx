@@ -1,44 +1,53 @@
-import { useState } from "react"
-import { move } from "./geo"
-import IconButton from "./IconButton"
-import KeypadButton from "./KeypadButton"
-import KeypadNumber from "./KeypadNumber"
-import Map from "./Map"
-import { getOsmFile } from "./osm-xml"
-import Settings from "./Settings"
-import SubmitButton from "./SubmitButton"
-import TopBar from "./TopBar"
-import { DeviceOrientationEventiOS, Direction, SurveyState, WebkitDeviceOrientationEvent } from "./types"
-import {saveAs} from 'file-saver-es'
-import NoteWriter from "./NoteWriter"
-import guessNextNumber from "./guess-next-number"
-import { useBoundStore } from "./store"
+import { useState } from 'react'
+import { move } from './geo'
+import IconButton from './IconButton'
+import KeypadButton from './KeypadButton'
+import KeypadNumber from './KeypadNumber'
+import Map from './Map'
+import { getOsmFile } from './osm-xml'
+import Settings from './Settings'
+import SubmitButton from './SubmitButton'
+import TopBar from './TopBar'
+import {
+  DeviceOrientationEventiOS,
+  Direction,
+  SurveyState,
+  WebkitDeviceOrientationEvent,
+} from './types'
+import { saveAs } from 'file-saver-es'
+import NoteWriter from './NoteWriter'
+import guessNextNumber from './guess-next-number'
+import { useBoundStore } from './store'
 
 function App() {
-  const addresses = useBoundStore(s => s.addresses)
-  const addAddress = useBoundStore(s => s.addAddress)
-  const removeLastAddress = useBoundStore(s => s.removeLastAddress)
+  const addresses = useBoundStore((s) => s.addresses)
+  const addAddress = useBoundStore((s) => s.addAddress)
+  const removeLastAddress = useBoundStore((s) => s.removeLastAddress)
 
-  const notes = useBoundStore(s => s.notes)
-  const dispatchAddNote = useBoundStore(s => s.addNote)
+  const notes = useBoundStore((s) => s.notes)
+  const dispatchAddNote = useBoundStore((s) => s.addNote)
 
-  const position = useBoundStore(s => s.position)
-  const updatePosition = useBoundStore(s => s.updatePosition)
-  const clearPosition = useBoundStore(s => s.clearPosition)
+  const position = useBoundStore((s) => s.position)
+  const updatePosition = useBoundStore((s) => s.updatePosition)
+  const clearPosition = useBoundStore((s) => s.clearPosition)
 
-  const customTags = useBoundStore(s => s.customTags)
-  const skipNumbers = useBoundStore(s => s.skipNumbers)
-  const street = useBoundStore(s => s.street)
-  const throwDistance = useBoundStore(s => s.throwDistance)
+  const customTags = useBoundStore((s) => s.customTags)
+  const skipNumbers = useBoundStore((s) => s.skipNumbers)
+  const street = useBoundStore((s) => s.street)
+  const throwDistance = useBoundStore((s) => s.throwDistance)
 
   const [mapOpen, setMapOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [noteWriterOpen, setNoteWriterOpen] = useState(false)
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
-  const [positionWatchId, setPositionWatchId] = useState<number | undefined>(undefined)
+  const [positionWatchId, setPositionWatchId] = useState<number | undefined>(
+    undefined,
+  )
   const [heading, setHeading] = useState<number | undefined>(undefined)
-  const [headingProvider, setHeadingProvider] = useState<'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined>(undefined)
+  const [headingProvider, setHeadingProvider] = useState<
+    'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined
+  >(undefined)
   const [lastActions, setLastActions] = useState<string[]>([])
   const [skippedNumbers, setSkippedNumbers] = useState<number[]>([])
   const [numberIsGuessed, setNumberIsGuessed] = useState(false)
@@ -114,7 +123,10 @@ function App() {
     addAddress(newAddress)
     addAction(`+ ${direction} ${currentNumberOrName}`)
 
-    const [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(newAddresses, skipNumbers)
+    const [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(
+      newAddresses,
+      skipNumbers,
+    )
 
     if (guessedNextNumber === undefined) {
       setCurrentNumberOrName('')
@@ -138,15 +150,21 @@ function App() {
     removeLastAddress()
   }
 
-  const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
+  const canRequestOrientationPermission = (
+    event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS,
+  ): event is DeviceOrientationEventiOS => {
     return 'requestPermission' in event
   }
 
-  const isOrientationEvent = (event: Event): event is DeviceOrientationEvent => {
+  const isOrientationEvent = (
+    event: Event,
+  ): event is DeviceOrientationEvent => {
     return 'alpha' in event && 'beta' in event && 'gamma' in event
   }
 
-  const isWebkitOrientationEvent = (event: DeviceOrientationEvent): event is WebkitDeviceOrientationEvent => {
+  const isWebkitOrientationEvent = (
+    event: DeviceOrientationEvent,
+  ): event is WebkitDeviceOrientationEvent => {
     return 'webkitCompassHeading' in event
   }
 
@@ -186,7 +204,7 @@ function App() {
 
       if (canRequestOrientationPermission(DeviceOrientationEvent)) {
         const permissionState = await DeviceOrientationEvent.requestPermission()
-    
+
         if (permissionState !== 'granted') {
           alert('Device orientation permission is required, please allow!')
         }
@@ -196,11 +214,14 @@ function App() {
       window.addEventListener('deviceorientation', handleHeading)
 
       const watchId = navigator.geolocation.watchPosition(
-        position => {
+        (position) => {
           updatePosition(position.coords)
           setSurveyState('started')
 
-          if (headingProvider === undefined || headingProvider === 'GPS heading') {
+          if (
+            headingProvider === undefined ||
+            headingProvider === 'GPS heading'
+          ) {
             const gpsHeading = position.coords.heading
 
             if (gpsHeading === null) {
@@ -216,19 +237,19 @@ function App() {
             setHeadingProvider('GPS heading')
           }
         },
-        errorEvent => {
+        (errorEvent) => {
           setSurveyState('error')
 
           if (errorEvent.code === errorEvent.PERMISSION_DENIED) {
             alert(`GPS permission denied: ${errorEvent.message}`)
             return
           }
-    
+
           if (errorEvent.code === errorEvent.POSITION_UNAVAILABLE) {
             alert(`GPS position unavailable: ${errorEvent.message}`)
             return
           }
-    
+
           if (errorEvent.code === errorEvent.TIMEOUT) {
             alert(`GPS position timeout: ${errorEvent.message}`)
           }
@@ -273,93 +294,168 @@ function App() {
 
     const contents = getOsmFile(
       document.implementation,
-      xml => new XMLSerializer().serializeToString(xml),
+      (xml) => new XMLSerializer().serializeToString(xml),
       addresses,
       notes,
       date,
     )
-  
+
     saveAs(
-      new Blob([contents], {type: 'application/vnd.osm+xml'}),
+      new Blob([contents], { type: 'application/vnd.osm+xml' }),
       `${getFormattedDate(date)}.osm`,
     )
   }
 
   const surveyDisabled = surveyState !== 'started'
 
-  return <>
-    {
-      mapOpen &&
-      <Map onClose={() => setMapOpen(false)} />
-    }
-    { settingsOpen &&
-      <Settings
-        heading={heading}
-        headingProvider={headingProvider}
-        onClose={() => setSettingsOpen(false)}
-      />
-    }
-    { noteWriterOpen &&
-      <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} />
-    }
-
-    <div className="container">
-      <TopBar
-        onOpenMap={() => setMapOpen(true)}
-        onOpenSettings={() => setSettingsOpen(true)}
-        accuracy={position?.accuracy}
-        lastActions={lastActions}
-      />
-
-      <div className="row">
-        <input
-          type="text"
-          id="current-number-or-name"
-          autoCapitalize="words"
-          value={currentNumberOrName}
-          onChange={(e) => setCurrentNumberOrName(e.target.value)}
-          onFocus={clearGuess}
-          style={numberIsGuessed ? { color: '#999' } : {}}
+  return (
+    <>
+      {mapOpen && <Map onClose={() => setMapOpen(false)} />}
+      {settingsOpen && (
+        <Settings
+          heading={heading}
+          headingProvider={headingProvider}
+          onClose={() => setSettingsOpen(false)}
         />
-      </div>
+      )}
+      {noteWriterOpen && (
+        <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} />
+      )}
 
-      <div className="row">
-        <SubmitButton disabled={surveyDisabled} direction="L" onClick={submit} />
-        <SubmitButton disabled={surveyDisabled} direction="F" onClick={submit} />
-        <SubmitButton disabled={surveyDisabled} direction="R" onClick={submit} />
-      </div>
+      <div className="container">
+        <TopBar
+          onOpenMap={() => setMapOpen(true)}
+          onOpenSettings={() => setSettingsOpen(true)}
+          accuracy={position?.accuracy}
+          lastActions={lastActions}
+        />
 
-      <div className="row">
-        <KeypadNumber disabled={surveyDisabled} number={1} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={2} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={3} onClick={appendNumber} />
-      </div>
+        <div className="row">
+          <input
+            type="text"
+            id="current-number-or-name"
+            autoCapitalize="words"
+            value={currentNumberOrName}
+            onChange={(e) => setCurrentNumberOrName(e.target.value)}
+            onFocus={clearGuess}
+            style={numberIsGuessed ? { color: '#999' } : {}}
+          />
+        </div>
 
-      <div className="row">
-        <KeypadNumber disabled={surveyDisabled} number={4} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={5} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={6} onClick={appendNumber} />
-      </div>
+        <div className="row">
+          <SubmitButton
+            disabled={surveyDisabled}
+            direction="L"
+            onClick={submit}
+          />
+          <SubmitButton
+            disabled={surveyDisabled}
+            direction="F"
+            onClick={submit}
+          />
+          <SubmitButton
+            disabled={surveyDisabled}
+            direction="R"
+            onClick={submit}
+          />
+        </div>
 
-      <div className="row">
-        <KeypadNumber disabled={surveyDisabled} number={7} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={8} onClick={appendNumber} />
-        <KeypadNumber disabled={surveyDisabled} number={9} onClick={appendNumber} />
-      </div>
+        <div className="row">
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={1}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={2}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={3}
+            onClick={appendNumber}
+          />
+        </div>
 
-      <div className="row">
-        <KeypadButton disabled={['starting', 'finishing'].includes(surveyState)} onClick={startOrPause}>{surveyState === 'started' ? 'Pause' : 'Start'}</KeypadButton>
-        <KeypadNumber disabled={surveyDisabled} number={0} onClick={appendNumber} />
-        <IconButton disabled={surveyDisabled} src="icons/clear_black_24dp.svg" onClick={clearNumberOrName} colour="#faa0a0" />
-      </div>
+        <div className="row">
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={4}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={5}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={6}
+            onClick={appendNumber}
+          />
+        </div>
 
-      <div className="row">
-        <IconButton src="icons/note_black_24dp.svg" disabled={surveyDisabled} onClick={() => setNoteWriterOpen(true)} />
-        <KeypadButton disabled={!['started', 'paused'].includes(surveyState)} onClick={done} colour="#aec6cf">Done</KeypadButton>
-        <IconButton src="icons/undo_black_24dp.svg" disabled={surveyDisabled} onClick={undo} />
+        <div className="row">
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={7}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={8}
+            onClick={appendNumber}
+          />
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={9}
+            onClick={appendNumber}
+          />
+        </div>
+
+        <div className="row">
+          <KeypadButton
+            disabled={['starting', 'finishing'].includes(surveyState)}
+            onClick={startOrPause}
+          >
+            {surveyState === 'started' ? 'Pause' : 'Start'}
+          </KeypadButton>
+          <KeypadNumber
+            disabled={surveyDisabled}
+            number={0}
+            onClick={appendNumber}
+          />
+          <IconButton
+            disabled={surveyDisabled}
+            src="icons/clear_black_24dp.svg"
+            onClick={clearNumberOrName}
+            colour="#faa0a0"
+          />
+        </div>
+
+        <div className="row">
+          <IconButton
+            src="icons/note_black_24dp.svg"
+            disabled={surveyDisabled}
+            onClick={() => setNoteWriterOpen(true)}
+          />
+          <KeypadButton
+            disabled={!['started', 'paused'].includes(surveyState)}
+            onClick={done}
+            colour="#aec6cf"
+          >
+            Done
+          </KeypadButton>
+          <IconButton
+            src="icons/undo_black_24dp.svg"
+            disabled={surveyDisabled}
+            onClick={undo}
+          />
+        </div>
       </div>
-    </div>
-  </>
+    </>
+  )
 }
 
 export default App

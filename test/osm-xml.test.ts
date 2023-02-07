@@ -1,16 +1,17 @@
-import {it} from 'node:test'
+import { it } from 'node:test'
 import assert from 'node:assert/strict'
-import {JSDOM} from 'jsdom'
+import { JSDOM } from 'jsdom'
 import serialize from 'w3c-xmlserializer'
-import {getOsmFile} from '../src/osm-xml'
-import {type Note, type Address} from '../src/types'
+import { getOsmFile } from '../src/osm-xml'
+import { type Note, type Address } from '../src/types'
 
-const implementation: DOMImplementation = new JSDOM().window.document.implementation
+const implementation: DOMImplementation = new JSDOM().window.document
+  .implementation
 
 function collapse(string: string): string {
   return string
     .split('\n')
-    .map(line => line.trim())
+    .map((line) => line.trim())
     .filter(Boolean)
     .join('')
 }

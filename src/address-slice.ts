@@ -1,5 +1,5 @@
-import { SliceStateCreator } from "./store"
-import { Address, Position } from "./types"
+import { SliceStateCreator } from './store'
+import { Address, Position } from './types'
 
 export interface AddressSlice {
   addresses: Address[]
@@ -11,25 +11,29 @@ export interface AddressSlice {
 
 export const createAddressSlice: SliceStateCreator<AddressSlice> = (set) => ({
   addresses: [],
-  addAddress: (address: Address) => set((state) => {
-    state.addresses.push(address)
-  }),
-  updateAddressPosition: (index: number, position: Position) => set((state) => {
-    const address = state.addresses[index]
+  addAddress: (address: Address) =>
+    set((state) => {
+      state.addresses.push(address)
+    }),
+  updateAddressPosition: (index: number, position: Position) =>
+    set((state) => {
+      const address = state.addresses[index]
 
-    if (address === undefined) {
-      return
-    }
+      if (address === undefined) {
+        return
+      }
 
-    state.addresses[index] = {
-      ...address,
-      ...position,
-    }
-  }),
-  removeAddress: (index: number) => set((state) => {
-    state.addresses.splice(index, 1)
-  }),
-  removeLastAddress: () => set((state) => {
-    state.addresses.pop()
-  }),
+      state.addresses[index] = {
+        ...address,
+        ...position,
+      }
+    }),
+  removeAddress: (index: number) =>
+    set((state) => {
+      state.addresses.splice(index, 1)
+    }),
+  removeLastAddress: () =>
+    set((state) => {
+      state.addresses.pop()
+    }),
 })

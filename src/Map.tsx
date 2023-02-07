@@ -1,10 +1,10 @@
-import { Circle, CircleMarker, MapContainer, TileLayer } from "react-leaflet";
+import { Circle, CircleMarker, MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import styled from "styled-components";
-import { Address, Note, Position } from "./types";
-import AddressMarker from "./AddressMarker";
-import NoteMarker from "./NoteMarker";
-import { useBoundStore } from "./store";
+import styled from 'styled-components'
+import { Address, Note, Position } from './types'
+import AddressMarker from './AddressMarker'
+import NoteMarker from './NoteMarker'
+import { useBoundStore } from './store'
 
 const MapPopup = styled.div`
   position: absolute;
@@ -31,12 +31,12 @@ const StyledMapContainer = styled(MapContainer)`
 `
 
 export default function Map(props: { onClose: () => void }) {
-  const addresses = useBoundStore(s => s.addresses)
-  const updateAddressPosition = useBoundStore(s => s.updateAddressPosition)
-  const removeAddress = useBoundStore(s => s.removeAddress)
+  const addresses = useBoundStore((s) => s.addresses)
+  const updateAddressPosition = useBoundStore((s) => s.updateAddressPosition)
+  const removeAddress = useBoundStore((s) => s.removeAddress)
 
-  const notes = useBoundStore(s => s.notes)
-  const position = useBoundStore(s => s.position)
+  const notes = useBoundStore((s) => s.notes)
+  const position = useBoundStore((s) => s.position)
 
   return (
     <MapPopup>
@@ -53,15 +53,17 @@ export default function Map(props: { onClose: () => void }) {
           maxZoom={20}
         />
         {/* todo generate and use ids */}
-        { addresses.map((address, i) =>
+        {addresses.map((address, i) => (
           <AddressMarker
             onUpdatePosition={(position) => updateAddressPosition(i, position)}
             onDelete={() => removeAddress(i)}
             key={i}
             address={address}
           />
-        ) }
-        {notes.map((note, i) => <NoteMarker key={i} note={note} />)}
+        ))}
+        {notes.map((note, i) => (
+          <NoteMarker key={i} note={note} />
+        ))}
       </StyledMapContainer>
     </MapPopup>
   )

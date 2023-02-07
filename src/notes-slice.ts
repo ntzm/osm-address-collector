@@ -1,5 +1,5 @@
-import { SliceStateCreator } from "./store"
-import { Note } from "./types"
+import { SliceStateCreator } from './store'
+import { Note } from './types'
 
 export interface NotesSlice {
   notes: Note[]
@@ -8,7 +8,8 @@ export interface NotesSlice {
 
 export const createNotesSlice: SliceStateCreator<NotesSlice> = (set) => ({
   notes: [],
-  addNote: (note: Note) => set((state) => {
-    state.notes.push(note)
-  }),
+  addNote: (note: Note) =>
+    set((state) => {
+      state.notes.push(note)
+    }),
 })

@@ -1,4 +1,4 @@
-import { SliceStateCreator } from "./store"
+import { SliceStateCreator } from './store'
 
 export interface PositionSlice {
   position: GeolocationCoordinates | undefined
@@ -8,10 +8,12 @@ export interface PositionSlice {
 
 export const createPositionSlice: SliceStateCreator<PositionSlice> = (set) => ({
   position: undefined,
-  updatePosition: (position: GeolocationCoordinates) => set((state) => {
-    state.position = position
-  }),
-  clearPosition: () => set((state) => {
-    state.position = undefined
-  }),
+  updatePosition: (position: GeolocationCoordinates) =>
+    set((state) => {
+      state.position = position
+    }),
+  clearPosition: () =>
+    set((state) => {
+      state.position = undefined
+    }),
 })

@@ -8,11 +8,26 @@ import { createCustomTagsSlice, CustomTagsSlice } from './custom-tags-slice'
 import { createPositionSlice, PositionSlice } from './position-slice'
 import { UnionToIntersection } from 'type-fest'
 import { createStreetSlice, StreetSlice } from './street-slice'
-import { createThrowDistanceSlice, ThrowDistanceSlice } from './throw-distance-slice'
+import {
+  createThrowDistanceSlice,
+  ThrowDistanceSlice,
+} from './throw-distance-slice'
 
-type Slice = AddressSlice | NotesSlice | SkipNumbersSlice | CustomTagsSlice | PositionSlice | StreetSlice | ThrowDistanceSlice
+type Slice =
+  | AddressSlice
+  | NotesSlice
+  | SkipNumbersSlice
+  | CustomTagsSlice
+  | PositionSlice
+  | StreetSlice
+  | ThrowDistanceSlice
 export type State = UnionToIntersection<Slice>
-export type SliceStateCreator<T extends Slice> = StateCreator<State, [["zustand/immer", never]], [], T>
+export type SliceStateCreator<T extends Slice> = StateCreator<
+  State,
+  [['zustand/immer', never]],
+  [],
+  T
+>
 
 const immerMiddleware = immer<State>((...a) => ({
   ...createAddressSlice(...a),
@@ -24,19 +39,16 @@ const immerMiddleware = immer<State>((...a) => ({
   ...createThrowDistanceSlice(...a),
 }))
 
-const persistMiddleware = persist(
-  immerMiddleware,
-  {
-    name: 'storage',
-    partialize: (state) => ({
-      addresses: state.addresses,
-      notes: state.notes,
-      skipNumbers: state.skipNumbers,
-      customTags: state.customTags,
-      throwDistance: state.throwDistance,
-    }),
-  },
-)
+const persistMiddleware = persist(immerMiddleware, {
+  name: 'storage',
+  partialize: (state) => ({
+    addresses: state.addresses,
+    notes: state.notes,
+    skipNumbers: state.skipNumbers,
+    customTags: state.customTags,
+    throwDistance: state.throwDistance,
+  }),
+})
 
 const devtoolsMiddleware = devtools(persistMiddleware)
 

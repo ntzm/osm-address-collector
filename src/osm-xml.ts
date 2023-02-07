@@ -1,4 +1,4 @@
-import {type Address, type Note} from './types'
+import { type Address, type Note } from './types'
 
 export function getOsmFile(
   domImplementation: DOMImplementation,
@@ -19,39 +19,39 @@ export function getOsmFile(
       node.setAttribute('version', '1')
       node.setAttribute('lat', String(address.latitude))
       node.setAttribute('lon', String(address.longitude))
-  
+
       const tag = xml.createElement('tag')
-  
+
       if (Number.isNaN(Number(address.numberOrName.charAt(0)))) {
         tag.setAttribute('k', 'addr:housename')
       } else {
         tag.setAttribute('k', 'addr:housenumber')
       }
-  
+
       tag.setAttribute('v', address.numberOrName)
-  
+
       node.append(tag)
-  
+
       if (address.street) {
         const streetTag = xml.createElement('tag')
         streetTag.setAttribute('k', 'addr:street')
         streetTag.setAttribute('v', address.street)
-  
+
         node.append(streetTag)
       }
-  
+
       node.append(
         ...address.customTags.map(({ key, value }) => {
           if (value === '') {
             return ''
           }
-  
+
           const customTag = xml.createElement('tag')
           customTag.setAttribute('k', key)
           customTag.setAttribute('v', value)
-  
+
           return customTag
-        })
+        }),
       )
 
       return node
