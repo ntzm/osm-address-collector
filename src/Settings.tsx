@@ -83,12 +83,53 @@ export default function Settings(props: {
     setStreets(newStreets)
   }
 
+  const showGeneralHelp = () => {
+    alert(
+      `Choose a distance to throw address nodes from your current position.
+If you add an address node by pressing the left arrow key, it will throw the node to your left by this amount.`,
+    )
+  }
+
+  const showStreetHelp = () => {
+    alert(
+      `Add a street to address nodes.
+The street you choose will only be applied to addresses going forward.
+You can type in the street name manually, or click "Get streets" to retrieve a list of streets near to you.
+You can change the distance it will look for nearby streets with the "Street search distance" slider.`,
+    )
+  }
+
+  const showCustomTagHelp = () => {
+    alert(
+      `Add custom OSM tags to each address node.
+The tags you add will only be applied to addresses going forward.`,
+    )
+  }
+
+  const showAdvancedHelp = () => {
+    alert(
+      `Orientation is used to throw address nodes in the correct direction.
+Orientation provider shows the method to get your device's orientation.
+Orientation shows your device's current orientation.
+We use Overpass API to find streets nearby to you.
+You can customise the timeout and the endpoint here.
+Do not change the endpoint unless you know what you are doing!`,
+    )
+  }
+
+  const showSkipNumbersHelp = () => {
+    alert(
+      `Choose some numbers to skip when the app tries to guess the next number in the sequence.
+For example, in the UK the number 13 is often skipped.`,
+    )
+  }
+
   return (
     <SettingsPopup>
       <button onClick={() => props.onClose()}>x</button>
 
       <div className="setting-category">
-        <h2 className="setting-category__heading" id="setting-street">
+        <h2 className="setting-category__heading" onClick={showStreetHelp}>
           <span className="setting-category__info">ⓘ</span>
           Street
         </h2>
@@ -160,7 +201,7 @@ export default function Settings(props: {
       </div>
 
       <div className="setting-category">
-        <h2 className="setting-category__heading" id="setting-custom-tags">
+        <h2 className="setting-category__heading" onClick={showCustomTagHelp}>
           <span className="setting-category__info">ⓘ</span>
           Custom tags
         </h2>
@@ -218,7 +259,7 @@ export default function Settings(props: {
       </div>
 
       <div className="setting-category">
-        <h2 className="setting-category__heading" id="setting-general">
+        <h2 className="setting-category__heading" onClick={showGeneralHelp}>
           <span className="setting-category__info">ⓘ</span>
           General
         </h2>
@@ -238,7 +279,7 @@ export default function Settings(props: {
       </div>
 
       <div className="setting-category">
-        <h2 className="setting-category__heading" id="setting-skip-numbers">
+        <h2 className="setting-category__heading" onClick={showSkipNumbersHelp}>
           <span className="setting-category__info">ⓘ</span>
           Skip numbers
         </h2>
@@ -305,7 +346,7 @@ export default function Settings(props: {
       </div>
 
       <div className="setting-category">
-        <h2 className="setting-category__heading" id="setting-advanced">
+        <h2 className="setting-category__heading" onClick={showAdvancedHelp}>
           <span className="setting-category__info">ⓘ</span>
           Advanced
         </h2>
