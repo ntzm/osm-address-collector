@@ -29,6 +29,7 @@
     "@typescript-eslint/parser": "^5.51.0",
     "eslint": "^8.33.0",
     "eslint-plugin-react": "^7.32.2",
+    "husky": "^8.0.3",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.3",
     "tsx": "^3.12.2",
@@ -44,6 +45,7 @@
     "style": "prettier --check .",
     "style-fix": "prettier --write .",
     "types": "tsc",
-    "check": "npm run lint && npm run style && npm run types && npm test"
+    "check": "npm run lint && npm run style && npm run types && npm test",
+    "prepare": "husky install"
   }
 }
