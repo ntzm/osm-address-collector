@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import findNearestStreets from "./find-nearest-streets";
-import { CustomTag } from "./types";
+import { useBoundStore } from "./store";
 
 const SettingsPopup = styled.div`
   position: absolute;
@@ -16,80 +16,28 @@ const SettingsPopup = styled.div`
 `
 
 export default function Settings(props: {
-  position: GeolocationCoordinates | undefined,
   heading: number | undefined,
   headingProvider: string | undefined,
   onClose: () => void,
-  street: string,
-  onStreetChange: (street: string) => void,
-  customTags: CustomTag[],
-  onCustomTagsChange: (customTags: CustomTag[]) => void,
-  throwDistance: number,
-  onThrowDistanceChange: (throwDistance: number) => void,
-  skipNumbers: number[],
-  onSkipNumbersChange: (skipNumbers: number[]) => void,
 }) {
-  const removeCustomTag = (i: number) => {
-    props.onCustomTagsChange(
-      props.customTags.filter((_, index) => i !== index)
-    )
-  }
+  const position = useBoundStore(s => s.position)
 
-  const addCustomTag = () => {
-    props.onCustomTagsChange([
-      ...props.customTags,
-      { key: '', value : ''},
-    ])
-  }
+  const skipNumbers = useBoundStore(s => s.skipNumbers)
+  const addSkipNumber = useBoundStore(s => s.addSkipNumber)
+  const updateSkipNumber = useBoundStore(s => s.updateSkipNumber)
+  const removeSkipNumber = useBoundStore(s => s.removeSkipNumber)
 
-  const onCustomTagKeyChange = (i: number, key: string) => {
-    props.onCustomTagsChange(
-      props.customTags.map((customTag, index) => {
-        if (i === index) {
-          return { ...customTag, key }
-        }
+  const customTags = useBoundStore(s => s.customTags)
+  const addCustomTag = useBoundStore(s => s.addCustomTag)
+  const updateCustomTagKey = useBoundStore(s => s.updateCustomTagKey)
+  const updateCustomTagValue = useBoundStore(s => s.updateCustomTagValue)
+  const removeCustomTag = useBoundStore(s => s.removeCustomTag)
 
-        return customTag
-      })
-    )
-  }
+  const street = useBoundStore(s => s.street)
+  const updateStreet = useBoundStore(s => s.updateStreet)
 
-  const onCustomTagValueChange = (i: number, value: string) => {
-    props.onCustomTagsChange(
-      props.customTags.map((customTag, index) => {
-        if (i === index) {
-          return { ...customTag, value }
-        }
-
-        return customTag
-      })
-    )
-  }
-
-  const removeSkipNumber = (i: number) => {
-    props.onSkipNumbersChange(
-      props.skipNumbers.filter((_, index) => i !== index)
-    )
-  }
-
-  const addSkipNumber = () => {
-    props.onSkipNumbersChange([
-      ...props.skipNumbers,
-      0,
-    ])
-  }
-
-  const onSkipNumberChange = (i: number, value: number) => {
-    props.onSkipNumbersChange(
-      props.skipNumbers.map((n, index) => {
-        if (i === index) {
-          return value
-        }
-
-        return n
-      })
-    )
-  }
+  const throwDistance = useBoundStore(s => s.throwDistance)
+  const updateThrowDistance = useBoundStore(s => s.updateThrowDistance)
 
   const [streetSearchDistance, setStreetSearchDistance] = useState(10)
   const [overpassEndpoint, setOverpassEndpoint] = useState('https://maps.mail.ru/osm/tools/overpass/api/interpreter')
@@ -99,7 +47,7 @@ export default function Settings(props: {
   const [streetsError, setStreetsError] = useState<string | undefined>(undefined)
 
   const getStreets = async () => {
-    if (props.position === undefined) {
+    if (position === undefined) {
       // todo type check
       return
     }
@@ -109,7 +57,7 @@ export default function Settings(props: {
     let newStreets: string[]
 
     try {
-      newStreets = await findNearestStreets(props.position, streetSearchDistance, overpassEndpoint, overpassTimeout)
+      newStreets = await findNearestStreets(position, streetSearchDistance, overpassEndpoint, overpassTimeout)
     } catch (error) {
       if (error instanceof Error) {
         setStreetsError(error.message)
@@ -145,13 +93,13 @@ export default function Settings(props: {
           list="streets"
           placeholder="Street"
           autoComplete="off"
-          value={props.street}
-          onChange={(e) => props.onStreetChange(e.target.value)}
+          value={street}
+          onChange={(e) => updateStreet(e.target.value)}
         />
       </div>
 
       <div className="setting">
-        <button className="setting-button" disabled={streetsStatus === 'getting' || props.position === undefined} onClick={getStreets}>Get streets</button>
+        <button className="setting-button" disabled={streetsStatus === 'getting' || position === undefined} onClick={getStreets}>Get streets</button>
         {streetsStatus === 'none' && 'Click "Get streets" to get streets'}
         {streetsStatus === 'getting' && 'Getting streets...'}
         {streetsStatus === 'complete' && <span style={{color: 'green'}}>Got {streets.length} street{streets.length === 1 ? '' : 's'}</span>}
@@ -199,13 +147,13 @@ export default function Settings(props: {
       <div className="setting">
         <div className="setting-list">
           <div id="custom-tags">
-            {props.customTags.map((customTag, i) => <div key={i} className="custom-tag setting-list__row">
+            {customTags.map((customTag, i) => <div key={i} className="custom-tag setting-list__row">
               <button onClick={() => removeCustomTag(i)}>x</button>
-              <input className="key-input setting-input setting-list__input" type="text" placeholder="Key" autoCapitalize="none" list="tag-keys" value={customTag.key} onChange={(e) => onCustomTagKeyChange(i, e.target.value)} />
-              <input className="value-input setting-input setting-list__input" type="text" placeholder="Value" value={customTag.value} onChange={(e) => onCustomTagValueChange(i, e.target.value)} />
+              <input className="key-input setting-input setting-list__input" type="text" placeholder="Key" autoCapitalize="none" list="tag-keys" value={customTag.key} onChange={(e) => updateCustomTagKey(i, e.target.value)} />
+              <input className="value-input setting-input setting-list__input" type="text" placeholder="Value" value={customTag.value} onChange={(e) => updateCustomTagValue(i, e.target.value)} />
             </div>)}
           </div>
-          <button className="setting-list__add" id="add-custom-tag" onClick={addCustomTag}>+</button>
+          <button className="setting-list__add" id="add-custom-tag" onClick={() => addCustomTag({ key: '', value: '' })}>+</button>
         </div>
       </div>
     </div>
@@ -217,8 +165,8 @@ export default function Settings(props: {
       </h2>
 
       <div className="setting">
-        <label htmlFor="distance">Throw distance: {props.throwDistance}m</label>
-        <input className="setting-input" type="range" id="distance" min="1" max="100" value={props.throwDistance} onChange={e => props.onThrowDistanceChange(Number(e.target.value))} />
+        <label htmlFor="distance">Throw distance: {throwDistance}m</label>
+        <input className="setting-input" type="range" id="distance" min="1" max="100" value={throwDistance} onChange={e => updateThrowDistance(Number(e.target.value))} />
       </div>
     </div>
 
@@ -231,12 +179,12 @@ export default function Settings(props: {
       <div className="setting">
         <div className="setting-list">
           <div id="skip-numbers">
-            {props.skipNumbers.map((skip, i) => <div key={i} className="skip-number setting-list__row">
+            {skipNumbers.map((skip, i) => <div key={i} className="skip-number setting-list__row">
               <button onClick={() => removeSkipNumber(i)}>x</button>
-              <input className="number-input setting-input setting-list__input" type="number" placeholder="Number" value={skip} onChange={(e) => onSkipNumberChange(i, Number(e.target.value))} />
+              <input className="number-input setting-input setting-list__input" type="number" placeholder="Number" value={skip} onChange={(e) => updateSkipNumber(i, Number(e.target.value))} />
             </div>)}
           </div>
-          <button className="setting-list__add" id="add-skip-number" onClick={addSkipNumber}>+</button>
+          <button className="setting-list__add" id="add-skip-number" onClick={() => addSkipNumber(0)}>+</button>
         </div>
       </div>
     </div>
@@ -264,7 +212,7 @@ export default function Settings(props: {
       </h2>
 
       <div className="setting">
-        Heading provider {props.headingProvider ?? 'N/A'}: {props.heading ?? 'N/A'}
+        Heading provider {props.headingProvider ?? 'N/A'}: {props.heading === undefined ? 'N/A' : Math.round(props.heading)}
       </div>
 
       <div className="setting">

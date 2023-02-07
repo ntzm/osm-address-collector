@@ -8,26 +8,37 @@ import { getOsmFile } from "./osm-xml"
 import Settings from "./Settings"
 import SubmitButton from "./SubmitButton"
 import TopBar from "./TopBar"
-import { Address, CustomTag, DeviceOrientationEventiOS, Direction, Note, Position, SurveyState, WebkitDeviceOrientationEvent } from "./types"
+import { DeviceOrientationEventiOS, Direction, SurveyState, WebkitDeviceOrientationEvent } from "./types"
 import {saveAs} from 'file-saver-es'
 import NoteWriter from "./NoteWriter"
 import guessNextNumber from "./guess-next-number"
+import { useBoundStore } from "./store"
 
 function App() {
+  const addresses = useBoundStore(s => s.addresses)
+  const addAddress = useBoundStore(s => s.addAddress)
+  const removeLastAddress = useBoundStore(s => s.removeLastAddress)
+
+  const notes = useBoundStore(s => s.notes)
+  const dispatchAddNote = useBoundStore(s => s.addNote)
+
+  const position = useBoundStore(s => s.position)
+  const updatePosition = useBoundStore(s => s.updatePosition)
+  const clearPosition = useBoundStore(s => s.clearPosition)
+
+  const customTags = useBoundStore(s => s.customTags)
+  const skipNumbers = useBoundStore(s => s.skipNumbers)
+  const street = useBoundStore(s => s.street)
+  const throwDistance = useBoundStore(s => s.throwDistance)
+
   const [mapOpen, setMapOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [noteWriterOpen, setNoteWriterOpen] = useState(false)
   const [currentNumberOrName, setCurrentNumberOrName] = useState('')
-  const [street, setStreet] = useState('')
-  const [customTags, setCustomTags] = useState<CustomTag[]>([])
-  const [throwDistance, setThrowDistance] = useState(10)
-  const [skipNumbers, setSkipNumbers] = useState<number[]>([])
   const [surveyState, setSurveyState] = useState<SurveyState>('not started')
-  const [position, setPosition] = useState<GeolocationCoordinates | undefined>(undefined)
   const [positionWatchId, setPositionWatchId] = useState<number | undefined>(undefined)
   const [heading, setHeading] = useState<number | undefined>(undefined)
   const [headingProvider, setHeadingProvider] = useState<'Webkit compass heading' | 'Device orientation' | 'GPS heading' | undefined>(undefined)
-  const [notes, setNotes] = useState<Note[]>([])
   const [lastActions, setLastActions] = useState<string[]>([])
   const [skippedNumbers, setSkippedNumbers] = useState<number[]>([])
   const [numberIsGuessed, setNumberIsGuessed] = useState(false)
@@ -47,21 +58,17 @@ function App() {
       ...(lastActions[0] === undefined ? [] : [lastActions[0]]),
     ])
   }
-  const [addresses, setAddresses] = useState<Address[]>([])
   const addNote = (content: string) => {
     if (position === undefined) {
       // todo type checking
       return
     }
 
-    setNotes([
-      ...notes,
-      {
-        latitude: position.latitude,
-        longitude: position.longitude,
-        content,
-      },
-    ])
+    dispatchAddNote({
+      latitude: position.latitude,
+      longitude: position.longitude,
+      content,
+    })
 
     addAction('+ note')
   }
@@ -104,7 +111,7 @@ function App() {
     }
 
     const newAddresses = [...addresses, newAddress]
-    setAddresses(newAddresses)
+    addAddress(newAddress)
     addAction(`+ ${direction} ${currentNumberOrName}`)
 
     const [guessedNextNumber, lastSkippedNumbers] = guessNextNumber(newAddresses, skipNumbers)
@@ -128,7 +135,7 @@ function App() {
 
     addAction(`- ${last.direction} ${last.numberOrName}`)
 
-    setAddresses(addresses.slice(0, -1))
+    removeLastAddress()
   }
 
   const canRequestOrientationPermission = (event: typeof DeviceOrientationEvent | DeviceOrientationEventiOS): event is DeviceOrientationEventiOS => {
@@ -190,7 +197,7 @@ function App() {
 
       const watchId = navigator.geolocation.watchPosition(
         position => {
-          setPosition(position.coords)
+          updatePosition(position.coords)
           setSurveyState('started')
 
           if (headingProvider === undefined || headingProvider === 'GPS heading') {
@@ -247,7 +254,7 @@ function App() {
       }
       window.removeEventListener('deviceorientationabsolute', handleHeading)
       window.removeEventListener('deviceorientation', handleHeading)
-      setPosition(undefined)
+      clearPosition()
       setHeading(undefined)
       setHeadingProvider(undefined)
       return
@@ -278,60 +285,23 @@ function App() {
     )
   }
 
-  const updateAddressPosition = (i: number, position: Position) => {
-    setAddresses(
-      addresses.map((address, index) => {
-        if (index === i) {
-          return {
-            ...address,
-            ...position,
-          }
-        }
-
-        return address
-      })
-    )
-  }
-
-  const deleteAddress = (i: number) => {
-    setAddresses(
-      addresses.filter((_, index) => index !== i)
-    )
-  }
-
   const surveyDisabled = surveyState !== 'started'
 
   return <>
     {
       mapOpen &&
-      <Map
-        position={position}
-        addresses={addresses}
-        onUpdateAddressPosition={updateAddressPosition}
-        onDeleteAddress={deleteAddress}
-        notes={notes}
-        onClose={() => setMapOpen(false)}
-      />
+      <Map onClose={() => setMapOpen(false)} />
     }
-    {
-      settingsOpen
-      ? <Settings
-        position={position}
+    { settingsOpen &&
+      <Settings
         heading={heading}
         headingProvider={headingProvider}
         onClose={() => setSettingsOpen(false)}
-        street={street}
-        onStreetChange={setStreet}
-        customTags={customTags}
-        onCustomTagsChange={setCustomTags}
-        throwDistance={throwDistance}
-        onThrowDistanceChange={setThrowDistance}
-        skipNumbers={skipNumbers}
-        onSkipNumbersChange={setSkipNumbers}
       />
-      : ''
     }
-    {noteWriterOpen ? <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} /> : ''}
+    { noteWriterOpen &&
+      <NoteWriter onClose={() => setNoteWriterOpen(false)} onAdd={addNote} />
+    }
 
     <div className="container">
       <TopBar

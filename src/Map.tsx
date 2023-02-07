@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Address, Note, Position } from "./types";
 import AddressMarker from "./AddressMarker";
 import NoteMarker from "./NoteMarker";
+import { useBoundStore } from "./store";
 
 const MapPopup = styled.div`
   position: absolute;
@@ -29,19 +30,19 @@ const StyledMapContainer = styled(MapContainer)`
   width: 100%;
 `
 
-export default function Map(props: {
-  position: GeolocationCoordinates | undefined
-  onClose: () => void
-  addresses: Address[]
-  onUpdateAddressPosition: (i: number, position: Position) => void
-  onDeleteAddress: (i: number) => void
-  notes: Note[]
-}) {
+export default function Map(props: { onClose: () => void }) {
+  const addresses = useBoundStore(s => s.addresses)
+  const updateAddressPosition = useBoundStore(s => s.updateAddressPosition)
+  const removeAddress = useBoundStore(s => s.removeAddress)
+
+  const notes = useBoundStore(s => s.notes)
+  const position = useBoundStore(s => s.position)
+
   return (
     <MapPopup>
       <CloseButton onClick={() => props.onClose()}>Close</CloseButton>
       <StyledMapContainer
-        center={props.position ? [props.position.latitude, props.position.longitude] : [0, 0]}
+        center={position ? [position.latitude, position.longitude] : [0, 0]}
         zoom={18}
         zoomControl={false}
       >
@@ -52,15 +53,15 @@ export default function Map(props: {
           maxZoom={20}
         />
         {/* todo generate and use ids */}
-        { props.addresses.map((address, i) =>
+        { addresses.map((address, i) =>
           <AddressMarker
-            onUpdatePosition={(position) => props.onUpdateAddressPosition(i, position)}
-            onDelete={() => props.onDeleteAddress(i)}
+            onUpdatePosition={(position) => updateAddressPosition(i, position)}
+            onDelete={() => removeAddress(i)}
             key={i}
             address={address}
           />
         ) }
-        {props.notes.map((note, i) => <NoteMarker key={i} note={note} />)}
+        {notes.map((note, i) => <NoteMarker key={i} note={note} />)}
       </StyledMapContainer>
     </MapPopup>
   )
