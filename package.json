@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "jsdom": "^21.1.0",
+    "prettier": "^2.8.3",
     "tsx": "^3.12.2",
     "w3c-xmlserializer": "^4.0.0"
   },
@@ -34,5 +35,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "node --loader tsx --test test/*.test.ts"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "semi": false,
+    "singleQuote": true
   }
 }
