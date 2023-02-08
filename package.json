@@ -2,6 +2,8 @@
   "name": "osm-address-collector",
   "type": "module",
   "dependencies": {
+    "@mantine/core": "^5.10.3",
+    "@mantine/hooks": "^5.10.3",
     "@turf/bbox": "^6.5.0",
     "@turf/buffer": "^6.5.0",
     "@turf/destination": "^6.5.0",
