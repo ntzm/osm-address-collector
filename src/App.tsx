@@ -338,9 +338,10 @@ function App() {
     <>
       {page === 'map' && <Map onClose={() => setPage('keypad')} />}
       {page === 'settings' && <Settings onClose={() => setPage('keypad')} />}
-      {page === 'note-writer' && (
-        <NoteWriter onClose={() => setPage('keypad')} />
-      )}
+      <NoteWriter
+        isOpened={page === 'note-writer'}
+        onClose={() => setPage('keypad')}
+      />
       <div className="container">
         <TopBar
           onOpenMap={() => setPage('map')}
