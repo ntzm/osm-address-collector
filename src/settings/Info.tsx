@@ -1,12 +1,4 @@
-import {
-  Accordion,
-  ActionIcon,
-  Anchor,
-  Button,
-  NavLink,
-  Stack,
-  Text,
-} from '@mantine/core'
+import { Accordion, NavLink } from '@mantine/core'
 import {
   IconBrandGithub,
   IconBug,
