@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useBoundStore } from '../../store'
 import findNearestStreets from './find-nearest-streets'
-import SettingCategory from '../SettingCategory'
 import {
   Accordion,
   ActionIcon,
@@ -21,11 +20,6 @@ import {
 } from '@tabler/icons-react'
 
 export default function Street() {
-  const help = `Add a street to address nodes.
-The street you choose will only be applied to addresses going forward.
-You can type in the street name manually, or click "Get streets" to retrieve a list of streets near to you.
-You can change the distance it will look for nearby streets with the "Street search distance" slider.`
-
   const position = useBoundStore((s) => s.position)
 
   const street = useBoundStore((s) => s.street)

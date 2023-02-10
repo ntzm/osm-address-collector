@@ -4,7 +4,6 @@ import {
   Autocomplete,
   Badge,
   Button,
-  Center,
   Grid,
   Input,
   Stack,
@@ -13,7 +12,6 @@ import {
 import { IconPlus, IconTags, IconX } from '@tabler/icons-react'
 import { Fragment } from 'react'
 import { useBoundStore } from '../../store'
-import SettingCategory from '../SettingCategory'
 
 export default function CustomTags() {
   const customTags = useBoundStore((s) => s.customTags)

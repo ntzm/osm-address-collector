@@ -12,6 +12,7 @@ import {
   IconSettings,
   IconTags,
 } from '@tabler/icons-react'
+import Info from './Info'
 
 const SettingsPopup = styled.div`
   position: absolute;
@@ -38,59 +39,21 @@ export default function Settings(props: {
       padding="xs"
     >
       <Accordion
-        defaultValue={['street', 'general', 'skip-numbers', 'custom-tags']}
+        defaultValue={[
+          'street',
+          'general',
+          'skip-numbers',
+          'custom-tags',
+          'info',
+        ]}
         multiple
       >
         <Street />
         <General />
         <SkipNumbers />
         <CustomTags />
+        <Info />
       </Accordion>
     </Modal>
-  )
-
-  return (
-    <SettingsPopup>
-      <button onClick={() => props.onClose()}>x</button>
-
-      <Street />
-      <General />
-      <SkipNumbers />
-      <CustomTags />
-
-      <SettingCategory heading="Info">
-        <div className="setting">
-          <a
-            href="https://github.com/ntzm/osm-address-collector/blob/main/CHANGELOG.md"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Latest changes
-          </a>
-        </div>
-
-        <div className="setting">
-          <a
-            href="https://github.com/ntzm/osm-address-collector"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-        </div>
-
-        <div className="setting">
-          <a
-            href="https://github.com/ntzm/osm-address-collector/issues/new"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Report a bug or request a feature
-          </a>
-        </div>
-      </SettingCategory>
-
-      <Advanced />
-    </SettingsPopup>
   )
 }
