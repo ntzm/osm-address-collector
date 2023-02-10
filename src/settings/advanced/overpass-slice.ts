@@ -13,8 +13,7 @@ export interface OverpassSlice {
 }
 
 const DEFAULT_OVERPASS_TIMEOUT = 10000
-const DEFAULT_OVERPASS_ENDPOINT =
-  'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+const DEFAULT_OVERPASS_ENDPOINT = 'https://overpass-api.de/api/interpreter'
 const DEFAULT_STREET_SEARCH_DISTANCE = 10
 
 export const createOverpassSlice: SliceStateCreator<OverpassSlice> = (set) => ({

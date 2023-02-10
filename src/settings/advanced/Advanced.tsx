@@ -1,5 +1,6 @@
 import {
   Accordion,
+  Autocomplete,
   Button,
   Flex,
   Group,
@@ -17,6 +18,12 @@ import {
 } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useBoundStore } from '../../store'
+
+const OVERPASS_ENDPOINT_OPTIONS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter',
+]
 
 export default function Advanced() {
   const resetSkipNumbers = useBoundStore((s) => s.resetSkipNumbers)
@@ -95,10 +102,11 @@ export default function Advanced() {
               min={0}
               max={10000}
             />
-            <TextInput
+            <Autocomplete
+              data={OVERPASS_ENDPOINT_OPTIONS}
               label="Overpass endpoint"
               value={overpassEndpoint}
-              onChange={(e) => updateOverpassEndpoint(e.target.value)}
+              onChange={(e) => updateOverpassEndpoint(e)}
               error={isValidUrl(overpassEndpoint) ? '' : 'URL is invalid'}
               type="url"
             />
