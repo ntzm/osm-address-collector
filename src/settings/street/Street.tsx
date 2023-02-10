@@ -91,6 +91,7 @@ You can change the distance it will look for nearby streets with the "Street sea
             rightSection={
               <Indicator
                 label={streets.length}
+                dot={false}
                 showZero={false}
                 overflowCount={10}
                 position="top-start"
