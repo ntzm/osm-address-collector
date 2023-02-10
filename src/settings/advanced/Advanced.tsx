@@ -100,7 +100,7 @@ export default function Advanced() {
               value={overpassTimeout}
               onChange={updateOverpassTimeout}
               min={0}
-              max={10000}
+              max={100_000}
             />
             <Autocomplete
               data={OVERPASS_ENDPOINT_OPTIONS}
