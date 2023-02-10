@@ -37,7 +37,7 @@ export default function NoteWriter(props: {
     <Modal opened={props.isOpened} onClose={close} title="Add a note">
       <Stack>
         <Textarea
-          data-autoFocus
+          data-autofocus
           description={`${content.length}/255`}
           value={content}
           onChange={(e) => setContent(e.target.value)}

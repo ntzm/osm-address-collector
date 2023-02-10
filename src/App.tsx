@@ -18,6 +18,23 @@ import { saveAs } from 'file-saver-es'
 import NoteWriter from './notes/NoteWriter'
 import guessNextNumber from './guess-next-number'
 import { useBoundStore } from './store'
+import {
+  ActionIcon,
+  Button,
+  Container,
+  Grid,
+  Navbar,
+  SimpleGrid,
+  TextInput,
+} from '@mantine/core'
+import {
+  IconArrowBackUp,
+  IconArrowLeft,
+  IconArrowRight,
+  IconArrowUp,
+  IconNote,
+  IconX,
+} from '@tabler/icons-react'
 
 function App() {
   const addresses = useBoundStore((s) => s.addresses)
@@ -342,15 +359,16 @@ function App() {
         isOpened={page === 'note-writer'}
         onClose={() => setPage('keypad')}
       />
-      <div className="container">
-        <TopBar
+
+      <Container size="xs" px="xs" h="100%">
+        {/* <TopBar
           onOpenMap={() => setPage('map')}
           onOpenSettings={() => setPage('settings')}
           accuracy={position?.accuracy}
           lastActions={lastActions}
-        />
+        /> */}
 
-        <div className="row">
+        {/* <div className="row">
           <input
             type="text"
             id="current-number-or-name"
@@ -360,120 +378,141 @@ function App() {
             onFocus={clearGuess}
             style={numberIsGuessed ? { color: '#999' } : {}}
           />
-        </div>
+        </div> */}
 
-        <div className="row">
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="L"
-            onClick={submit}
-          />
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="F"
-            onClick={submit}
-          />
-          <SubmitButton
-            disabled={surveyDisabled}
-            direction="R"
-            onClick={submit}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={1}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={2}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={3}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={4}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={5}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={6}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={7}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={8}
-            onClick={appendNumber}
-          />
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={9}
-            onClick={appendNumber}
-          />
-        </div>
-
-        <div className="row">
-          <KeypadButton
-            disabled={['starting', 'finishing'].includes(surveyState)}
-            onClick={startOrPause}
-          >
-            {surveyState === 'started' ? 'Pause' : 'Start'}
-          </KeypadButton>
-          <KeypadNumber
-            disabled={surveyDisabled}
-            number={0}
-            onClick={appendNumber}
-          />
-          <IconButton
-            disabled={surveyDisabled}
-            src="icons/clear_black_24dp.svg"
-            onClick={clearNumberOrName}
-            colour="#faa0a0"
-          />
-        </div>
-
-        <div className="row">
-          <IconButton
-            src="icons/note_black_24dp.svg"
-            disabled={surveyDisabled}
-            onClick={() => setPage('note-writer')}
-          />
-          <KeypadButton
-            disabled={!['started', 'paused'].includes(surveyState)}
-            onClick={done}
-            colour="#aec6cf"
-          >
-            Done
-          </KeypadButton>
-          <IconButton
-            src="icons/undo_black_24dp.svg"
-            disabled={surveyDisabled}
-            onClick={undo}
-          />
-        </div>
-      </div>
+        <Grid h="100%">
+          <Grid.Col span={12}>
+            <TextInput
+              w="100%"
+              h="100%"
+              size="xl"
+              value={currentNumberOrName}
+              onChange={(e) => setCurrentNumberOrName(e.target.value)}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <ActionIcon
+              variant="light"
+              w="100%"
+              h="100%"
+              size="xl"
+              onClick={() => submit('L')}
+              disabled={surveyDisabled}
+            >
+              <IconArrowLeft />
+            </ActionIcon>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <ActionIcon
+              variant="light"
+              w="100%"
+              h="100%"
+              size="xl"
+              onClick={() => submit('F')}
+              disabled={surveyDisabled}
+            >
+              <IconArrowUp />
+            </ActionIcon>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <ActionIcon
+              variant="light"
+              w="100%"
+              h="100%"
+              size="xl"
+              onClick={() => submit('R')}
+              disabled={surveyDisabled}
+            >
+              <IconArrowRight />
+            </ActionIcon>
+          </Grid.Col>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+            <Grid.Col key={n} span={4}>
+              <Button
+                w="100%"
+                h="100%"
+                variant="light"
+                size="xl"
+                onClick={() => appendNumber(n)}
+                disabled={surveyDisabled}
+              >
+                {n}
+              </Button>
+            </Grid.Col>
+          ))}
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="filled"
+              size="xl"
+              onClick={startOrPause}
+              disabled={['starting', 'finishing'].includes(surveyState)}
+            >
+              {surveyState === 'started' ? 'Pause' : 'Start'}
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="light"
+              size="xl"
+              disabled={surveyDisabled}
+            >
+              0
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="light"
+              leftIcon={<IconX />}
+              disabled={surveyDisabled}
+              onClick={clearNumberOrName}
+            >
+              Clear
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="light"
+              onClick={() => setPage('note-writer')}
+              leftIcon={<IconNote />}
+              disabled={surveyDisabled}
+            >
+              Note
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="filled"
+              size="xl"
+              disabled={!['started', 'paused'].includes(surveyState)}
+              onClick={done}
+            >
+              Done
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <Button
+              w="100%"
+              h="100%"
+              variant="light"
+              leftIcon={<IconArrowBackUp />}
+              disabled={surveyDisabled}
+              onClick={undo}
+            >
+              Undo
+            </Button>
+          </Grid.Col>
+        </Grid>
+      </Container>
     </>
   )
 }
