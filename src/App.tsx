@@ -17,8 +17,14 @@ import {
   ActionIcon,
   Button,
   Container,
+  Divider,
+  Flex,
   Grid,
+  Group,
   LoadingOverlay,
+  Modal,
+  Stack,
+  Text,
   TextInput,
 } from '@mantine/core'
 import {
@@ -31,6 +37,7 @@ import {
   IconMap,
   IconNote,
   IconSettings,
+  IconTrash,
   IconX,
 } from '@tabler/icons-react'
 
@@ -210,23 +217,31 @@ function App() {
     updateHeadingProvider('Device orientation')
   }
 
+  const [loadLastSessionModalOpened, setLoadLastSessionModalOpened] =
+    useState(false)
+
+  const deleteLastSession = () => {
+    clearAddresses()
+    clearNotes()
+    setLoadLastSessionModalOpened(false)
+    startOrPause()
+  }
+
   const startOrPause = async () => {
     if (
       surveyState === 'not started' &&
-      (addresses.length > 0 || notes.length > 0) &&
-      !confirm(
-        `You have ${addresses.length} unsaved address${
-          addresses.length === 1 ? '' : 'es'
-        } and ${notes.length} unsaved note${
-          notes.length === 1 ? '' : 's'
-        } from the previous session, do you want to load them?`,
-      )
+      (addresses.length > 0 || notes.length > 0)
     ) {
-      clearAddresses()
-      clearNotes()
+      setLoadLastSessionModalOpened(true)
+      setSurveyState('starting')
+      return
     }
 
-    if (surveyState === 'not started' || surveyState == 'paused') {
+    if (
+      surveyState === 'starting' ||
+      surveyState === 'not started' ||
+      surveyState == 'paused'
+    ) {
       setSurveyState('starting')
 
       if (canRequestOrientationPermission(DeviceOrientationEvent)) {
@@ -365,6 +380,40 @@ function App() {
         isOpened={page === 'note-writer'}
         onClose={() => setPage('keypad')}
       />
+
+      <Modal
+        opened={loadLastSessionModalOpened}
+        withCloseButton={false}
+        onClose={deleteLastSession}
+        centered
+      >
+        <Stack>
+          <Text>
+            You have {addresses.length} unsaved address
+            {addresses.length === 1 ? '' : 'es'} and {notes.length} unsaved note
+            {notes.length === 1 ? '' : 's'} from the previous session, do you
+            want to load them?
+          </Text>
+          <Group position="apart">
+            <Button
+              variant="outline"
+              color="red"
+              leftIcon={<IconTrash />}
+              onClick={deleteLastSession}
+            >
+              No, delete them
+            </Button>
+            <Button
+              onClick={() => {
+                startOrPause()
+                setLoadLastSessionModalOpened(false)
+              }}
+            >
+              Yes, load them
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
 
       <Container size="xs" px={0} h="100%">
         <LoadingOverlay visible={surveyState === 'finishing'} />
