@@ -15,6 +15,14 @@ export default async function overpassQuery(
 
   clearTimeout(timeoutId)
 
+  if (!response.ok) {
+    throw new Error(
+      `HTTP code ${
+        response.status
+      } occurred with body ${await response.text()}`,
+    )
+  }
+
   const body = await response.json()
 
   return body.elements

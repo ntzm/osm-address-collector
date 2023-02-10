@@ -61,12 +61,19 @@ export default function Street() {
         overpassTimeout,
       )
     } catch (error) {
-      if (error instanceof Error) {
-        setStreetsError(error.message)
-      } else {
-        setStreetsError('Unknown error')
-      }
       setStreetsStatus('error')
+
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          setStreetsError(`Timed out after ${overpassTimeout}ms`)
+          return
+        }
+
+        setStreetsError(`${error.name} - ${error.message}`)
+        return
+      }
+
+      setStreetsError('Unknown error')
       return
     }
 
