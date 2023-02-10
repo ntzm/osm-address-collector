@@ -41,32 +41,10 @@ export default function Settings(props: {
         defaultValue={['street', 'general', 'skip-numbers', 'custom-tags']}
         multiple
       >
-        <Accordion.Item value="street">
-          <Accordion.Control icon={<IconRoad />}>Street</Accordion.Control>
-          <Accordion.Panel>
-            <Street />
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="general">
-          <Accordion.Control icon={<IconSettings />}>General</Accordion.Control>
-          <Accordion.Panel>
-            <General />
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="skip-numbers">
-          <Accordion.Control icon={<IconNumbers />}>
-            Skip Numbers
-          </Accordion.Control>
-          <Accordion.Panel>
-            <SkipNumbers />
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="custom-tags">
-          <Accordion.Control icon={<IconTags />}>Custom Tags</Accordion.Control>
-          <Accordion.Panel>
-            <CustomTags />
-          </Accordion.Panel>
-        </Accordion.Item>
+        <Street />
+        <General />
+        <SkipNumbers />
+        <CustomTags />
       </Accordion>
     </Modal>
   )

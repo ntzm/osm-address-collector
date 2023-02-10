@@ -3,6 +3,7 @@ import { useBoundStore } from '../../store'
 import findNearestStreets from './find-nearest-streets'
 import SettingCategory from '../SettingCategory'
 import {
+  Accordion,
   ActionIcon,
   Alert,
   Anchor,
@@ -80,137 +81,71 @@ You can change the distance it will look for nearby streets with the "Street sea
   }
 
   return (
-    <>
-      <Stack>
-        <Autocomplete
-          data={streets}
-          placeholder="Street"
-          rightSection={
-            <Indicator
-              label={streets.length}
-              showZero={false}
-              overflowCount={10}
-              position="top-start"
-              size={14}
-            >
-              <ActionIcon
-                onClick={getStreets}
-                variant="outline"
-                loading={streetsStatus === 'getting'}
+    <Accordion.Item value="street">
+      <Accordion.Control icon={<IconRoad />}>Street</Accordion.Control>
+      <Accordion.Panel>
+        <Stack>
+          <Autocomplete
+            data={streets}
+            placeholder="Street"
+            rightSection={
+              <Indicator
+                label={streets.length}
+                showZero={false}
+                overflowCount={10}
+                position="top-start"
+                size={14}
               >
-                <IconDownload size={20} />
-              </ActionIcon>
-            </Indicator>
-          }
-          autoCapitalize="words"
-          autoComplete="off"
-          value={street}
-          onChange={updateStreet}
-          description={
-            <>
-              Street data from{' '}
-              <Anchor
-                href="https://openstreetmap.org/copyright"
-                target="_blank"
-                rel="noreferrer"
-              >
-                OpenStreetMap
-              </Anchor>
-            </>
-          }
-        />
-        {position === undefined && (
-          <Alert icon={<IconInfoCircle />} color="orange">
-            Loading streets requires an active GPS connection. Please start a
-            survey to load streets.
-          </Alert>
-        )}
-        {streetsStatus === 'error' && (
-          <Alert icon={<IconAlertCircle />} color="red">
-            Error: {streetsError}
-          </Alert>
-        )}
-        <Input.Wrapper>
-          <Input.Label>Search distance</Input.Label>
-          <Slider
-            mt="xs"
-            label={(value) => `${value} m`}
-            min={1}
-            max={50}
-            value={streetSearchDistance}
-            onChange={updateStreetSearchDistance}
+                <ActionIcon
+                  onClick={getStreets}
+                  variant="outline"
+                  loading={streetsStatus === 'getting'}
+                >
+                  <IconDownload size={20} />
+                </ActionIcon>
+              </Indicator>
+            }
+            autoCapitalize="words"
+            autoComplete="off"
+            value={street}
+            onChange={updateStreet}
+            description={
+              <>
+                Street data from{' '}
+                <Anchor
+                  href="https://openstreetmap.org/copyright"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  OpenStreetMap
+                </Anchor>
+              </>
+            }
           />
-        </Input.Wrapper>
-      </Stack>
-    </>
-  )
-
-  return (
-    <SettingCategory heading="Street" help={help}>
-      <datalist id="streets">
-        {streets.map((street) => (
-          <option key={street} value={street} />
-        ))}
-      </datalist>
-
-      <div className="setting">
-        <input
-          className="setting-input"
-          type="text"
-          id="street"
-          list="streets"
-          placeholder="Street"
-          autoComplete="off"
-          value={street}
-          onChange={(e) => updateStreet(e.target.value)}
-        />
-      </div>
-
-      <div className="setting">
-        <button
-          className="setting-button"
-          disabled={streetsStatus === 'getting' || position === undefined}
-          onClick={getStreets}
-        >
-          Get streets
-        </button>
-        {streetsStatus === 'none' && 'Click "Get streets" to get streets'}
-        {streetsStatus === 'getting' && 'Getting streets...'}
-        {streetsStatus === 'complete' && (
-          <span style={{ color: 'green' }}>
-            Got {streets.length} street{streets.length === 1 ? '' : 's'}
-          </span>
-        )}
-        {streetsStatus === 'error' && (
-          <span style={{ color: 'red' }}>Error: {streetsError}</span>
-        )}
-        <p className="disclaimer">
-          Street data from{' '}
-          <a
-            href="https://openstreetmap.org/copyright"
-            target="_blank"
-            rel="noreferrer"
-          >
-            OpenStreetMap
-          </a>
-        </p>
-      </div>
-
-      <div className="setting">
-        <label htmlFor="street-search-distance">
-          Street search distance: {streetSearchDistance}m
-        </label>
-        <br />
-        <input
-          className="setting-input"
-          type="range"
-          id="street-search-distance"
-          min="0"
-          max="50"
-          value={streetSearchDistance}
-          onChange={(e) => updateStreetSearchDistance(Number(e.target.value))}
-        />
-      </div>
-    </SettingCategory>
+          {position === undefined && (
+            <Alert icon={<IconInfoCircle />} color="orange">
+              Loading streets requires an active GPS connection. Please start a
+              survey to load streets.
+            </Alert>
+          )}
+          {streetsStatus === 'error' && (
+            <Alert icon={<IconAlertCircle />} color="red">
+              Error: {streetsError}
+            </Alert>
+          )}
+          <Input.Wrapper>
+            <Input.Label>Search distance</Input.Label>
+            <Slider
+              mt="xs"
+              label={(value) => `${value} m`}
+              min={1}
+              max={50}
+              value={streetSearchDistance}
+              onChange={updateStreetSearchDistance}
+            />
+          </Input.Wrapper>
+        </Stack>
+      </Accordion.Panel>
+    </Accordion.Item>
   )
 }
