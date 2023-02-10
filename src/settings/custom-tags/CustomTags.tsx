@@ -4,20 +4,12 @@ import {
   Autocomplete,
   Badge,
   Button,
-  Grid,
   Group,
   Input,
   Stack,
   TextInput,
 } from '@mantine/core'
-import {
-  IconEqual,
-  IconPlus,
-  IconTags,
-  IconTrash,
-  IconX,
-} from '@tabler/icons-react'
-import { Fragment } from 'react'
+import { IconEqual, IconPlus, IconTags, IconTrash } from '@tabler/icons-react'
 import { useBoundStore } from '../../store'
 
 export default function CustomTags() {
