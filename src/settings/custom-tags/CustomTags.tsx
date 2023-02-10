@@ -5,11 +5,18 @@ import {
   Badge,
   Button,
   Grid,
+  Group,
   Input,
   Stack,
   TextInput,
 } from '@mantine/core'
-import { IconPlus, IconTags, IconX } from '@tabler/icons-react'
+import {
+  IconEqual,
+  IconPlus,
+  IconTags,
+  IconTrash,
+  IconX,
+} from '@tabler/icons-react'
 import { Fragment } from 'react'
 import { useBoundStore } from '../../store'
 
@@ -47,37 +54,33 @@ export default function CustomTags() {
           <Input.Description>
             Add custom tags to each address node from now on
           </Input.Description>
-          <Grid gutter="xs" columns={13}>
-            {customTags.map((customTag, i) => (
-              <Fragment key={i}>
-                <Grid.Col span={1}>
+          {customTags.map((customTag, i) => (
+            <Group grow spacing={0} key={i}>
+              <Autocomplete
+                data={tagKeys}
+                value={customTag.key}
+                onChange={(key) => updateCustomTagKey(i, key)}
+                autoCapitalize="none"
+                placeholder="Key"
+                rightSection={<IconEqual color="grey" />}
+              />
+              <TextInput
+                value={customTag.value}
+                onChange={(e) => updateCustomTagValue(i, e.target.value)}
+                placeholder="Value"
+                rightSection={
                   <ActionIcon
                     size="xs"
-                    variant="filled"
+                    variant="outline"
                     onClick={() => removeCustomTag(i)}
+                    color="red"
                   >
-                    <IconX />
+                    <IconTrash />
                   </ActionIcon>
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <Autocomplete
-                    data={tagKeys}
-                    value={customTag.key}
-                    onChange={(key) => updateCustomTagKey(i, key)}
-                    autoCapitalize="none"
-                    placeholder="Key"
-                  />
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <TextInput
-                    value={customTag.value}
-                    onChange={(e) => updateCustomTagValue(i, e.target.value)}
-                    placeholder="Value"
-                  />
-                </Grid.Col>
-              </Fragment>
-            ))}
-          </Grid>
+                }
+              />
+            </Group>
+          ))}
           <Button
             onClick={() => addCustomTag({ key: '', value: '' })}
             leftIcon={<IconPlus />}
