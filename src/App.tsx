@@ -400,7 +400,9 @@ function App() {
               placeholder="House number or name"
               value={currentNumberOrName}
               onChange={(e) => setCurrentNumberOrName(e.target.value)}
-              icon={numberIsGuessed ? <IconBrain /> : <IconHomePlus />}
+              icon={
+                numberIsGuessed ? <IconBrain color="green" /> : <IconHomePlus />
+              }
               autoCapitalize="words"
               onFocus={clearGuess}
               disabled={surveyDisabled}
