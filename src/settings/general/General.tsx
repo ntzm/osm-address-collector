@@ -1,3 +1,4 @@
+import { Input, Slider } from '@mantine/core'
 import { useBoundStore } from '../../store'
 import SettingCategory from '../SettingCategory'
 
@@ -9,19 +10,15 @@ If you add an address node by pressing the left arrow key, it will throw the nod
   const updateThrowDistance = useBoundStore((s) => s.updateThrowDistance)
 
   return (
-    <SettingCategory heading="General" help={help}>
-      <div className="setting">
-        <label htmlFor="distance">Throw distance: {throwDistance}m</label>
-        <input
-          className="setting-input"
-          type="range"
-          id="distance"
-          min="1"
-          max="100"
-          value={throwDistance}
-          onChange={(e) => updateThrowDistance(Number(e.target.value))}
-        />
-      </div>
-    </SettingCategory>
+    <Input.Wrapper>
+      <Input.Label>Throw distance</Input.Label>
+      <Slider
+        label={(value) => `${value} m`}
+        min={1}
+        max={100}
+        value={throwDistance}
+        onChange={updateThrowDistance}
+      />
+    </Input.Wrapper>
   )
 }

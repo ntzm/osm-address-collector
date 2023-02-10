@@ -78,7 +78,6 @@ You can change the distance it will look for nearby streets with the "Street sea
     <>
       <Stack>
         <Autocomplete
-          label="Street"
           data={streets}
           icon={<IconRoad />}
           rightSection={

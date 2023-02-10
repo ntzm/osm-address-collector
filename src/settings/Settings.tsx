@@ -5,7 +5,7 @@ import Street from './street/Street'
 import General from './general/General'
 import SettingCategory from './SettingCategory'
 import Advanced from './advanced/Advanced'
-import { Modal, Select, TextInput } from '@mantine/core'
+import { Divider, Modal, Select, TextInput } from '@mantine/core'
 
 const SettingsPopup = styled.div`
   position: absolute;
@@ -30,7 +30,12 @@ export default function Settings(props: {
       opened={props.isOpened}
       onClose={props.onClose}
     >
+      <Divider label="Street" />
       <Street />
+      <Divider label="General" />
+      <General />
+      <Divider label="Skip numbers" />
+      <SkipNumbers />
     </Modal>
   )
 
