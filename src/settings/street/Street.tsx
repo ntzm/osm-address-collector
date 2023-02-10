@@ -79,7 +79,7 @@ You can change the distance it will look for nearby streets with the "Street sea
       <Stack>
         <Autocomplete
           data={streets}
-          icon={<IconRoad />}
+          placeholder="Street"
           rightSection={
             <Indicator
               label={streets.length}
@@ -122,6 +122,7 @@ You can change the distance it will look for nearby streets with the "Street sea
         <Input.Wrapper>
           <Input.Label>Search distance</Input.Label>
           <Slider
+            mt="xs"
             label={(value) => `${value} m`}
             min={1}
             max={50}

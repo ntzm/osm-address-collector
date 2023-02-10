@@ -12,7 +12,11 @@ If you add an address node by pressing the left arrow key, it will throw the nod
   return (
     <Input.Wrapper>
       <Input.Label>Throw distance</Input.Label>
+      <Input.Description>
+        The distance that address nodes are thrown from your current position
+      </Input.Description>
       <Slider
+        mt="xs"
         label={(value) => `${value} m`}
         min={1}
         max={100}

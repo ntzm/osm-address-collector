@@ -4,6 +4,8 @@ import {
   Button,
   Center,
   Grid,
+  Input,
+  Stack,
   TextInput,
 } from '@mantine/core'
 import { IconPlus, IconX } from '@tabler/icons-react'
@@ -11,9 +13,6 @@ import { useBoundStore } from '../../store'
 import SettingCategory from '../SettingCategory'
 
 export default function CustomTags() {
-  const help = `Add custom OSM tags to each address node.
-The tags you add will only be applied to addresses going forward.`
-
   const customTags = useBoundStore((s) => s.customTags)
   const addCustomTag = useBoundStore((s) => s.addCustomTag)
   const updateCustomTagKey = useBoundStore((s) => s.updateCustomTagKey)
@@ -38,46 +37,47 @@ The tags you add will only be applied to addresses going forward.`
   ]
 
   return (
-    <Grid gutter="xs" columns={13}>
-      {customTags.map((customTag, i) => (
-        <>
-          <Grid.Col span={1}>
-            <ActionIcon
-              size="xs"
-              variant="filled"
-              onClick={() => removeCustomTag(i)}
-            >
-              <IconX />
-            </ActionIcon>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Autocomplete
-              size="xs"
-              data={tagKeys}
-              value={customTag.key}
-              onChange={(key) => updateCustomTagKey(i, key)}
-              autoCapitalize="none"
-              placeholder="Key"
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <TextInput
-              size="xs"
-              value={customTag.value}
-              onChange={(e) => updateCustomTagValue(i, e.target.value)}
-              placeholder="Value"
-            />
-          </Grid.Col>
-        </>
-      ))}
-      <Grid.Col span={12}>
-        <Button
-          onClick={() => addCustomTag({ key: '', value: '' })}
-          leftIcon={<IconPlus />}
-        >
-          Add
-        </Button>
-      </Grid.Col>
-    </Grid>
+    <Stack spacing="xs">
+      <Input.Description>
+        Add custom tags to each address node from now on
+      </Input.Description>
+      <Grid gutter="xs" columns={13}>
+        {customTags.map((customTag, i) => (
+          <>
+            <Grid.Col span={1}>
+              <ActionIcon
+                size="xs"
+                variant="filled"
+                onClick={() => removeCustomTag(i)}
+              >
+                <IconX />
+              </ActionIcon>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Autocomplete
+                data={tagKeys}
+                value={customTag.key}
+                onChange={(key) => updateCustomTagKey(i, key)}
+                autoCapitalize="none"
+                placeholder="Key"
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <TextInput
+                value={customTag.value}
+                onChange={(e) => updateCustomTagValue(i, e.target.value)}
+                placeholder="Value"
+              />
+            </Grid.Col>
+          </>
+        ))}
+      </Grid>
+      <Button
+        onClick={() => addCustomTag({ key: '', value: '' })}
+        leftIcon={<IconPlus />}
+      >
+        Add
+      </Button>
+    </Stack>
   )
 }

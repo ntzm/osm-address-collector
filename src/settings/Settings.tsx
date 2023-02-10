@@ -5,7 +5,13 @@ import Street from './street/Street'
 import General from './general/General'
 import SettingCategory from './SettingCategory'
 import Advanced from './advanced/Advanced'
-import { Divider, Modal, Select, TextInput } from '@mantine/core'
+import { Accordion, Divider, Modal, Select, TextInput } from '@mantine/core'
+import {
+  IconNumbers,
+  IconRoad,
+  IconSettings,
+  IconTags,
+} from '@tabler/icons-react'
 
 const SettingsPopup = styled.div`
   position: absolute;
@@ -29,15 +35,39 @@ export default function Settings(props: {
       fullScreen
       opened={props.isOpened}
       onClose={props.onClose}
+      padding="xs"
     >
-      <Divider label="Street" />
-      <Street />
-      <Divider label="General" />
-      <General />
-      <Divider label="Skip numbers" />
-      <SkipNumbers />
-      <Divider label="Custom tags" />
-      <CustomTags />
+      <Accordion
+        defaultValue={['street', 'general', 'skip-numbers', 'custom-tags']}
+        multiple
+      >
+        <Accordion.Item value="street">
+          <Accordion.Control icon={<IconRoad />}>Street</Accordion.Control>
+          <Accordion.Panel>
+            <Street />
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="general">
+          <Accordion.Control icon={<IconSettings />}>General</Accordion.Control>
+          <Accordion.Panel>
+            <General />
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="skip-numbers">
+          <Accordion.Control icon={<IconNumbers />}>
+            Skip Numbers
+          </Accordion.Control>
+          <Accordion.Panel>
+            <SkipNumbers />
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="custom-tags">
+          <Accordion.Control icon={<IconTags />}>Custom Tags</Accordion.Control>
+          <Accordion.Panel>
+            <CustomTags />
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Modal>
   )
 

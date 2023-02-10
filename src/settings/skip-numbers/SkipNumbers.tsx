@@ -1,17 +1,13 @@
 import { MultiSelect } from '@mantine/core'
-import { IconPlus } from '@tabler/icons-react'
 import { useBoundStore } from '../../store'
-import SettingCategory from '../SettingCategory'
 
 export default function SkipNumbers() {
-  const help = `Choose some numbers to skip when the app tries to guess the next number in the sequence.
-For example, in the UK the number 13 is often skipped.`
-
   const skipNumbers = useBoundStore((s) => s.skipNumbers)
   const updateSkipNumbers = useBoundStore((s) => s.updateSkipNumbers)
 
   return (
     <MultiSelect
+      description="Define numbers to skip when guessing the next number in the sequence. For example, in the UK the number 13 is often skipped."
       data={skipNumbers}
       value={skipNumbers}
       onChange={updateSkipNumbers}
