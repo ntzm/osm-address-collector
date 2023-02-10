@@ -21,6 +21,7 @@ For example, in the UK the number 13 is often skipped.`
       getCreateLabel={(query) => `Add ${query}`}
       rightSection={' '}
       rightSectionWidth={0}
+      type="number"
     />
   )
 }
