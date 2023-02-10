@@ -9,6 +9,7 @@ import {
   TextInput,
 } from '@mantine/core'
 import { IconPlus, IconX } from '@tabler/icons-react'
+import { Fragment } from 'react'
 import { useBoundStore } from '../../store'
 import SettingCategory from '../SettingCategory'
 
@@ -43,7 +44,7 @@ export default function CustomTags() {
       </Input.Description>
       <Grid gutter="xs" columns={13}>
         {customTags.map((customTag, i) => (
-          <>
+          <Fragment key={i}>
             <Grid.Col span={1}>
               <ActionIcon
                 size="xs"
@@ -69,7 +70,7 @@ export default function CustomTags() {
                 placeholder="Value"
               />
             </Grid.Col>
-          </>
+          </Fragment>
         ))}
       </Grid>
       <Button

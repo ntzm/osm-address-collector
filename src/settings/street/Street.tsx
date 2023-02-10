@@ -12,7 +12,12 @@ import {
   Slider,
   Stack,
 } from '@mantine/core'
-import { IconAlertCircle, IconDownload, IconRoad } from '@tabler/icons-react'
+import {
+  IconAlertCircle,
+  IconDownload,
+  IconInfoCircle,
+  IconRoad,
+} from '@tabler/icons-react'
 
 export default function Street() {
   const help = `Add a street to address nodes.
@@ -114,6 +119,12 @@ You can change the distance it will look for nearby streets with the "Street sea
             </>
           }
         />
+        {position === undefined && (
+          <Alert icon={<IconInfoCircle />} color="orange">
+            Loading streets requires an active GPS connection. Please start a
+            survey to load streets.
+          </Alert>
+        )}
         {streetsStatus === 'error' && (
           <Alert icon={<IconAlertCircle />} color="red">
             Error: {streetsError}
