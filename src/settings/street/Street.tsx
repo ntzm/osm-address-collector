@@ -2,6 +2,17 @@ import { useState } from 'react'
 import { useBoundStore } from '../../store'
 import findNearestStreets from './find-nearest-streets'
 import SettingCategory from '../SettingCategory'
+import {
+  ActionIcon,
+  Alert,
+  Anchor,
+  Autocomplete,
+  Indicator,
+  Input,
+  Slider,
+  Stack,
+} from '@mantine/core'
+import { IconAlertCircle, IconDownload, IconRoad } from '@tabler/icons-react'
 
 export default function Street() {
   const help = `Add a street to address nodes.
@@ -19,7 +30,9 @@ You can change the distance it will look for nearby streets with the "Street sea
     (s) => s.updateStreetSearchDistance,
   )
 
-  const [streets, setStreets] = useState<string[]>([])
+  const streets = useBoundStore((s) => s.streets)
+  const updateStreets = useBoundStore((s) => s.updateStreets)
+
   const [streetsStatus, setStreetsStatus] = useState<
     'none' | 'getting' | 'complete' | 'error'
   >('none')
@@ -58,8 +71,68 @@ You can change the distance it will look for nearby streets with the "Street sea
     }
 
     setStreetsStatus('complete')
-    setStreets(newStreets)
+    updateStreets(newStreets)
   }
+
+  return (
+    <>
+      <Stack>
+        <Autocomplete
+          label="Street"
+          data={streets}
+          icon={<IconRoad />}
+          rightSection={
+            <Indicator
+              label={streets.length}
+              showZero={false}
+              overflowCount={10}
+              position="top-start"
+              size={14}
+            >
+              <ActionIcon
+                onClick={getStreets}
+                variant="outline"
+                loading={streetsStatus === 'getting'}
+              >
+                <IconDownload size={20} />
+              </ActionIcon>
+            </Indicator>
+          }
+          autoCapitalize="words"
+          autoComplete="off"
+          value={street}
+          onChange={updateStreet}
+          description={
+            <>
+              Street data from{' '}
+              <Anchor
+                href="https://openstreetmap.org/copyright"
+                target="_blank"
+                rel="noreferrer"
+              >
+                OpenStreetMap
+              </Anchor>
+            </>
+          }
+        />
+        {streetsStatus === 'error' && (
+          <Alert icon={<IconAlertCircle />} color="red">
+            Error: {streetsError}
+          </Alert>
+        )}
+        <Input.Wrapper>
+          <Input.Label>Search distance</Input.Label>
+          <Slider
+            label={(value) => `${value} m`}
+            min={1}
+            max={50}
+            value={streetSearchDistance}
+            onChange={updateStreetSearchDistance}
+          />
+        </Input.Wrapper>
+      </Stack>
+    </>
+  )
 
   return (
     <SettingCategory heading="Street" help={help}>

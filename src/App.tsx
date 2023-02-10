@@ -350,7 +350,10 @@ function App() {
   return (
     <>
       {page === 'map' && <Map onClose={() => setPage('keypad')} />}
-      {page === 'settings' && <Settings onClose={() => setPage('keypad')} />}
+      <Settings
+        isOpened={page === 'settings'}
+        onClose={() => setPage('keypad')}
+      />
       <NoteWriter
         isOpened={page === 'note-writer'}
         onClose={() => setPage('keypad')}

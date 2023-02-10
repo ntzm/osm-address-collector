@@ -5,6 +5,7 @@ import Street from './street/Street'
 import General from './general/General'
 import SettingCategory from './SettingCategory'
 import Advanced from './advanced/Advanced'
+import { Modal, Select, TextInput } from '@mantine/core'
 
 const SettingsPopup = styled.div`
   position: absolute;
@@ -18,7 +19,21 @@ const SettingsPopup = styled.div`
   font-size: 14pt;
 `
 
-export default function Settings(props: { onClose: () => void }) {
+export default function Settings(props: {
+  isOpened: boolean
+  onClose: () => void
+}) {
+  return (
+    <Modal
+      title="Settings"
+      fullScreen
+      opened={props.isOpened}
+      onClose={props.onClose}
+    >
+      <Street />
+    </Modal>
+  )
+
   return (
     <SettingsPopup>
       <button onClick={() => props.onClose()}>x</button>
