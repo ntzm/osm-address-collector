@@ -102,6 +102,7 @@ export default function Street() {
                   onClick={getStreets}
                   variant="outline"
                   loading={streetsStatus === 'getting'}
+                  disabled={position === undefined}
                 >
                   <IconDownload size={20} />
                 </ActionIcon>
