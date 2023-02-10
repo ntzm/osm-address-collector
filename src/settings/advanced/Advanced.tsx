@@ -2,9 +2,11 @@ import {
   Accordion,
   Button,
   Flex,
+  Group,
   Modal,
   NumberInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core'
 import {
@@ -59,23 +61,26 @@ export default function Advanced() {
     <>
       <Modal
         size="auto"
-        title="Are you sure you want to reset all settings?"
         opened={resetModalOpened}
+        withCloseButton={false}
         onClose={() => setResetModalOpened(false)}
         centered
       >
-        <Flex justify="space-between">
-          <Button
-            variant="outline"
-            leftIcon={<IconX />}
-            onClick={() => setResetModalOpened(false)}
-          >
-            No
-          </Button>
-          <Button color="red" leftIcon={<IconTrash />} onClick={reset}>
-            Yes
-          </Button>
-        </Flex>
+        <Stack>
+          <Text>Are you sure you want to reset all settings?</Text>
+          <Group position="apart">
+            <Button
+              variant="outline"
+              leftIcon={<IconX />}
+              onClick={() => setResetModalOpened(false)}
+            >
+              No
+            </Button>
+            <Button color="red" leftIcon={<IconTrash />} onClick={reset}>
+              Yes
+            </Button>
+          </Group>
+        </Stack>
       </Modal>
       <Accordion.Item value="advanced">
         <Accordion.Control icon={<IconAlertTriangle />}>
