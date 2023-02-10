@@ -13,7 +13,14 @@ import { saveAs } from 'file-saver-es'
 import NoteWriter from './notes/NoteWriter'
 import guessNextNumber from './guess-next-number'
 import { useBoundStore } from './store'
-import { ActionIcon, Button, Container, Grid, TextInput } from '@mantine/core'
+import {
+  ActionIcon,
+  Button,
+  Container,
+  Grid,
+  LoadingOverlay,
+  TextInput,
+} from '@mantine/core'
 import {
   IconArrowBackUp,
   IconArrowLeft,
@@ -360,6 +367,8 @@ function App() {
       />
 
       <Container size="xs" px={0} h="100%">
+        <LoadingOverlay visible={surveyState === 'finishing'} />
+
         <Grid h="100%" m={0} gutter="xs">
           <Grid.Col span={6}>
             <Button
