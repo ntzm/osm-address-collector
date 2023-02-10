@@ -1,10 +1,10 @@
 import { SliceStateCreator } from '../../store'
 
 export interface OverpassSlice {
-  overpassTimeout: string
+  overpassTimeout: number
   overpassEndpoint: string
   streetSearchDistance: number
-  updateOverpassTimeout: (overpassTimeout: string) => void
+  updateOverpassTimeout: (overpassTimeout: number) => void
   resetOverpassTimeout: () => void
   updateOverpassEndpoint: (overpassEndpoint: string) => void
   resetOverpassEndpoint: () => void
@@ -12,7 +12,7 @@ export interface OverpassSlice {
   resetStreetSearchDistance: () => void
 }
 
-const DEFAULT_OVERPASS_TIMEOUT = '10000'
+const DEFAULT_OVERPASS_TIMEOUT = 10000
 const DEFAULT_OVERPASS_ENDPOINT =
   'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
 const DEFAULT_STREET_SEARCH_DISTANCE = 10
@@ -21,7 +21,7 @@ export const createOverpassSlice: SliceStateCreator<OverpassSlice> = (set) => ({
   overpassTimeout: DEFAULT_OVERPASS_TIMEOUT,
   overpassEndpoint: DEFAULT_OVERPASS_ENDPOINT,
   streetSearchDistance: DEFAULT_STREET_SEARCH_DISTANCE,
-  updateOverpassTimeout: (overpassTimeout: string) =>
+  updateOverpassTimeout: (overpassTimeout: number) =>
     set((state) => {
       state.overpassTimeout = overpassTimeout
     }),

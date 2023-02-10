@@ -53,6 +53,7 @@ export default function Settings(props: {
         <SkipNumbers />
         <CustomTags />
         <Info />
+        <Advanced />
       </Accordion>
     </Modal>
   )

@@ -58,7 +58,7 @@ export default function Street() {
         position,
         streetSearchDistance,
         overpassEndpoint,
-        Number(overpassTimeout), // todo nan
+        overpassTimeout,
       )
     } catch (error) {
       if (error instanceof Error) {

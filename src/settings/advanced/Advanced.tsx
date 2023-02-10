@@ -1,14 +1,22 @@
+import {
+  Accordion,
+  Button,
+  Flex,
+  Modal,
+  NumberInput,
+  Stack,
+  TextInput,
+} from '@mantine/core'
+import {
+  IconAlertTriangle,
+  IconArrowBackUp,
+  IconTrash,
+  IconX,
+} from '@tabler/icons-react'
+import { useState } from 'react'
 import { useBoundStore } from '../../store'
-import SettingCategory from '../SettingCategory'
 
 export default function Advanced() {
-  const help = `Orientation is used to throw address nodes in the correct direction.
-Orientation provider shows the method to get your device's orientation.
-Orientation shows your device's current orientation.
-We use Overpass API to find streets nearby to you.
-You can customise the timeout and the endpoint here.
-Do not change the endpoint unless you know what you are doing!`
-
   const resetSkipNumbers = useBoundStore((s) => s.resetSkipNumbers)
   const resetCustomTags = useBoundStore((s) => s.resetCustomTags)
   const resetThrowDistance = useBoundStore((s) => s.resetThrowDistance)
@@ -25,18 +33,8 @@ Do not change the endpoint unless you know what you are doing!`
     (s) => s.resetStreetSearchDistance,
   )
 
-  const headingProvider = useBoundStore((s) => s.headingProvider)
-  const heading = useBoundStore((s) => s.heading)
-
   const reset = () => {
-    if (
-      !confirm(
-        'Are you sure you want to reset the settings to the default values?',
-      )
-    ) {
-      return
-    }
-
+    setResetModalOpened(false)
     resetOverpassTimeout()
     resetOverpassEndpoint()
     resetStreetSearchDistance()
@@ -45,42 +43,70 @@ Do not change the endpoint unless you know what you are doing!`
     resetSkipNumbers()
   }
 
+  const isValidUrl = (string: string) => {
+    let url
+    try {
+      url = new URL(string)
+    } catch (e) {
+      return false
+    }
+    return ['http:', 'https:'].includes(url.protocol)
+  }
+
+  const [resetModalOpened, setResetModalOpened] = useState(false)
+
   return (
-    <SettingCategory heading="Advanced" help={help}>
-      <div className="setting">
-        Heading provider {headingProvider ?? 'N/A'}:{' '}
-        {heading === undefined ? 'N/A' : Math.round(heading)}
-      </div>
-
-      <div className="setting">
-        <label htmlFor="overpass-timeout">
-          Overpass timeout (milliseconds)
-        </label>
-        <input
-          className="setting-input"
-          type="number"
-          id="overpass-timeout"
-          value={overpassTimeout}
-          onChange={(e) => updateOverpassTimeout(e.target.value)}
-        />
-      </div>
-
-      <div className="setting">
-        <label htmlFor="overpass-endpoint">Overpass endpoint</label>
-        <input
-          className="setting-input"
-          type="text"
-          id="overpass-endpoint"
-          value={overpassEndpoint}
-          onChange={(e) => updateOverpassEndpoint(e.target.value)}
-        />
-      </div>
-
-      <div className="setting">
-        <button className="setting-button" onClick={reset}>
-          Reset settings
-        </button>
-      </div>
-    </SettingCategory>
+    <>
+      <Modal
+        size="auto"
+        title="Are you sure you want to reset all settings?"
+        opened={resetModalOpened}
+        onClose={() => setResetModalOpened(false)}
+        centered
+      >
+        <Flex justify="space-between">
+          <Button
+            variant="outline"
+            leftIcon={<IconX />}
+            onClick={() => setResetModalOpened(false)}
+          >
+            No
+          </Button>
+          <Button color="red" leftIcon={<IconTrash />} onClick={reset}>
+            Yes
+          </Button>
+        </Flex>
+      </Modal>
+      <Accordion.Item value="advanced">
+        <Accordion.Control icon={<IconAlertTriangle />}>
+          Advanced
+        </Accordion.Control>
+        <Accordion.Panel>
+          <Stack>
+            <NumberInput
+              label="Overpass timeout (milliseconds)"
+              value={overpassTimeout}
+              onChange={updateOverpassTimeout}
+              min={0}
+              max={10000}
+            />
+            <TextInput
+              label="Overpass endpoint"
+              value={overpassEndpoint}
+              onChange={(e) => updateOverpassEndpoint(e.target.value)}
+              error={isValidUrl(overpassEndpoint) ? '' : 'URL is invalid'}
+              type="url"
+            />
+            <Button
+              color="red"
+              leftIcon={<IconArrowBackUp />}
+              onClick={() => setResetModalOpened(true)}
+            >
+              Reset all settings
+            </Button>
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
+    </>
   )
 }
