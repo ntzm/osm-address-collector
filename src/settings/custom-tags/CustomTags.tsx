@@ -1,3 +1,12 @@
+import {
+  ActionIcon,
+  Autocomplete,
+  Button,
+  Center,
+  Grid,
+  TextInput,
+} from '@mantine/core'
+import { IconPlus, IconX } from '@tabler/icons-react'
 import { useBoundStore } from '../../store'
 import SettingCategory from '../SettingCategory'
 
@@ -11,58 +20,64 @@ The tags you add will only be applied to addresses going forward.`
   const updateCustomTagValue = useBoundStore((s) => s.updateCustomTagValue)
   const removeCustomTag = useBoundStore((s) => s.removeCustomTag)
 
-  return (
-    <SettingCategory heading="Custom tags" help={help}>
-      <datalist id="tag-keys">
-        <option value="addr:city" />
-        <option value="addr:postcode" />
-        <option value="addr:country" />
-        <option value="addr:state" />
-        <option value="addr:place" />
-        <option value="addr:suburb" />
-        <option value="addr:province" />
-        <option value="addr:district" />
-        <option value="addr:subdistrict" />
-        <option value="addr:hamlet" />
-        <option value="addr:village" />
-        <option value="addr:town" />
-        <option value="addr:county" />
-      </datalist>
+  // todo make addable
+  const tagKeys = [
+    'addr:city',
+    'addr:postcode',
+    'addr:country',
+    'addr:state',
+    'addr:place',
+    'addr:suburb',
+    'addr:province',
+    'addr:district',
+    'addr:subdistrict',
+    'addr:hamlet',
+    'addr:village',
+    'addr:town',
+    'addr:county',
+  ]
 
-      <div className="setting">
-        <div className="setting-list">
-          <div id="custom-tags">
-            {customTags.map((customTag, i) => (
-              <div key={i} className="custom-tag setting-list__row">
-                <button onClick={() => removeCustomTag(i)}>x</button>
-                <input
-                  className="key-input setting-input setting-list__input"
-                  type="text"
-                  placeholder="Key"
-                  autoCapitalize="none"
-                  list="tag-keys"
-                  value={customTag.key}
-                  onChange={(e) => updateCustomTagKey(i, e.target.value)}
-                />
-                <input
-                  className="value-input setting-input setting-list__input"
-                  type="text"
-                  placeholder="Value"
-                  value={customTag.value}
-                  onChange={(e) => updateCustomTagValue(i, e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-          <button
-            className="setting-list__add"
-            id="add-custom-tag"
-            onClick={() => addCustomTag({ key: '', value: '' })}
-          >
-            +
-          </button>
-        </div>
-      </div>
-    </SettingCategory>
+  return (
+    <Grid gutter="xs" columns={13}>
+      {customTags.map((customTag, i) => (
+        <>
+          <Grid.Col span={1}>
+            <ActionIcon
+              size="xs"
+              variant="filled"
+              onClick={() => removeCustomTag(i)}
+            >
+              <IconX />
+            </ActionIcon>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Autocomplete
+              size="xs"
+              data={tagKeys}
+              value={customTag.key}
+              onChange={(key) => updateCustomTagKey(i, key)}
+              autoCapitalize="none"
+              placeholder="Key"
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <TextInput
+              size="xs"
+              value={customTag.value}
+              onChange={(e) => updateCustomTagValue(i, e.target.value)}
+              placeholder="Value"
+            />
+          </Grid.Col>
+        </>
+      ))}
+      <Grid.Col span={12}>
+        <Button
+          onClick={() => addCustomTag({ key: '', value: '' })}
+          leftIcon={<IconPlus />}
+        >
+          Add
+        </Button>
+      </Grid.Col>
+    </Grid>
   )
 }

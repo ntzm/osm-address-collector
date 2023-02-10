@@ -36,6 +36,8 @@ export default function Settings(props: {
       <General />
       <Divider label="Skip numbers" />
       <SkipNumbers />
+      <Divider label="Custom tags" />
+      <CustomTags />
     </Modal>
   )
 
