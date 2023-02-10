@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import { move } from './geo'
-import IconButton from './IconButton'
-import KeypadButton from './KeypadButton'
-import KeypadNumber from './KeypadNumber'
 import Map from './map/Map'
 import { getOsmFile } from './osm-xml'
 import Settings from './settings/Settings'
-import SubmitButton from './SubmitButton'
-import TopBar from './TopBar'
 import {
   DeviceOrientationEventiOS,
   Direction,
@@ -18,21 +13,17 @@ import { saveAs } from 'file-saver-es'
 import NoteWriter from './notes/NoteWriter'
 import guessNextNumber from './guess-next-number'
 import { useBoundStore } from './store'
-import {
-  ActionIcon,
-  Button,
-  Container,
-  Grid,
-  Navbar,
-  SimpleGrid,
-  TextInput,
-} from '@mantine/core'
+import { ActionIcon, Button, Container, Grid, TextInput } from '@mantine/core'
 import {
   IconArrowBackUp,
   IconArrowLeft,
   IconArrowRight,
   IconArrowUp,
+  IconBrain,
+  IconHomePlus,
+  IconMap,
   IconNote,
+  IconSettings,
   IconX,
 } from '@tabler/icons-react'
 
@@ -91,7 +82,12 @@ function App() {
     ])
   }
   const appendNumber = (number: number) => {
-    clearGuess()
+    if (numberIsGuessed) {
+      setNumberIsGuessed(false)
+      setCurrentNumberOrName(String(number))
+      return
+    }
+
     setCurrentNumberOrName(currentNumberOrName + String(number))
   }
   const submit = (direction: Direction) => {
@@ -360,34 +356,42 @@ function App() {
         onClose={() => setPage('keypad')}
       />
 
-      <Container size="xs" px="xs" h="100%">
-        {/* <TopBar
-          onOpenMap={() => setPage('map')}
-          onOpenSettings={() => setPage('settings')}
-          accuracy={position?.accuracy}
-          lastActions={lastActions}
-        /> */}
-
-        {/* <div className="row">
-          <input
-            type="text"
-            id="current-number-or-name"
-            autoCapitalize="words"
-            value={currentNumberOrName}
-            onChange={(e) => setCurrentNumberOrName(e.target.value)}
-            onFocus={clearGuess}
-            style={numberIsGuessed ? { color: '#999' } : {}}
-          />
-        </div> */}
-
-        <Grid h="100%">
-          <Grid.Col span={12}>
-            <TextInput
+      <Container size="xs" px={0} h="100%">
+        <Grid h="100%" m={0} gutter="xs">
+          <Grid.Col span={6}>
+            <Button
+              variant="light"
               w="100%"
               h="100%"
               size="xl"
+              onClick={() => setPage('map')}
+              leftIcon={<IconMap />}
+            >
+              Map
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Button
+              variant="light"
+              w="100%"
+              h="100%"
+              size="xl"
+              onClick={() => setPage('settings')}
+              leftIcon={<IconSettings />}
+            >
+              Settings
+            </Button>
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <TextInput
+              size="xl"
+              placeholder="House number or name"
               value={currentNumberOrName}
               onChange={(e) => setCurrentNumberOrName(e.target.value)}
+              icon={numberIsGuessed ? <IconBrain /> : <IconHomePlus />}
+              autoCapitalize="words"
+              onFocus={clearGuess}
+              disabled={surveyDisabled}
             />
           </Grid.Col>
           <Grid.Col span={4}>
@@ -434,6 +438,8 @@ function App() {
                 variant="light"
                 size="xl"
                 onClick={() => appendNumber(n)}
+                onTouchStart={() => appendNumber(n)}
+                onTouchEnd={(e) => e.preventDefault()}
                 disabled={surveyDisabled}
               >
                 {n}
@@ -458,6 +464,9 @@ function App() {
               h="100%"
               variant="light"
               size="xl"
+              onClick={() => appendNumber(0)}
+              onTouchStart={() => appendNumber(0)}
+              onTouchEnd={(e) => e.preventDefault()}
               disabled={surveyDisabled}
             >
               0
