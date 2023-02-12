@@ -1,22 +1,13 @@
 import { PropsWithChildren } from 'react'
+import { Divider, Paper, Stack } from '@mantine/core'
 
-export default function SettingCategory(
-  props: PropsWithChildren<{
-    heading: string
-    help?: string
-  }>,
-) {
+export default function SettingCategory(props: PropsWithChildren) {
   return (
-    <div className="setting-category">
-      <h2
-        className="setting-category__heading"
-        onClick={() => props.help && alert(props.help)}
-      >
-        {props.help && <span className="setting-category__info">ⓘ</span>}
-        {props.heading}
-      </h2>
-
-      {props.children}
-    </div>
+    <>
+      <Paper p="md">
+        <Stack align="self-start">{props.children}</Stack>
+      </Paper>
+      <Divider />
+    </>
   )
 }

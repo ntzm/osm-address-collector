@@ -1,16 +1,20 @@
-import { Accordion, NavLink } from '@mantine/core'
+import { Group, NavLink, Stack } from '@mantine/core'
 import {
   IconBrandGithub,
   IconBug,
   IconInfoCircle,
   IconStatusChange,
 } from '@tabler/icons-react'
+import SettingCategory from './SettingCategory'
 
 export default function Info() {
   return (
-    <Accordion.Item value="info">
-      <Accordion.Control icon={<IconInfoCircle />}>Info</Accordion.Control>
-      <Accordion.Panel>
+    <SettingCategory>
+      <Group>
+        <IconInfoCircle />
+        Info
+      </Group>
+      <Stack spacing={0} w="100%">
         <NavLink
           px={0}
           component="a"
@@ -38,7 +42,7 @@ export default function Info() {
           icon={<IconBug />}
           label="Report a bug or request a feature"
         />
-      </Accordion.Panel>
-    </Accordion.Item>
+      </Stack>
+    </SettingCategory>
   )
 }

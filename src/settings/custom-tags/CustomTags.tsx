@@ -1,5 +1,4 @@
 import {
-  Accordion,
   ActionIcon,
   Autocomplete,
   Badge,
@@ -11,6 +10,24 @@ import {
 } from '@mantine/core'
 import { IconEqual, IconPlus, IconTags, IconTrash } from '@tabler/icons-react'
 import { useBoundStore } from '../../store'
+import SettingCategory from '../SettingCategory'
+
+// todo make addable
+const TAG_KEYS = [
+  'addr:city',
+  'addr:postcode',
+  'addr:country',
+  'addr:state',
+  'addr:place',
+  'addr:suburb',
+  'addr:province',
+  'addr:district',
+  'addr:subdistrict',
+  'addr:hamlet',
+  'addr:village',
+  'addr:town',
+  'addr:county',
+]
 
 export default function CustomTags() {
   const customTags = useBoundStore((s) => s.customTags)
@@ -19,68 +36,52 @@ export default function CustomTags() {
   const updateCustomTagValue = useBoundStore((s) => s.updateCustomTagValue)
   const removeCustomTag = useBoundStore((s) => s.removeCustomTag)
 
-  // todo make addable
-  const tagKeys = [
-    'addr:city',
-    'addr:postcode',
-    'addr:country',
-    'addr:state',
-    'addr:place',
-    'addr:suburb',
-    'addr:province',
-    'addr:district',
-    'addr:subdistrict',
-    'addr:hamlet',
-    'addr:village',
-    'addr:town',
-    'addr:county',
-  ]
-
   return (
-    <Accordion.Item value="custom-tags">
-      <Accordion.Control icon={<IconTags />}>
-        Custom Tags <Badge>{customTags.length}</Badge>
-      </Accordion.Control>
-      <Accordion.Panel>
-        <Stack spacing="xs">
-          <Input.Description>
-            Add custom tags to each address node from now on
-          </Input.Description>
-          {customTags.map((customTag, i) => (
-            <Group grow spacing={0} key={i}>
-              <Autocomplete
-                data={tagKeys}
-                value={customTag.key}
-                onChange={(key) => updateCustomTagKey(i, key)}
-                autoCapitalize="none"
-                placeholder="Key"
-                rightSection={<IconEqual color="grey" />}
-              />
-              <TextInput
-                value={customTag.value}
-                onChange={(e) => updateCustomTagValue(i, e.target.value)}
-                placeholder="Value"
-                rightSection={
-                  <ActionIcon
-                    size="xs"
-                    variant="outline"
-                    onClick={() => removeCustomTag(i)}
-                    color="red"
-                  >
-                    <IconTrash />
-                  </ActionIcon>
-                }
-              />
-            </Group>
-          ))}
-          <Button
-            onClick={() => addCustomTag({ key: '', value: '' })}
-            leftIcon={<IconPlus />}
-          >
-            Add
-          </Button>
-        </Stack>
-      </Accordion.Panel>
-    </Accordion.Item>
+    <SettingCategory>
+      <Group>
+        <IconTags />
+        Custom Tags
+        <Badge>{customTags.length}</Badge>
+      </Group>
+      <Input.Description>
+        Add custom tags to each address node from now on
+      </Input.Description>
+      <Stack spacing="xs" w="100%">
+        {customTags.map((customTag, i) => (
+          <Group grow spacing={0} key={i}>
+            <Autocomplete
+              data={TAG_KEYS}
+              value={customTag.key}
+              onChange={(key) => updateCustomTagKey(i, key)}
+              autoCapitalize="none"
+              placeholder="Key"
+              rightSection={<IconEqual color="grey" />}
+            />
+            <TextInput
+              value={customTag.value}
+              onChange={(e) => updateCustomTagValue(i, e.target.value)}
+              placeholder="Value"
+              rightSection={
+                <ActionIcon
+                  size="xs"
+                  variant="outline"
+                  onClick={() => removeCustomTag(i)}
+                  color="red"
+                >
+                  <IconTrash />
+                </ActionIcon>
+              }
+            />
+          </Group>
+        ))}
+
+        <Button
+          onClick={() => addCustomTag({ key: '', value: '' })}
+          leftIcon={<IconPlus />}
+        >
+          Add
+        </Button>
+      </Stack>
+    </SettingCategory>
   )
 }

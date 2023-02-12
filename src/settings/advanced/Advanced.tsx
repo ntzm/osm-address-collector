@@ -1,5 +1,4 @@
 import {
-  Accordion,
   Autocomplete,
   Button,
   Group,
@@ -16,6 +15,7 @@ import {
 } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useBoundStore } from '../../store'
+import SettingCategory from '../SettingCategory'
 
 const OVERPASS_ENDPOINT_OPTIONS = [
   'https://overpass-api.de/api/interpreter',
@@ -87,37 +87,36 @@ export default function Advanced() {
           </Group>
         </Stack>
       </Modal>
-      <Accordion.Item value="advanced">
-        <Accordion.Control icon={<IconAlertTriangle />}>
+      <SettingCategory>
+        <Group>
+          <IconAlertTriangle />
           Advanced
-        </Accordion.Control>
-        <Accordion.Panel>
-          <Stack>
-            <NumberInput
-              label="Overpass timeout (milliseconds)"
-              value={overpassTimeout}
-              onChange={updateOverpassTimeout}
-              min={0}
-              max={100_000}
-            />
-            <Autocomplete
-              data={OVERPASS_ENDPOINT_OPTIONS}
-              label="Overpass endpoint"
-              value={overpassEndpoint}
-              onChange={(e) => updateOverpassEndpoint(e)}
-              error={isValidUrl(overpassEndpoint) ? '' : 'URL is invalid'}
-              type="url"
-            />
-            <Button
-              color="red"
-              leftIcon={<IconArrowBackUp />}
-              onClick={() => setResetModalOpened(true)}
-            >
-              Reset all settings
-            </Button>
-          </Stack>
-        </Accordion.Panel>
-      </Accordion.Item>
+        </Group>
+        <NumberInput
+          w="100%"
+          label="Overpass timeout (milliseconds)"
+          value={overpassTimeout}
+          onChange={updateOverpassTimeout}
+          min={0}
+          max={100_000}
+        />
+        <Autocomplete
+          w="100%"
+          data={OVERPASS_ENDPOINT_OPTIONS}
+          label="Overpass endpoint"
+          value={overpassEndpoint}
+          onChange={(e) => updateOverpassEndpoint(e)}
+          error={isValidUrl(overpassEndpoint) ? '' : 'URL is invalid'}
+          type="url"
+        />
+        <Button
+          color="red"
+          leftIcon={<IconArrowBackUp />}
+          onClick={() => setResetModalOpened(true)}
+        >
+          Reset all settings
+        </Button>
+      </SettingCategory>
     </>
   )
 }
