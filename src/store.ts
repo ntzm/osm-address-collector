@@ -15,9 +15,9 @@ import { createPositionSlice, PositionSlice } from './position-slice'
 import { UnionToIntersection } from 'type-fest'
 import { createStreetSlice, StreetSlice } from './settings/street/street-slice'
 import {
-  createThrowDistanceSlice,
-  ThrowDistanceSlice,
-} from './settings/general/throw-distance-slice'
+  createGeneralSlice,
+  GeneralSlice,
+} from './settings/general/general-slice'
 import {
   createOverpassSlice,
   OverpassSlice,
@@ -30,7 +30,7 @@ type Slice =
   | CustomTagsSlice
   | PositionSlice
   | StreetSlice
-  | ThrowDistanceSlice
+  | GeneralSlice
   | OverpassSlice
 export type State = UnionToIntersection<Slice>
 export type SliceStateCreator<T extends Slice> = StateCreator<
@@ -47,7 +47,7 @@ const immerMiddleware = immer<State>((...a) => ({
   ...createCustomTagsSlice(...a),
   ...createPositionSlice(...a),
   ...createStreetSlice(...a),
-  ...createThrowDistanceSlice(...a),
+  ...createGeneralSlice(...a),
   ...createOverpassSlice(...a),
 }))
 
