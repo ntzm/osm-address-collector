@@ -140,11 +140,16 @@ export default function Street() {
             <Input.Label>Search distance</Input.Label>
             <Slider
               mt="xs"
-              label={(value) => `${value} m`}
+              mb="lg"
+              label={(value) => `${value}m`}
               min={1}
               max={50}
               value={streetSearchDistance}
               onChange={updateStreetSearchDistance}
+              marks={[10, 20, 30, 40].map((n) => ({
+                value: n,
+                label: `${n}m`,
+              }))}
             />
           </Input.Wrapper>
         </Stack>

@@ -18,11 +18,13 @@ export default function General() {
           </Input.Description>
           <Slider
             mt="xs"
-            label={(value) => `${value} m`}
+            mb="lg"
+            label={(value) => `${value}m`}
             min={1}
-            max={100}
+            max={50}
             value={throwDistance}
             onChange={updateThrowDistance}
+            marks={[10, 20, 30, 40].map((n) => ({ value: n, label: `${n}m` }))}
           />
         </Input.Wrapper>
       </Accordion.Panel>

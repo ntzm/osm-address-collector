@@ -15,13 +15,17 @@ import guessNextNumber from './guess-next-number'
 import { useBoundStore } from './store'
 import {
   ActionIcon,
+  AppShell,
   Button,
   Container,
+  Flex,
   Grid,
   Group,
+  Header,
   LoadingOverlay,
   Modal,
   Stack,
+  Tabs,
   Text,
   TextInput,
 } from '@mantine/core'
@@ -30,6 +34,7 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconArrowUp,
+  IconBorderAll,
   IconBrain,
   IconHomePlus,
   IconMap,
@@ -368,12 +373,39 @@ function App() {
   const surveyDisabled = surveyState !== 'started'
 
   return (
-    <>
-      {page === 'map' && <Map onClose={() => setPage('keypad')} />}
-      <Settings
-        isOpened={page === 'settings'}
-        onClose={() => setPage('keypad')}
-      />
+    <AppShell
+      header={
+        <Header height={70} withBorder={false}>
+          <Container size="xs" mt="xs">
+            <Tabs
+              value={page}
+              onTabChange={(page) =>
+                page &&
+                setPage(page as 'keypad' | 'map' | 'note-writer' | 'settings')
+              }
+              variant="outline"
+              defaultValue="keypad"
+            >
+              <Tabs.List grow>
+                <Tabs.Tab icon={<IconBorderAll />} value="keypad">
+                  Keypad
+                </Tabs.Tab>
+                <Tabs.Tab
+                  icon={<IconMap />}
+                  value="map"
+                  disabled={position === undefined}
+                >
+                  Map
+                </Tabs.Tab>
+                <Tabs.Tab icon={<IconSettings />} value="settings">
+                  Settings
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+          </Container>
+        </Header>
+      }
+    >
       <NoteWriter
         isOpened={page === 'note-writer'}
         onClose={() => setPage('keypad')}
@@ -394,6 +426,7 @@ function App() {
           </Text>
           <Group position="apart">
             <Button
+              p="xs"
               variant="outline"
               color="red"
               leftIcon={<IconTrash />}
@@ -402,6 +435,7 @@ function App() {
               No, delete them
             </Button>
             <Button
+              p="xs"
               onClick={() => {
                 startOrPause()
                 setLoadLastSessionModalOpened(false)
@@ -414,176 +448,168 @@ function App() {
       </Modal>
 
       <Container size="xs" px={0} h="100%">
+        {page === 'settings' && <Settings />}
+        {page === 'map' && <Map />}
+
         <LoadingOverlay visible={surveyState === 'finishing'} />
 
-        <Grid h="100%" m={0} gutter="xs">
-          <Grid.Col span={6}>
-            <Button
-              variant="light"
-              w="100%"
-              h="100%"
-              size="xl"
-              onClick={() => setPage('map')}
-              leftIcon={<IconMap />}
-            >
-              Map
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Button
-              variant="light"
-              w="100%"
-              h="100%"
-              size="xl"
-              onClick={() => setPage('settings')}
-              leftIcon={<IconSettings />}
-            >
-              Settings
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <TextInput
-              size="xl"
-              placeholder="House number or name"
-              value={currentNumberOrName}
-              onChange={(e) => setCurrentNumberOrName(e.target.value)}
-              icon={
-                numberIsGuessed ? <IconBrain color="green" /> : <IconHomePlus />
-              }
-              autoCapitalize="words"
-              onFocus={clearGuess}
-              disabled={surveyDisabled}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <ActionIcon
-              variant="light"
-              w="100%"
-              h="100%"
-              size="xl"
-              onClick={() => submit('L')}
-              disabled={surveyDisabled}
-            >
-              <IconArrowLeft />
-            </ActionIcon>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <ActionIcon
-              variant="light"
-              w="100%"
-              h="100%"
-              size="xl"
-              onClick={() => submit('F')}
-              disabled={surveyDisabled}
-            >
-              <IconArrowUp />
-            </ActionIcon>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <ActionIcon
-              variant="light"
-              w="100%"
-              h="100%"
-              size="xl"
-              onClick={() => submit('R')}
-              disabled={surveyDisabled}
-            >
-              <IconArrowRight />
-            </ActionIcon>
-          </Grid.Col>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-            <Grid.Col key={n} span={4}>
+        {page === 'keypad' && (
+          <Grid h="100%" m={0} gutter="xs">
+            <Grid.Col span={12}>
+              <TextInput
+                size="xl"
+                placeholder="House number or name"
+                value={currentNumberOrName}
+                onChange={(e) => setCurrentNumberOrName(e.target.value)}
+                icon={
+                  numberIsGuessed ? (
+                    <IconBrain color="green" />
+                  ) : (
+                    <IconHomePlus />
+                  )
+                }
+                autoCapitalize="words"
+                onFocus={clearGuess}
+                disabled={surveyDisabled}
+              />
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <ActionIcon
+                variant="light"
+                w="100%"
+                h="100%"
+                size="xl"
+                onClick={() => submit('L')}
+                disabled={surveyDisabled}
+              >
+                <IconArrowLeft />
+              </ActionIcon>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <ActionIcon
+                variant="light"
+                w="100%"
+                h="100%"
+                size="xl"
+                onClick={() => submit('F')}
+                disabled={surveyDisabled}
+              >
+                <IconArrowUp />
+              </ActionIcon>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <ActionIcon
+                variant="light"
+                w="100%"
+                h="100%"
+                size="xl"
+                onClick={() => submit('R')}
+                disabled={surveyDisabled}
+              >
+                <IconArrowRight />
+              </ActionIcon>
+            </Grid.Col>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+              <Grid.Col key={n} span={4}>
+                <Button
+                  p="xs"
+                  w="100%"
+                  h="100%"
+                  variant="light"
+                  size="xl"
+                  onClick={() => appendNumber(n)}
+                  onTouchStart={() => appendNumber(n)}
+                  onTouchEnd={(e) => e.preventDefault()}
+                  disabled={surveyDisabled}
+                >
+                  {n}
+                </Button>
+              </Grid.Col>
+            ))}
+            <Grid.Col span={4}>
               <Button
+                p="xs"
+                w="100%"
+                h="100%"
+                variant="filled"
+                size="xl"
+                onClick={startOrPause}
+                disabled={['starting', 'finishing'].includes(surveyState)}
+              >
+                {surveyState === 'started' ? 'Pause' : 'Start'}
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Button
+                p="xs"
                 w="100%"
                 h="100%"
                 variant="light"
                 size="xl"
-                onClick={() => appendNumber(n)}
-                onTouchStart={() => appendNumber(n)}
+                onClick={() => appendNumber(0)}
+                onTouchStart={() => appendNumber(0)}
                 onTouchEnd={(e) => e.preventDefault()}
                 disabled={surveyDisabled}
               >
-                {n}
+                0
               </Button>
             </Grid.Col>
-          ))}
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="filled"
-              size="xl"
-              onClick={startOrPause}
-              disabled={['starting', 'finishing'].includes(surveyState)}
-            >
-              {surveyState === 'started' ? 'Pause' : 'Start'}
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="light"
-              size="xl"
-              onClick={() => appendNumber(0)}
-              onTouchStart={() => appendNumber(0)}
-              onTouchEnd={(e) => e.preventDefault()}
-              disabled={surveyDisabled}
-            >
-              0
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="light"
-              leftIcon={<IconX />}
-              disabled={surveyDisabled}
-              onClick={clearNumberOrName}
-            >
-              Clear
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="light"
-              onClick={() => setPage('note-writer')}
-              leftIcon={<IconNote />}
-              disabled={surveyDisabled}
-            >
-              Note
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="filled"
-              size="xl"
-              disabled={!['started', 'paused'].includes(surveyState)}
-              onClick={done}
-            >
-              Done
-            </Button>
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <Button
-              w="100%"
-              h="100%"
-              variant="light"
-              leftIcon={<IconArrowBackUp />}
-              disabled={surveyDisabled}
-              onClick={undo}
-            >
-              Undo
-            </Button>
-          </Grid.Col>
-        </Grid>
+            <Grid.Col span={4}>
+              <Button
+                p="xs"
+                w="100%"
+                h="100%"
+                variant="light"
+                leftIcon={<IconX />}
+                disabled={surveyDisabled}
+                onClick={clearNumberOrName}
+              >
+                Clear
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Button
+                p="xs"
+                w="100%"
+                h="100%"
+                variant="light"
+                onClick={() => setPage('note-writer')}
+                leftIcon={<IconNote />}
+                disabled={surveyDisabled}
+              >
+                Note
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Button
+                p="xs"
+                w="100%"
+                h="100%"
+                variant="filled"
+                size="xl"
+                disabled={!['started', 'paused'].includes(surveyState)}
+                onClick={done}
+              >
+                Done
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Button
+                p="xs"
+                w="100%"
+                h="100%"
+                variant="light"
+                leftIcon={<IconArrowBackUp />}
+                disabled={surveyDisabled}
+                onClick={undo}
+              >
+                Undo
+              </Button>
+            </Grid.Col>
+          </Grid>
+        )}
       </Container>
-    </>
+    </AppShell>
   )
 }
 
