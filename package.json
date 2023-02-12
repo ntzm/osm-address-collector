@@ -32,7 +32,6 @@
     "husky": "^8.0.3",
     "jsdom": "^21.1.0",
     "prettier": "^2.8.3",
-    "rollup-plugin-analyzer": "^4.0.0",
     "tsx": "^3.12.2",
     "w3c-xmlserializer": "^4.0.0"
   },
