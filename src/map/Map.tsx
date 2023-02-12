@@ -2,6 +2,7 @@ import {
   LayerGroup,
   LayersControl,
   MapContainer,
+  Marker,
   TileLayer,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -9,6 +10,9 @@ import styled from 'styled-components'
 import AddressMarker from './AddressMarker'
 import NoteMarker from './NoteMarker'
 import { useBoundStore } from '../store'
+import { useState } from 'react'
+import circle from '@tabler/icons/circle-filled.svg'
+import { Icon } from 'leaflet'
 
 const StyledMapContainer = styled(MapContainer)`
   height: 100%;
@@ -28,9 +32,21 @@ export default function Map() {
 
   const theme = useBoundStore((s) => s.theme)
 
+  // this is probably the wrong way to do this
+  const [initialPosition, setInitialPosition] = useState<
+    GeolocationCoordinates | undefined
+  >(undefined)
+  if (!initialPosition) {
+    setInitialPosition(position)
+  }
+
   return (
     <StyledMapContainer
-      center={position ? [position.latitude, position.longitude] : [0, 0]}
+      center={
+        initialPosition
+          ? [initialPosition.latitude, initialPosition.longitude]
+          : [0, 0]
+      }
       zoom={18}
       zoomControl={false}
       style={
@@ -48,6 +64,20 @@ export default function Map() {
         maxNativeZoom={18}
         maxZoom={20}
       />
+      <LayerGroup>
+        {position && (
+          <Marker
+            position={[position.latitude, position.longitude]}
+            icon={
+              new Icon({
+                iconUrl: circle,
+                iconSize: [12, 12],
+                iconAnchor: [6, 6],
+              })
+            }
+          />
+        )}
+      </LayerGroup>
       <LayersControl position="topright">
         {/* todo generate and use ids */}
         <LayersControl.Overlay checked name="Addresses">
