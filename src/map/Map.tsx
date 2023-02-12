@@ -6,18 +6,12 @@ import {
   TileLayer,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import styled from 'styled-components'
 import AddressMarker from './AddressMarker'
 import NoteMarker from './NoteMarker'
 import { useBoundStore } from '../store'
 import { useState } from 'react'
 import circle from '@tabler/icons/circle-filled.svg'
 import { Icon } from 'leaflet'
-
-const StyledMapContainer = styled(MapContainer)`
-  height: 100%;
-  width: 100%;
-`
 
 export default function Map() {
   const addresses = useBoundStore((s) => s.addresses)
@@ -41,7 +35,7 @@ export default function Map() {
   }
 
   return (
-    <StyledMapContainer
+    <MapContainer
       center={
         initialPosition
           ? [initialPosition.latitude, initialPosition.longitude]
@@ -49,14 +43,13 @@ export default function Map() {
       }
       zoom={18}
       zoomControl={false}
-      style={
-        theme === 'dark'
-          ? {
-              filter:
-                'brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7)',
-            }
-          : {}
-      }
+      style={{
+        height: '100%',
+        filter:
+          theme === 'dark'
+            ? 'brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7)'
+            : 'none',
+      }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -107,6 +100,6 @@ export default function Map() {
           </LayerGroup>
         </LayersControl.Overlay>
       </LayersControl>
-    </StyledMapContainer>
+    </MapContainer>
   )
 }
