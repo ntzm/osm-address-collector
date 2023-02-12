@@ -26,11 +26,21 @@ export default function Map() {
 
   const position = useBoundStore((s) => s.position)
 
+  const theme = useBoundStore((s) => s.theme)
+
   return (
     <StyledMapContainer
       center={position ? [position.latitude, position.longitude] : [0, 0]}
       zoom={18}
       zoomControl={false}
+      style={
+        theme === 'dark'
+          ? {
+              filter:
+                'brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7)',
+            }
+          : {}
+      }
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
